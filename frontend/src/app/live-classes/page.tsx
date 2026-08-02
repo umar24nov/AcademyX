@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { Card, CardContent } from "@/components/ui/card";
@@ -85,24 +86,19 @@ export default function LiveClassesPage() {
                   </div>
                   <div className="flex gap-2 shrink-0">
                     {l.status !== "Ended" && (
-                      <Button onClick={() => startClass(l.title)}>
-                        {l.status === "Live" ? (
-                          <>
-                            <Icon name="video" className="h-4 w-4" />
-                            Join Now
-                          </>
-                        ) : (
-                          <>
-                            <Icon name="play_circle" className="h-4 w-4" />
-                            Start Class
-                          </>
-                        )}
+                      <Button asChild>
+                        <Link href={`/live-classes/session?id=${l.id}`}>
+                          <Icon name="video" className="h-4 w-4" />
+                          {l.status === "Live" ? "Join Now" : "Start Class"}
+                        </Link>
                       </Button>
                     )}
                     {l.recordingUrl && (
-                      <Button variant="outline">
-                        <Icon name="play_circle" className="h-4 w-4" />
-                        Recording
+                      <Button variant="outline" asChild>
+                        <a href={l.recordingUrl} target="_blank" rel="noreferrer">
+                          <Icon name="play_circle" className="h-4 w-4" />
+                          Recording
+                        </a>
                       </Button>
                     )}
                     <Button variant="ghost" size="icon" className="text-text-muted">
@@ -116,19 +112,19 @@ export default function LiveClassesPage() {
 
           <TabsContent value="live" className="space-y-4">
             {liveClasses.filter((l) => l.status === "Live").map((l) => (
-              <LiveCard key={l.id} title={l.title} course={l.course} teacher={l.teacher} onJoin={() => startClass(l.title)} />
+              <LiveCard key={l.id} id={l.id} title={l.title} course={l.course} teacher={l.teacher} />
             ))}
           </TabsContent>
 
           <TabsContent value="scheduled" className="space-y-4">
             {liveClasses.filter((l) => l.status === "Scheduled").map((l) => (
-              <LiveCard key={l.id} title={l.title} course={l.course} teacher={l.teacher} onJoin={() => startClass(l.title)} />
+              <LiveCard key={l.id} id={l.id} title={l.title} course={l.course} teacher={l.teacher} />
             ))}
           </TabsContent>
 
           <TabsContent value="ended" className="space-y-4">
             {liveClasses.filter((l) => l.status === "Ended").map((l) => (
-              <LiveCard key={l.id} title={l.title} course={l.course} teacher={l.teacher} />
+              <LiveCard key={l.id} id={l.id} title={l.title} course={l.course} teacher={l.teacher} ended />
             ))}
           </TabsContent>
         </Tabs>
@@ -138,15 +134,17 @@ export default function LiveClassesPage() {
 }
 
 function LiveCard({
+  id,
   title,
   course,
   teacher,
-  onJoin,
+  ended,
 }: {
+  id: string;
   title: string;
   course: string;
   teacher: string;
-  onJoin?: () => void;
+  ended?: boolean;
 }) {
   return (
     <Card>
@@ -155,12 +153,12 @@ function LiveCard({
           <h4 className="font-semibold text-text-heading">{title}</h4>
           <p className="text-sm text-text-muted mt-0.5">{course} • {teacher}</p>
         </div>
-        {onJoin && (
-          <Button onClick={onJoin}>
+        <Button asChild variant={ended ? "outline" : "default"}>
+          <Link href={`/live-classes/session?id=${id}`}>
             <Icon name="video" className="h-4 w-4" />
-            Join
-          </Button>
-        )}
+            {ended ? "Details" : "Join"}
+          </Link>
+        </Button>
       </CardContent>
     </Card>
   );

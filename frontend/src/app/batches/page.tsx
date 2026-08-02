@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -116,8 +117,10 @@ export default function BatchManagementPage() {
               {filtered.map((b) => (
                 <TableRow key={b.id}>
                   <TableCell>
-                    <p className="font-medium text-on-surface">{b.name}</p>
-                    <p className="text-xs text-text-muted font-mono">{b.code}</p>
+                    <Link href={`/batches/detail?id=${b.id}`} className="group/row">
+                      <p className="font-medium text-on-surface group-hover/row:text-primary transition-colors">{b.name}</p>
+                      <p className="text-xs text-text-muted font-mono">{b.code}</p>
+                    </Link>
                   </TableCell>
                   <TableCell className="text-sm text-on-surface-variant">{b.course}</TableCell>
                   <TableCell className="text-sm text-on-surface-variant">{b.teacher}</TableCell>

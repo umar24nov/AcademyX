@@ -6,6 +6,7 @@ export const navSections: Record<"main" | "manage", NavItem[]> = {
   ],
   manage: [
     { label: "Curriculum", href: "/curriculum/courses", icon: "menu_book", roles: ["INSTITUTE_ADMIN", "TEACHER", "SUPER_ADMIN"], section: "manage" },
+    { label: "Courses", href: "/courses", icon: "menu_book", roles: ["STUDENT"], section: "manage" },
     { label: "Batches", href: "/batches", icon: "group", roles: ["INSTITUTE_ADMIN", "TEACHER", "SUPER_ADMIN"], section: "manage" },
     { label: "Students", href: "/students", icon: "school", roles: ["INSTITUTE_ADMIN", "TEACHER", "SUPER_ADMIN"], section: "manage" },
     { label: "Teachers", href: "/teachers", icon: "admin_panel_settings", roles: ["INSTITUTE_ADMIN", "SUPER_ADMIN"], section: "manage" },

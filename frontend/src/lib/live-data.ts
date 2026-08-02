@@ -970,7 +970,7 @@ export const mockStudentDashboardData: StudentDashboardData = {
 };
 
 interface ApiStudentDashboard {
-  enrollments?: { course?: { title?: string } | null }[];
+  enrollments?: { course?: { id?: string; title?: string } | null }[];
   upcomingClasses?: {
     title: string;
     startsAt: string;
@@ -1517,4 +1517,272 @@ export async function updateInstituteProfile(
   } catch {
     return false;
   }
+}
+
+// ---------------------------------------------------------------------------
+// Courses Library (student "Continue watching" + lecture catalog)
+// ---------------------------------------------------------------------------
+
+export interface ContinueWatchingRow {
+  id: string;
+  title: string;
+  progress: number;
+  lessons: string;
+  next: string;
+}
+
+export const mockContinueWatchingData: ContinueWatchingRow[] = mockStudentDashboardData.courses.map(
+  (c, i) => ({ id: `cw_${i + 1}`, ...c })
+);
+
+export async function fetchContinueWatching(): Promise<ContinueWatchingRow[]> {
+  const live = await tryGet<ApiStudentDashboard>("/dashboard/student");
+  const enrolled = live?.enrollments ?? [];
+  if (!enrolled.length) return mockContinueWatchingData;
+  const base = mockContinueWatchingData;
+  return enrolled.slice(0, 4).map((e, i) => {
+    const fallback = base[i % base.length];
+    const title = e.course?.title ?? "Untitled Course";
+    return {
+      id: e.course?.id ?? title,
+      title,
+      progress: fallback?.progress ?? 0,
+      lessons: fallback?.lessons ?? "0 lessons",
+      next: fallback?.next ?? "Start course",
+    };
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Live class session detail
+// ---------------------------------------------------------------------------
+
+export interface LiveClassDetailData {
+  id: string;
+  title: string;
+  course: string;
+  batch: string;
+  teacher: string;
+  status: "Live" | "Scheduled" | "Ended";
+  startsIn: string;
+  location: string;
+  registered: number;
+  startsAt: string;
+  durationMin: number;
+  recordingUrl?: string;
+  description?: string;
+}
+
+interface ApiLiveClassDetail {
+  id: string;
+  title: string;
+  description?: string | null;
+  course?: { id: string; title: string } | null;
+  batch?: { id: string; name: string; code: string; students?: unknown[] } | null;
+  teacher?: { id: string; name: string } | null;
+  startsAt: string;
+  durationMin: number;
+  status: string;
+  recordingUrl?: string | null;
+  roomId?: string | null;
+  hmsRoomCode?: string | null;
+}
+
+export const mockLiveClassDetailData: LiveClassDetailData = {
+  id: "live_001",
+  title: "Introduction to UI Design Systems",
+  course: "Mastering the Modern Toolchain",
+  batch: "WEB-W1",
+  teacher: "Sarah Chen, PhD",
+  status: "Live",
+  startsIn: "14m",
+  location: "Main Lecture Hall A2",
+  registered: 28,
+  startsAt: "2024-06-15T14:00:00Z",
+  durationMin: 60,
+};
+
+function liveStatusFor(startsAt: string | Date, durationMin: number, status: string): "Live" | "Scheduled" | "Ended" {
+  if (status === "LIVE") return "Live";
+  const end = new Date(startsAt).getTime() + durationMin * 60000;
+  if (status === "ENDED" || (Date.now() > end && status !== "CANCELLED")) return "Ended";
+  return "Scheduled";
+}
+
+export async function fetchLiveClassDetail(id?: string): Promise<LiveClassDetailData> {
+  if (!id) return mockLiveClassDetailData;
+  const live = await tryGet<{ liveClass: ApiLiveClassDetail }>(`/live-classes/${id}`);
+  if (!live) return mockLiveClassDetailData;
+  const c = live.liveClass;
+  const status = liveStatusFor(c.startsAt, c.durationMin, c.status);
+  const diff = new Date(c.startsAt).getTime() - Date.now();
+  const startsIn =
+    diff < 0
+      ? "Completed"
+      : diff < 3600000
+        ? `${Math.max(1, Math.round(diff / 60000))}m`
+        : `${Math.floor(diff / 3600000)}h ${Math.round((diff % 3600000) / 60000)}m`;
+  return {
+    id: c.id,
+    title: c.title,
+    course: c.course?.title ?? "—",
+    batch: c.batch?.code ?? c.batch?.name ?? "—",
+    teacher: c.teacher?.name ?? "—",
+    status,
+    startsIn,
+    location: c.batch?.name ?? "Online",
+    registered: Array.isArray(c.batch?.students) ? c.batch!.students!.length : 0,
+    startsAt: c.startsAt,
+    durationMin: c.durationMin,
+    recordingUrl: c.recordingUrl ?? undefined,
+    description: c.description ?? undefined,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Batch detail (student progress registry & schedule)
+// ---------------------------------------------------------------------------
+
+export interface BatchStudentRow {
+  id: string;
+  name: string;
+  rollNumber: string;
+  email: string;
+  attendanceRate: number;
+  status: string;
+}
+
+export interface BatchClassRow {
+  id: string;
+  title: string;
+  startsAt: string;
+  status: string;
+}
+
+export interface BatchDetailData {
+  id: string;
+  name: string;
+  code: string;
+  course: string;
+  teacher: string;
+  status: string;
+  schedule: string;
+  startDate: string;
+  endDate: string;
+  capacity: number;
+  attendanceRate: number;
+  exams: number;
+  assignments: number;
+  students: BatchStudentRow[];
+  liveClasses: BatchClassRow[];
+}
+
+interface ApiBatchDetail {
+  id: string;
+  name: string;
+  code: string;
+  course?: { id: string; title: string } | null;
+  capacity?: number | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  status: string;
+  timetable?: Record<string, unknown> | null;
+  students?: {
+    id: string;
+    rollNumber?: string | null;
+    user: { id: string; name: string; email: string };
+  }[];
+  attendance?: { studentId: string; status: string }[];
+  assignments?: unknown[];
+  exams?: unknown[];
+  liveClasses?: { id: string; title: string; startsAt: string; status: string }[];
+}
+
+export const mockBatchDetailData: BatchDetailData = {
+  id: "bat_001",
+  name: "Advanced AI - Night Shift",
+  code: "AI-N1",
+  course: "Foundations of Neural Networks",
+  teacher: "Prof. Marcus Thorne",
+  status: "Active",
+  schedule: "Mon, Wed, Fri • 7:00 PM - 9:00 PM",
+  startDate: "2024-04-01",
+  endDate: "2024-09-30",
+  capacity: 40,
+  attendanceRate: 92,
+  exams: 4,
+  assignments: 6,
+  students: [
+    { id: "stu_001", name: "Elena Martinez", rollNumber: "AX-2023-001", email: "elena@vantage.edu", attendanceRate: 95, status: "Active" },
+    { id: "stu_002", name: "Marcus Chen", rollNumber: "AX-2023-002", email: "marcus@vantage.edu", attendanceRate: 88, status: "Active" },
+    { id: "stu_003", name: "Priya Sharma", rollNumber: "AX-2023-003", email: "priya@vantage.edu", attendanceRate: 91, status: "Active" },
+    { id: "stu_004", name: "Julian Wright", rollNumber: "AX-2023-004", email: "julian@vantage.edu", attendanceRate: 79, status: "Active" },
+    { id: "stu_005", name: "Sarah Lofton", rollNumber: "AX-2023-005", email: "sarah@vantage.edu", attendanceRate: 97, status: "Active" },
+  ],
+  liveClasses: [
+    { id: "live_003", title: "Backpropagation Deep Dive", startsAt: "2024-06-16T19:00:00Z", status: "Scheduled" },
+    { id: "live_002", title: "Recurrence Relations & Master Theorem", startsAt: "2024-06-15T16:30:00Z", status: "Scheduled" },
+  ],
+};
+
+export const mockBatchDetailDataFallback: BatchDetailData = mockBatchDetailData;
+
+export async function fetchBatchDetail(id?: string): Promise<BatchDetailData> {
+  if (!id) return mockBatchDetailData;
+  const live = await tryGet<{ batch: ApiBatchDetail }>(`/batches/${id}`);
+  if (!live) return mockBatchDetailData;
+  const b = live.batch;
+
+  const attendanceCounts = new Map<string, { present: number; total: number }>();
+  for (const a of b.attendance ?? []) {
+    const cur = attendanceCounts.get(a.studentId) ?? { present: 0, total: 0 };
+    cur.total += 1;
+    if (a.status === "PRESENT" || a.status === "LATE") cur.present += 1;
+    attendanceCounts.set(a.studentId, cur);
+  }
+  let totalAttendance = 0;
+  let presentAttendance = 0;
+  for (const v of attendanceCounts.values()) {
+    totalAttendance += v.total;
+    presentAttendance += v.present;
+  }
+
+  const students: BatchStudentRow[] = (b.students ?? []).map((s) => {
+    const counts = attendanceCounts.get(s.id);
+    const rate = counts && counts.total > 0 ? Math.round((counts.present / counts.total) * 100) : 0;
+    return {
+      id: s.id,
+      name: s.user.name,
+      rollNumber: s.rollNumber ?? "—",
+      email: s.user.email,
+      attendanceRate: rate,
+      status: "Active",
+    };
+  });
+
+  const status =
+    b.status === "UPCOMING" ? "Upcoming" : b.status === "COMPLETED" ? "Completed" : "Active";
+
+  return {
+    id: b.id,
+    name: b.name,
+    code: b.code,
+    course: b.course?.title ?? "—",
+    teacher: "—",
+    status,
+    schedule: "—",
+    startDate: b.startDate ? formatDate(b.startDate) : "—",
+    endDate: b.endDate ? formatDate(b.endDate) : "—",
+    capacity: b.capacity ?? 0,
+    attendanceRate: totalAttendance > 0 ? Math.round((presentAttendance / totalAttendance) * 100) : 0,
+    exams: b.exams?.length ?? 0,
+    assignments: b.assignments?.length ?? 0,
+    students: students.length ? students : mockBatchDetailData.students,
+    liveClasses: (b.liveClasses ?? []).map((l) => ({
+      id: l.id,
+      title: l.title,
+      startsAt: l.startsAt,
+      status: l.status === "LIVE" ? "Live" : l.status === "ENDED" ? "Ended" : "Scheduled",
+    })),
+  };
 }
