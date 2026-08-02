@@ -65,7 +65,7 @@ export default function ExamsPage() {
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm">Edit</Button>
                     <Button size="sm" asChild>
-                      <Link href="/exams/mcq">
+                      <Link href={`/exams/mcq?id=${e.id}`}>
                         <Icon name="play_circle" className="h-4 w-4" />
                         Preview
                       </Link>

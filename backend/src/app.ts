@@ -16,6 +16,7 @@ import { notificationsRouter } from "./routes/notifications.routes";
 import { dashboardRouter } from "./routes/dashboard.routes";
 import { liveClassesRouter } from "./routes/live-classes.routes";
 import { lecturesRouter } from "./routes/lectures.routes";
+import { reportsRouter } from "./routes/reports.routes";
 import { notFoundHandler, errorHandler } from "./middleware/error";
 
 export function createApp(): Express {
@@ -62,6 +63,7 @@ export function createApp(): Express {
   app.use("/api/v1/dashboard", dashboardRouter);
   app.use("/api/v1/live-classes", liveClassesRouter);
   app.use("/api/v1/lectures", lecturesRouter);
+  app.use("/api/v1/reports", reportsRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

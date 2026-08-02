@@ -1,4 +1,6 @@
-import type { Metadata } from "next";
+"use client";
+
+import * as React from "react";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,31 +9,25 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Icon } from "@/components/shared/icon";
 import { Button as Btn } from "@/components/ui/button";
+import { useLive } from "@/lib/live";
+import { fetchTeacherDashboard, mockTeacherDashboardData } from "@/lib/live-data";
 
-export const metadata: Metadata = {
-  title: "Teacher Dashboard | AcademyX",
-};
-
-const performance = [40, 65, 55, 80, 72, 90, 45];
 const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
-const materials = [
-  { icon: "description", title: "Modernist Architecture: Level 4", meta: "Uploaded 2 hours ago • PDF • 12.4 MB" },
-  { icon: "play_circle", title: "React Fundamentals Workshop", meta: "Uploaded Yesterday • Video • 1.2 GB" },
-  { icon: "folder_zip", title: "Data Science Asset Kit", meta: "Uploaded 3 days ago • ZIP • 450 MB" },
-];
-
-const upcomingClasses = [
-  { id: "c1", title: "Introduction to UI Design Systems", meta: "Main Lecture Hall A2 • 28 Registered Students", time: "Starts in 14m", label: "NEXT CLASS" },
-];
-
 export default function TeacherDashboardPage() {
+  const data = useLive(fetchTeacherDashboard, mockTeacherDashboardData);
+  const performance = data.weeklyPerformance;
+  const max = Math.max(...performance, 100);
+  const nextClass = data.nextClass ?? data.upcomingClasses[0];
+  const presentPct = data.attendanceToday.rate;
+  const firstName = data.name.split(" ")[0];
+
   return (
     <DashboardShell>
       <div className="flex flex-col gap-6">
         <PageHeader
-          title="Good Morning, Prof. Aris"
-          description="You have 3 classes today and 12 ungraded assignments."
+          title={`Good Morning, ${firstName}`}
+          description={`You have ${data.stats.classesToday} classes today and ${data.stats.ungradedAssignments} ungraded assignments.`}
           actions={
             <>
               <Button variant="outline">View Schedule</Button>
@@ -59,7 +55,7 @@ export default function TeacherDashboardPage() {
                           ? "bg-primary/60 hover:bg-primary/80 border-t-2 border-primary"
                           : "bg-primary/20 hover:bg-primary/40"
                       }`}
-                      style={{ height: `${h}%` }}
+                      style={{ height: `${(h / max) * 100}%` }}
                     />
                   </div>
                 ))}
@@ -83,15 +79,17 @@ export default function TeacherDashboardPage() {
                     <h3 className="text-text-muted font-mono text-xs uppercase tracking-wider mb-1">
                       Attendance Today
                     </h3>
-                    <span className="font-bold text-4xl text-text-heading">94.2%</span>
+                    <span className="font-bold text-4xl text-text-heading">{presentPct}%</span>
                   </div>
                   <div className="p-2 rounded-lg bg-success-green/10 text-success-green">
                     <Icon name="check_circle" className="h-5 w-5" />
                   </div>
                 </div>
                 <div className="mt-4">
-                  <Progress value={94} className="bg-surface-container-high [&>div]:bg-success-green" />
-                  <p className="mt-2 text-sm text-text-muted">42 of 45 students present</p>
+                  <Progress value={presentPct} className="bg-surface-container-high [&>div]:bg-success-green" />
+                  <p className="mt-2 text-sm text-text-muted">
+                    {data.attendanceToday.present} of {data.attendanceToday.total} students present
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -125,8 +123,8 @@ export default function TeacherDashboardPage() {
               <Button variant="link" className="text-primary">View All</Button>
             </CardHeader>
             <div className="divide-y divide-border-subtle">
-              {materials.map((m) => (
-                <div key={m.title} className="p-4 flex items-center gap-4 hover:bg-surface-container-low transition-colors group cursor-pointer">
+              {data.materials.map((m) => (
+                <div key={m.id} className="p-4 flex items-center gap-4 hover:bg-surface-container-low transition-colors group cursor-pointer">
                   <div className="h-12 w-12 rounded bg-surface-container-highest border border-border-subtle flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
                     <Icon name={m.icon} className="h-6 w-6" />
                   </div>
@@ -140,38 +138,40 @@ export default function TeacherDashboardPage() {
             </div>
           </Card>
 
-          <Card className="md:col-span-12 lg:col-span-5 relative overflow-hidden hover:border-primary/30 hover:active-glow transition-all">
-            <CardContent className="p-6 flex flex-col justify-between h-full">
-              <div>
-                <div className="flex justify-between items-start mb-4">
-                  <Badge variant="default" className="font-mono">NEXT CLASS</Badge>
-                  <span className="text-text-muted text-xs font-mono">
-                    {upcomingClasses[0].time}
-                  </span>
-                </div>
-                <h3 className="text-xl font-semibold text-text-heading leading-tight mb-2">
-                  {upcomingClasses[0].title}
-                </h3>
-                <p className="text-text-muted text-sm mb-6">{upcomingClasses[0].meta}</p>
-                <div className="flex -space-x-2">
-                  {["JD", "AM", "KT"].map((ini) => (
-                    <div key={ini} className="w-8 h-8 rounded-full border-2 border-surface bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-on-surface">
-                      {ini}
+          {nextClass && (
+            <Card className="md:col-span-12 lg:col-span-5 relative overflow-hidden hover:border-primary/30 hover:active-glow transition-all">
+              <CardContent className="p-6 flex flex-col justify-between h-full">
+                <div>
+                  <div className="flex justify-between items-start mb-4">
+                    <Badge variant="default" className="font-mono">{nextClass.label}</Badge>
+                    <span className="text-text-muted text-xs font-mono">
+                      {nextClass.time}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-semibold text-text-heading leading-tight mb-2">
+                    {nextClass.title}
+                  </h3>
+                  <p className="text-text-muted text-sm mb-6">{nextClass.meta}</p>
+                  <div className="flex -space-x-2">
+                    {["JD", "AM", "KT"].map((ini) => (
+                      <div key={ini} className="w-8 h-8 rounded-full border-2 border-surface bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-on-surface">
+                        {ini}
+                      </div>
+                    ))}
+                    <div className="w-8 h-8 rounded-full border-2 border-surface bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-on-surface">
+                      +{Math.max(data.stats.students - 3, 0)}
                     </div>
-                  ))}
-                  <div className="w-8 h-8 rounded-full border-2 border-surface bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-on-surface">
-                    +24
                   </div>
                 </div>
+                <Btn className="w-full mt-8 bg-on-surface text-background hover:opacity-90">
+                  Launch Live Session
+                </Btn>
+              </CardContent>
+              <div className="absolute -bottom-10 -right-10 opacity-[0.03] pointer-events-none">
+                <Icon name="group" className="h-44 w-44" />
               </div>
-              <Btn className="w-full mt-8 bg-on-surface text-background hover:opacity-90">
-                Launch Live Session
-              </Btn>
-            </CardContent>
-            <div className="absolute -bottom-10 -right-10 opacity-[0.03] pointer-events-none">
-              <Icon name="group" className="h-44 w-44" />
-            </div>
-          </Card>
+            </Card>
+          )}
         </div>
       </div>
     </DashboardShell>

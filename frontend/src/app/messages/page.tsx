@@ -8,9 +8,14 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Icon } from "@/components/shared/icon";
-import { chatThread } from "@/lib/mock-data";
 import { useLive } from "@/lib/live";
 import { fetchConversations, mockConversationsData } from "@/lib/live-data";
+import {
+  fetchThreadMessages,
+  sendThreadMessage,
+  mockThreadData,
+  type ThreadMessage,
+} from "@/lib/live-data";
 import { cn } from "@/lib/utils";
 import { Send, Paperclip, MoreVertical } from "lucide-react";
 
@@ -18,12 +23,44 @@ export default function MessagesPage() {
   const conversations = useLive(fetchConversations, mockConversationsData);
   const [activeThread, setActiveThread] = React.useState(0);
   const [draft, setDraft] = React.useState("");
+  const [messages, setMessages] = React.useState<ThreadMessage[]>(mockThreadData);
+  const [loadedConv, setLoadedConv] = React.useState<string | null>(null);
 
   const safeIndex = Math.min(activeThread, Math.max(conversations.length - 1, 0));
   const thread = conversations[safeIndex] ?? mockConversationsData[0];
 
-  const send = () => {
+  React.useEffect(() => {
+    if (thread.id === loadedConv) return;
+    let cancelled = false;
+    fetchThreadMessages(thread.id)
+      .then((result) => {
+        if (!cancelled) {
+          setMessages(result);
+          setLoadedConv(thread.id);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [thread.id, loadedConv]);
+
+  const send = async () => {
+    const text = draft.trim();
+    if (!text) return;
+    const mine: ThreadMessage = {
+      id: `local_${Date.now()}`,
+      from: "Me",
+      mine: true,
+      text,
+      time: "now",
+    };
+    setMessages((prev) => [...prev, mine]);
     setDraft("");
+    const sent = await sendThreadMessage(thread.id, text);
+    if (sent) {
+      setMessages((prev) => [...prev.filter((m) => m.id !== mine.id), sent]);
+    }
   };
 
   return (
@@ -117,7 +154,7 @@ export default function MessagesPage() {
               <div className="text-center">
                 <span className="text-[10px] text-text-muted font-mono bg-surface-container-high px-2 py-1 rounded-full">TODAY</span>
               </div>
-              {chatThread.map((m) => (
+              {messages.map((m) => (
                 <div key={m.id} className={cn("flex", m.mine ? "justify-end" : "justify-start")}>
                   <div className="max-w-[75%]">
                     <div

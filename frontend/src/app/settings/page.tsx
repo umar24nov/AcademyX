@@ -23,16 +23,62 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Icon } from "@/components/shared/icon";
 import { useToast } from "@/components/ui/use-toast";
+import { useLive } from "@/lib/live";
+import {
+  fetchInstituteProfile,
+  mockInstituteProfile,
+  updateInstituteProfile,
+} from "@/lib/live-data";
 
 export default function SettingsPage() {
   const { toast } = useToast();
+  const profile = useLive(fetchInstituteProfile, mockInstituteProfile);
 
-  const save = (label: string) => {
+  const [form, setForm] = React.useState({
+    name: mockInstituteProfile.name,
+    contactEmail: mockInstituteProfile.contactEmail ?? "",
+    phone: mockInstituteProfile.phone ?? "",
+    address: mockInstituteProfile.address ?? "",
+    about: mockInstituteProfile.about ?? "",
+  });
+  const [academic, setAcademic] = React.useState({
+    gradingSystem: mockInstituteProfile.gradingSystem ?? "percentage",
+    passingMarks: String(mockInstituteProfile.passingMarks ?? 40),
+    attendanceThreshold: String(mockInstituteProfile.attendanceThreshold ?? 75),
+    academicYear: mockInstituteProfile.academicYear ?? "2025-26",
+  });
+
+  React.useEffect(() => {
+    if (profile && profile.id) {
+      setForm({
+        name: profile.name ?? mockInstituteProfile.name,
+        contactEmail: profile.contactEmail ?? "",
+        phone: profile.phone ?? "",
+        address: profile.address ?? "",
+        about: profile.about ?? "",
+      });
+      setAcademic({
+        gradingSystem: profile.gradingSystem ?? "percentage",
+        passingMarks: String(profile.passingMarks ?? 40),
+        attendanceThreshold: String(profile.attendanceThreshold ?? 75),
+        academicYear: profile.academicYear ?? "2025-26",
+      });
+    }
+  }, [profile]);
+
+  const save = async (label: string, patch: Record<string, unknown>) => {
+    const ok = await updateInstituteProfile(profile.id, patch);
     toast({
-      title: "Settings saved",
-      description: `${label} has been updated successfully.`,
+      title: ok ? "Settings saved" : "Could not save settings",
+      description: ok
+        ? `${label} has been updated successfully.`
+        : "Make sure you are logged in as an institute admin and try again.",
+      variant: ok ? undefined : "destructive",
     });
   };
+
+  const setField = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((prev) => ({ ...prev, [key]: e.target.value }));
 
   return (
     <DashboardShell>
@@ -60,27 +106,27 @@ export default function SettingsPage() {
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <label className="block">
                   <span className="text-sm text-text-muted mb-1.5 block">Institute Name</span>
-                  <Input defaultValue="Vantage Institute" />
+                  <Input value={form.name} onChange={setField("name")} />
                 </label>
                 <label className="block">
                   <span className="text-sm text-text-muted mb-1.5 block">Contact Email</span>
-                  <Input defaultValue="contact@vantage.edu" />
+                  <Input value={form.contactEmail} onChange={setField("contactEmail")} />
                 </label>
                 <label className="block">
                   <span className="text-sm text-text-muted mb-1.5 block">Phone</span>
-                  <Input defaultValue="+91 98765 43210" />
+                  <Input value={form.phone} onChange={setField("phone")} />
                 </label>
                 <label className="block">
                   <span className="text-sm text-text-muted mb-1.5 block">Address</span>
-                  <Input defaultValue="221B, Tech Park, Bangalore" />
+                  <Input value={form.address} onChange={setField("address")} />
                 </label>
                 <label className="block md:col-span-2">
                   <span className="text-sm text-text-muted mb-1.5 block">About</span>
-                  <Textarea rows={3} defaultValue="Leading institute for engineering and computer science education." />
+                  <Textarea rows={3} value={form.about} onChange={setField("about")} />
                 </label>
               </CardContent>
               <div className="px-6 pb-6">
-                <Button onClick={() => save("Institute information")}>
+                <Button onClick={() => save("Institute information", form)}>
                   <Icon name="save" className="h-4 w-4" />
                   Save Changes
                 </Button>
@@ -140,7 +186,7 @@ export default function SettingsPage() {
                 </div>
               </CardContent>
               <div className="px-6 pb-6">
-                <Button onClick={() => save("Branding")}>
+                <Button onClick={() => toast({ title: "Settings saved", description: "Branding has been updated successfully." })}>
                   <Icon name="save" className="h-4 w-4" />
                   Save Branding
                 </Button>
@@ -157,10 +203,10 @@ export default function SettingsPage() {
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <label className="block">
                   <span className="text-sm text-text-muted mb-1.5 block">Grading System</span>
-                  <Select defaultValue="percent">
+                  <Select value={academic.gradingSystem} onValueChange={(v) => setAcademic((p) => ({ ...p, gradingSystem: v }))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="percent">Percentage (0-100)</SelectItem>
+                      <SelectItem value="percentage">Percentage (0-100)</SelectItem>
                       <SelectItem value="gpa">GPA (0-10)</SelectItem>
                       <SelectItem value="cgpa">CGPA (0-10)</SelectItem>
                       <SelectItem value="letter">Letter Grades</SelectItem>
@@ -169,15 +215,23 @@ export default function SettingsPage() {
                 </label>
                 <label className="block">
                   <span className="text-sm text-text-muted mb-1.5 block">Passing Marks (%)</span>
-                  <Input className="font-mono" defaultValue="40" />
+                  <Input
+                    className="font-mono"
+                    value={academic.passingMarks}
+                    onChange={(e) => setAcademic((p) => ({ ...p, passingMarks: e.target.value }))}
+                  />
                 </label>
                 <label className="block">
                   <span className="text-sm text-text-muted mb-1.5 block">Attendance Threshold (%)</span>
-                  <Input className="font-mono" defaultValue="75" />
+                  <Input
+                    className="font-mono"
+                    value={academic.attendanceThreshold}
+                    onChange={(e) => setAcademic((p) => ({ ...p, attendanceThreshold: e.target.value }))}
+                  />
                 </label>
                 <label className="block">
                   <span className="text-sm text-text-muted mb-1.5 block">Academic Year</span>
-                  <Select defaultValue="2025-26">
+                  <Select value={academic.academicYear} onValueChange={(v) => setAcademic((p) => ({ ...p, academicYear: v }))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="2025-26">2025-26</SelectItem>
@@ -187,7 +241,12 @@ export default function SettingsPage() {
                 </label>
               </CardContent>
               <div className="px-6 pb-6">
-                <Button onClick={() => save("Academic preferences")}>
+                <Button onClick={() => save("Academic preferences", {
+                  gradingSystem: academic.gradingSystem,
+                  passingMarks: Number(academic.passingMarks),
+                  attendanceThreshold: Number(academic.attendanceThreshold),
+                  academicYear: academic.academicYear,
+                })}>
                   <Icon name="save" className="h-4 w-4" />
                   Save Preferences
                 </Button>
@@ -220,7 +279,7 @@ export default function SettingsPage() {
                 ))}
               </CardContent>
               <div className="px-6 pb-6">
-                <Button onClick={() => save("Notification preferences")}>
+                <Button onClick={() => toast({ title: "Settings saved", description: "Notification preferences have been updated successfully." })}>
                   <Icon name="save" className="h-4 w-4" />
                   Save Preferences
                 </Button>

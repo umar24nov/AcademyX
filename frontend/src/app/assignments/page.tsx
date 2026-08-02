@@ -55,7 +55,7 @@ export default function AssignmentsPage() {
                 <div className="flex items-center justify-between mt-auto">
                   <Button variant="outline" size="sm">View Details</Button>
                   <Button size="sm" asChild>
-                    <Link href="/assignments/submission">Grade</Link>
+                    <Link href={`/assignments/submission?id=${a.id}`}>Grade</Link>
                   </Button>
                 </div>
               </CardContent>

@@ -16,6 +16,10 @@ import {
   announcements as mockAnnouncements,
   recentAdmissions as mockRecentAdmissions,
   activity as mockActivity,
+  attendanceData as mockAttendanceData,
+  examResults as mockExamResults,
+  chatThread as mockChatThread,
+  examQuestions as mockExamQuestions,
 } from "@/lib/mock-data";
 
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -1024,4 +1028,493 @@ export async function fetchStudentDashboard(): Promise<StudentDashboardData> {
     nextClass,
     assignments: assignments.length ? assignments : mockStudentDashboardData.assignments,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Teacher dashboard
+// ---------------------------------------------------------------------------
+
+export interface TeacherClassRow {
+  id: string;
+  title: string;
+  meta: string;
+  time: string;
+  label: string;
+}
+
+export interface TeacherMaterialRow {
+  id: string;
+  icon: string;
+  title: string;
+  meta: string;
+}
+
+export interface TeacherDashboardData {
+  name: string;
+  stats: {
+    classesToday: number;
+    ungradedAssignments: number;
+    students: number;
+    attendanceRate: number;
+  };
+  weeklyPerformance: number[];
+  attendanceToday: { present: number; total: number; rate: number };
+  nextClass: TeacherClassRow | null;
+  upcomingClasses: TeacherClassRow[];
+  materials: TeacherMaterialRow[];
+}
+
+function materialIcon(fileType: string): string {
+  const t = (fileType ?? "").toLowerCase();
+  if (t.includes("video") || t.includes("mp4")) return "play_circle";
+  if (t.includes("zip") || t.includes("rar")) return "folder_zip";
+  return "description";
+}
+
+function sizeLabel(size: string | null | undefined): string {
+  if (!size) return "";
+  return ` • ${size}`;
+}
+
+function startsLabel(startsAt: string | Date): string {
+  const dt = new Date(startsAt);
+  if (Number.isNaN(dt.getTime())) return formatTime(startsAt);
+  const mins = Math.round((dt.getTime() - Date.now()) / 60000);
+  if (mins > 0 && mins <= 90) return `Starts in ${mins}m`;
+  return formatTime(startsAt);
+}
+
+interface ApiTeacherDashboard {
+  name?: string;
+  stats?: {
+    classesToday?: number;
+    ungradedAssignments?: number;
+    students?: number;
+    attendanceRate?: number;
+  };
+  weeklyPerformance?: number[];
+  attendanceToday?: { present?: number; total?: number; rate?: number };
+  nextClass?: {
+    id: string;
+    title: string;
+    batch?: string | null;
+    course?: string | null;
+    startsAt: string;
+    status?: string;
+  } | null;
+  upcomingClasses?: {
+    id: string;
+    title: string;
+    batch?: string | null;
+    course?: string | null;
+    startsAt: string;
+    status?: string;
+  }[];
+  materials?: {
+    id: string;
+    title: string;
+    fileType: string;
+    size?: string | null;
+    createdAt?: string;
+  }[];
+}
+
+function teacherClassRow(c: NonNullable<ApiTeacherDashboard["nextClass"]>, next: boolean): TeacherClassRow {
+  const meta = [c.batch, c.course].filter(Boolean).join(" • ") || "—";
+  const isLive = c.status === "LIVE";
+  return {
+    id: c.id,
+    title: c.title,
+    meta,
+    time: isLive ? "LIVE NOW" : startsLabel(c.startsAt),
+    label: next ? "NEXT CLASS" : isLive ? "LIVE NOW" : "UPCOMING",
+  };
+}
+
+export const mockTeacherDashboardData: TeacherDashboardData = {
+  name: "Prof. Aris",
+  stats: { classesToday: 3, ungradedAssignments: 12, students: 96, attendanceRate: 94 },
+  weeklyPerformance: [40, 65, 55, 80, 72, 90, 45],
+  attendanceToday: { present: 42, total: 45, rate: 94 },
+  nextClass: {
+    id: "c1",
+    title: "Introduction to UI Design Systems",
+    meta: "Main Lecture Hall A2 • 28 Registered Students",
+    time: "Starts in 14m",
+    label: "NEXT CLASS",
+  },
+  upcomingClasses: [
+    {
+      id: "c1",
+      title: "Introduction to UI Design Systems",
+      meta: "Main Lecture Hall A2 • 28 Registered Students",
+      time: "Starts in 14m",
+      label: "NEXT CLASS",
+    },
+  ],
+  materials: [
+    { id: "m1", icon: "description", title: "Modernist Architecture: Level 4", meta: "Uploaded 2 hours ago • PDF • 12.4 MB" },
+    { id: "m2", icon: "play_circle", title: "React Fundamentals Workshop", meta: "Uploaded Yesterday • Video • 1.2 GB" },
+    { id: "m3", icon: "folder_zip", title: "Data Science Asset Kit", meta: "Uploaded 3 days ago • ZIP • 450 MB" },
+  ],
+};
+
+export async function fetchTeacherDashboard(): Promise<TeacherDashboardData> {
+  const live = await tryGet<ApiTeacherDashboard>("/dashboard/teacher");
+  if (!live) return mockTeacherDashboardData;
+
+  const upcoming = (live.upcomingClasses ?? []).map((c, i) => teacherClassRow(c, i === 0));
+  const nextClass = live.nextClass ? teacherClassRow(live.nextClass, true) : upcoming[0] ?? null;
+
+  return {
+    name: live.name ?? mockTeacherDashboardData.name,
+    stats: {
+      classesToday: live.stats?.classesToday ?? mockTeacherDashboardData.stats.classesToday,
+      ungradedAssignments: live.stats?.ungradedAssignments ?? mockTeacherDashboardData.stats.ungradedAssignments,
+      students: live.stats?.students ?? mockTeacherDashboardData.stats.students,
+      attendanceRate: live.stats?.attendanceRate ?? mockTeacherDashboardData.stats.attendanceRate,
+    },
+    weeklyPerformance: live.weeklyPerformance?.length
+      ? live.weeklyPerformance
+      : mockTeacherDashboardData.weeklyPerformance,
+    attendanceToday: {
+      present: live.attendanceToday?.present ?? mockTeacherDashboardData.attendanceToday.present,
+      total: live.attendanceToday?.total ?? mockTeacherDashboardData.attendanceToday.total,
+      rate: live.attendanceToday?.rate ?? mockTeacherDashboardData.attendanceToday.rate,
+    },
+    nextClass,
+    upcomingClasses: upcoming.length ? upcoming : mockTeacherDashboardData.upcomingClasses,
+    materials: live.materials?.length
+      ? live.materials.map((m) => ({
+          id: m.id,
+          icon: materialIcon(m.fileType),
+          title: m.title,
+          meta: `Uploaded ${timeAgo(m.createdAt)} • ${m.fileType}${sizeLabel(m.size)}`,
+        }))
+      : mockTeacherDashboardData.materials,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Reports
+// ---------------------------------------------------------------------------
+
+export interface AttendanceByBatchRow {
+  batch: string;
+  rate: number;
+}
+
+export interface ExamResultRow {
+  id: string;
+  student: string;
+  course: string;
+  score: number;
+  max: number;
+  percentage: number;
+}
+
+export interface ReportsData {
+  attendanceByBatch: AttendanceByBatchRow[];
+  examResults: ExamResultRow[];
+}
+
+export const mockReportsData: ReportsData = {
+  attendanceByBatch: mockAttendanceData.byBatch,
+  examResults: mockExamResults,
+};
+
+export async function fetchReports(): Promise<ReportsData> {
+  const live = await tryGet<{ attendanceByBatch?: AttendanceByBatchRow[]; examResults?: ExamResultRow[] }>(
+    "/reports/overview"
+  );
+  if (!live) return mockReportsData;
+  return {
+    attendanceByBatch: live.attendanceByBatch?.length
+      ? live.attendanceByBatch
+      : mockReportsData.attendanceByBatch,
+    examResults: live.examResults?.length ? live.examResults : mockReportsData.examResults,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Exam detail + attempt
+// ---------------------------------------------------------------------------
+
+export interface ExamQuestionRow {
+  id: string;
+  text: string;
+  options: string[];
+  type?: string;
+  marks?: number;
+}
+
+export interface ExamDetailData {
+  id: string;
+  title: string;
+  course: string;
+  batch: string;
+  type: string;
+  totalMarks: number;
+  durationMin: number;
+  questions: ExamQuestionRow[];
+}
+
+export const mockExamDetailData: ExamDetailData = {
+  id: "exm_001",
+  title: "Advanced Algorithms Midterm",
+  course: "Advanced Distributed Systems",
+  batch: "DS-M1",
+  type: "MCQ",
+  totalMarks: 100,
+  durationMin: 90,
+  questions: mockExamQuestions,
+};
+
+export async function fetchExamDetail(id?: string): Promise<ExamDetailData> {
+  if (!id) return mockExamDetailData;
+  const live = await tryGet<{ exam: ApiExamDetail }>(`/exams/${id}`);
+  if (!live) return mockExamDetailData;
+  const e = live.exam;
+  return {
+    id: e.id,
+    title: e.title ?? mockExamDetailData.title,
+    course: e.course?.title ?? "—",
+    batch: e.batch?.name ?? "—",
+    type: e.type ?? "MCQ",
+    totalMarks: e.totalMarks ?? mockExamDetailData.totalMarks,
+    durationMin: e.durationMin ?? mockExamDetailData.durationMin,
+    questions:
+      e.questions && e.questions.length
+        ? e.questions.map((q) => ({
+            id: q.id,
+            text: q.text,
+            options: q.options ?? [],
+            type: q.type ?? "mcq",
+            marks: q.marks,
+          }))
+        : mockExamDetailData.questions,
+  };
+}
+
+interface ApiExamDetail {
+  id: string;
+  title?: string;
+  type?: string;
+  totalMarks?: number;
+  durationMin?: number;
+  course?: { id: string; title: string } | null;
+  batch?: { id: string; name: string } | null;
+  questions?: {
+    id: string;
+    text: string;
+    options?: string[] | null;
+    type?: string;
+    marks?: number;
+  }[];
+}
+
+export interface ExamAttemptPayload {
+  questionId: string;
+  selectedOption?: number | null;
+  text?: string | null;
+}
+
+export async function startExamAttempt(examId: string): Promise<string | null> {
+  try {
+    const res = await api.post<{ attempt: { id: string } }>(`/exams/${examId}/attempt`, {});
+    return res.attempt.id;
+  } catch {
+    return null;
+  }
+}
+
+export async function submitExamAttempt(
+  examId: string,
+  attemptId: string,
+  answers: ExamAttemptPayload[]
+): Promise<{ score?: number; status?: string } | null> {
+  try {
+    const res = await api.post<{ attempt: { score?: number; status?: string } }>(
+      `/exams/${examId}/attempt/${attemptId}/submit`,
+      { answers }
+    );
+    return res.attempt;
+  } catch {
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Assignment detail + submission
+// ---------------------------------------------------------------------------
+
+export interface AssignmentDetailData {
+  id: string;
+  title: string;
+  course: string;
+  batch: string;
+  maxMarks: number;
+  dueAt: string | null;
+  description: string | null;
+  submissions: number;
+}
+
+export const mockAssignmentDetailData: AssignmentDetailData = {
+  id: "asg_001",
+  title: "Distributed Key-Value Store Implementation",
+  course: "Advanced Distributed Systems",
+  batch: "DS-M1",
+  maxMarks: 20,
+  dueAt: null,
+  description: null,
+  submissions: 12,
+};
+
+interface ApiAssignmentDetail {
+  id: string;
+  title: string;
+  description?: string | null;
+  maxMarks?: number | null;
+  dueAt?: string | null;
+  course?: { id: string; title: string } | null;
+  batch?: { id: string; name: string } | null;
+  submissions?: unknown[];
+}
+
+export async function fetchAssignmentDetail(id?: string): Promise<AssignmentDetailData> {
+  if (!id) return mockAssignmentDetailData;
+  const live = await tryGet<{ assignment: ApiAssignmentDetail }>(`/assignments/${id}`);
+  if (!live) return mockAssignmentDetailData;
+  const a = live.assignment;
+  return {
+    id: a.id,
+    title: a.title ?? mockAssignmentDetailData.title,
+    course: a.course?.title ?? "—",
+    batch: a.batch?.name ?? "—",
+    maxMarks: a.maxMarks ?? mockAssignmentDetailData.maxMarks,
+    dueAt: a.dueAt ?? null,
+    description: a.description ?? null,
+    submissions: a.submissions?.length ?? mockAssignmentDetailData.submissions,
+  };
+}
+
+export interface AssignmentSubmissionPayload {
+  title?: string;
+  notes?: string;
+  attachments?: string[];
+}
+
+export async function submitAssignment(
+  id: string,
+  payload: AssignmentSubmissionPayload
+): Promise<boolean> {
+  try {
+    await api.post(`/assignments/${id}/submit`, payload);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Message thread
+// ---------------------------------------------------------------------------
+
+export interface ThreadMessage {
+  id: string;
+  from: string;
+  mine: boolean;
+  text: string;
+  time: string;
+}
+
+export const mockThreadData: ThreadMessage[] = mockChatThread;
+
+export async function fetchThreadMessages(conversationId?: string): Promise<ThreadMessage[]> {
+  if (!conversationId) return mockThreadData;
+  const live = await tryGet<{ messages: ApiMessage[] }>(`/messages/conversations/${conversationId}/messages`);
+  if (!live) return mockThreadData;
+  if (!live.messages.length) return mockThreadData;
+  return live.messages.map((m) => ({
+    id: m.id,
+    from: m.sender?.name ?? "Unknown",
+    mine: false,
+    text: m.content ?? "",
+    time: formatTime(m.sentAt),
+  }));
+}
+
+interface ApiMessage {
+  id: string;
+  content?: string | null;
+  sentAt?: string;
+  sender?: { id: string; name?: string } | null;
+}
+
+export async function sendThreadMessage(conversationId: string, content: string): Promise<ThreadMessage | null> {
+  try {
+    const res = await api.post<{ message: ApiMessage }>(`/messages/conversations/${conversationId}/messages`, {
+      content,
+    });
+    const m = res.message;
+    return {
+      id: m.id,
+      from: "Me",
+      mine: true,
+      text: m.content ?? "",
+      time: formatTime(m.sentAt),
+    };
+  } catch {
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Institute profile (settings)
+// ---------------------------------------------------------------------------
+
+export interface InstituteProfile {
+  id: string;
+  name: string;
+  slug: string;
+  contactEmail?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  about?: string | null;
+  gradingSystem?: string | null;
+  passingMarks?: number | null;
+  attendanceThreshold?: number | null;
+  academicYear?: string | null;
+}
+
+export const mockInstituteProfile: InstituteProfile = {
+  id: "ins_001",
+  name: "Vantage Institute",
+  slug: "vantage",
+  contactEmail: "contact@vantage.edu",
+  phone: "+91 98765 43210",
+  address: "221B, Tech Park, Bangalore",
+  about: "Leading institute for engineering and computer science education.",
+  gradingSystem: "percentage",
+  passingMarks: 40,
+  attendanceThreshold: 75,
+  academicYear: "2025-26",
+};
+
+export async function fetchInstituteProfile(): Promise<InstituteProfile> {
+  const live = await tryGet<{ institute?: Partial<InstituteProfile> }>("/institutes");
+  if (!live?.institute) return mockInstituteProfile;
+  return { ...mockInstituteProfile, ...live.institute } as InstituteProfile;
+}
+
+export async function updateInstituteProfile(
+  id: string,
+  patch: Partial<InstituteProfile>
+): Promise<boolean> {
+  try {
+    await api.patch(`/institutes/${id}`, patch);
+    return true;
+  } catch {
+    return false;
+  }
 }

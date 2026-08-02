@@ -2,25 +2,56 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { GraduationCap, Timer, Flag, ChevronLeft, ChevronRight, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { examQuestions } from "@/lib/mock-data";
-
-const TOTAL = 40;
+import { useLive } from "@/lib/live";
+import {
+  fetchExamDetail,
+  mockExamDetailData,
+  startExamAttempt,
+  submitExamAttempt,
+  type ExamAttemptPayload,
+} from "@/lib/live-data";
 
 export default function McqExamPage() {
+  return (
+    <React.Suspense fallback={null}>
+      <McqExamPageInner />
+    </React.Suspense>
+  );
+}
+
+function McqExamPageInner() {
+  const searchParams = useSearchParams();
+  const examId = searchParams.get("id") ?? undefined;
+  const exam = useLive(() => fetchExamDetail(examId), mockExamDetailData);
+
+  const questions = exam.questions;
+  const TOTAL = Math.max(questions.length, 1);
+
   const [current, setCurrent] = React.useState(0);
   const [answers, setAnswers] = React.useState<Record<number, number>>({});
   const [flagged, setFlagged] = React.useState<Set<number>>(new Set());
   const [submitted, setSubmitted] = React.useState(false);
+  const [submitting, setSubmitting] = React.useState(false);
+  const [result, setResult] = React.useState<{ score?: number; status?: string } | null>(null);
+  const [attemptId, setAttemptId] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (examId) {
+      startExamAttempt(examId).then(setAttemptId);
+    }
+  }, [examId]);
 
   const selected = answers[current];
   const answeredCount = Object.keys(answers).length;
   const progress = (answeredCount / TOTAL) * 100;
+  const q = questions[Math.min(current, TOTAL - 1)];
 
   const toggleFlag = () => {
     setFlagged((prev) => {
@@ -31,7 +62,20 @@ export default function McqExamPage() {
     });
   };
 
-  const submit = () => {
+  const submit = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+    let score: number | undefined;
+    if (examId && attemptId && questions.length) {
+      const payload: ExamAttemptPayload[] = questions.map((qq, i) => ({
+        questionId: qq.id,
+        selectedOption: answers[i] !== undefined ? answers[i] : null,
+      }));
+      const res = await submitExamAttempt(examId, attemptId, payload);
+      score = res?.score;
+    }
+    setResult({ score });
+    setSubmitting(false);
     setSubmitted(true);
   };
 
@@ -46,7 +90,9 @@ export default function McqExamPage() {
           <p className="text-sm text-text-muted">
             You answered <span className="font-bold text-on-surface">{answeredCount}</span> of{" "}
             <span className="font-bold text-on-surface">{TOTAL}</span> questions.
-            Your results will be published after review.
+            {result?.score !== undefined
+              ? ` Your score: ${result.score} / ${exam.totalMarks}.`
+              : " Your results will be published after review."}
           </p>
           <div className="flex flex-col gap-2 mt-2">
             <Button asChild>
@@ -56,6 +102,7 @@ export default function McqExamPage() {
               setSubmitted(false);
               setAnswers({});
               setCurrent(0);
+              setFlagged(new Set());
             }}>
               Review Answers
             </Button>
@@ -75,19 +122,19 @@ export default function McqExamPage() {
               <GraduationCap className="h-5 w-5" />
             </div>
             <div className="hidden sm:block">
-              <p className="font-semibold text-text-heading leading-none">Advanced Algorithms Midterm</p>
-              <p className="text-xs text-text-muted mt-1">Advanced Distributed Systems • DS-M1</p>
+              <p className="font-semibold text-text-heading leading-none">{exam.title}</p>
+              <p className="text-xs text-text-muted mt-1">{exam.course} • {exam.batch}</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
             <Badge variant="warning" className="font-mono">
               <Timer className="h-3.5 w-3.5 mr-1" />
-              54:32 left
+              {exam.durationMin * 60 - Math.round((Date.now() % 60000) / 1000)}:00 left
             </Badge>
             <Badge variant="secondary" className="font-mono">
               {answeredCount}/{TOTAL}
             </Badge>
-            <Button onClick={submit} className="hidden sm:inline-flex">
+            <Button onClick={submit} disabled={submitting} className="hidden sm:inline-flex">
               Submit
             </Button>
           </div>
@@ -118,11 +165,11 @@ export default function McqExamPage() {
                 </div>
 
                 <h2 className="text-xl md:text-2xl font-semibold text-text-heading leading-snug mb-8">
-                  {examQuestions[current].text}
+                  {q.text}
                 </h2>
 
                 <div className="space-y-3">
-                  {examQuestions[current].options.map((opt, i) => (
+                  {(q.options ?? []).map((opt, i) => (
                     <button
                       key={i}
                       onClick={() => setAnswers((prev) => ({ ...prev, [current]: i }))}
@@ -165,7 +212,7 @@ export default function McqExamPage() {
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               ) : (
-                <Button onClick={submit}>
+                <Button onClick={submit} disabled={submitting}>
                   Submit Exam
                   <Send className="h-4 w-4" />
                 </Button>
@@ -214,7 +261,7 @@ export default function McqExamPage() {
                 </div>
               </CardContent>
             </Card>
-            <Button onClick={submit} className="w-full">
+            <Button onClick={submit} disabled={submitting} className="w-full">
               Submit Exam
             </Button>
           </aside>

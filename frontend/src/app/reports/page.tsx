@@ -22,9 +22,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Icon } from "@/components/shared/icon";
-import { attendanceData, examResults } from "@/lib/mock-data";
+import { useLive } from "@/lib/live";
+import { fetchReports, mockReportsData } from "@/lib/live-data";
 
 export default function ReportsPage() {
+  const reports = useLive(fetchReports, mockReportsData);
   return (
     <DashboardShell>
       <div className="flex flex-col gap-6">
@@ -60,7 +62,7 @@ export default function ReportsPage() {
                 </SelectContent>
               </Select>
               <div className="space-y-3">
-                {attendanceData.byBatch.map((a) => (
+                {reports.attendanceByBatch.map((a) => (
                   <div key={a.batch}>
                     <div className="flex justify-between text-sm mb-1">
                       <span className="text-text-muted">{a.batch}</span>
@@ -99,7 +101,7 @@ export default function ReportsPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {examResults.map((r) => (
+                  {reports.examResults.map((r) => (
                     <TableRow key={r.id}>
                       <TableCell className="font-medium text-on-surface">{r.student}</TableCell>
                       <TableCell className="text-text-muted">{r.course}</TableCell>

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useSearchParams } from "next/navigation";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,21 +12,69 @@ import { Textarea } from "@/components/ui/textarea";
 import { Icon } from "@/components/shared/icon";
 import { useToast } from "@/components/ui/use-toast";
 import { FileText, X, Paperclip, CheckCircle2 } from "lucide-react";
+import { useLive } from "@/lib/live";
+import {
+  fetchAssignmentDetail,
+  mockAssignmentDetailData,
+  submitAssignment,
+} from "@/lib/live-data";
+import { formatDate } from "@/lib/live-data";
 
 export default function AssignmentSubmissionPage() {
+  return (
+    <React.Suspense fallback={null}>
+      <AssignmentSubmissionPageInner />
+    </React.Suspense>
+  );
+}
+
+function AssignmentSubmissionPageInner() {
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id") ?? undefined;
+  const assignment = useLive(() => fetchAssignmentDetail(id), mockAssignmentDetailData);
+
   const [files, setFiles] = React.useState<string[]>([]);
+  const [title, setTitle] = React.useState("");
+  const [notes, setNotes] = React.useState("");
+  const [submitting, setSubmitting] = React.useState(false);
+  const [done, setDone] = React.useState(false);
 
   const addFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (f) setFiles((prev) => [...prev, f.name]);
   };
 
-  const submit = () => {
-    toast({
-      title: "Assignment submitted",
-      description: "Your submission has been uploaded for grading.",
-    });
+  const submit = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+    if (id) {
+      const ok = await submitAssignment(id, {
+        title: title || undefined,
+        notes: notes || undefined,
+        attachments: files.length ? files : undefined,
+      });
+      if (ok) {
+        setDone(true);
+        toast({
+          title: "Assignment submitted",
+          description: "Your submission has been uploaded for grading.",
+        });
+      } else {
+        toast({
+          title: "Submission failed",
+          description: "Please make sure you are logged in and try again.",
+          variant: "destructive",
+        });
+      }
+    } else {
+      setDone(true);
+      toast({
+        title: "Assignment submitted",
+        description: "Your submission has been uploaded for grading.",
+      });
+    }
+    setSubmitting(false);
   };
 
   return (
@@ -40,22 +89,24 @@ export default function AssignmentSubmissionPage() {
           {/* Instructions */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle className="text-lg">Digital Logic Design — Project 3</CardTitle>
-              <p className="text-sm text-text-muted">Software Engineering • CS-B1 • Due in 3 days</p>
+              <CardTitle className="text-lg">{assignment.title}</CardTitle>
+              <p className="text-sm text-text-muted">
+                {assignment.course} • {assignment.batch} • Due {formatDate(assignment.dueAt)}
+              </p>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-3 gap-3">
                 <div className="p-3 bg-surface-container-low rounded-lg text-center">
                   <p className="text-xs text-text-muted">Marks</p>
-                  <p className="font-bold text-text-heading mt-0.5">20</p>
+                  <p className="font-bold text-text-heading mt-0.5">{assignment.maxMarks}</p>
                 </div>
                 <div className="p-3 bg-surface-container-low rounded-lg text-center">
                   <p className="text-xs text-text-muted">Submissions</p>
-                  <p className="font-bold text-text-heading mt-0.5">12/40</p>
+                  <p className="font-bold text-text-heading mt-0.5">{assignment.submissions}</p>
                 </div>
                 <div className="p-3 bg-surface-container-low rounded-lg text-center">
                   <p className="text-xs text-text-muted">Status</p>
-                  <Badge variant="default" className="mt-1.5">Active</Badge>
+                  <Badge variant="default" className="mt-1.5">{done ? "Submitted" : "Active"}</Badge>
                 </div>
               </div>
 
@@ -63,15 +114,8 @@ export default function AssignmentSubmissionPage() {
                 <h4 className="font-semibold text-text-heading mb-2">Instructions</h4>
                 <div className="prose-sm text-text-muted space-y-2 text-sm">
                   <p>
-                    Design a 4-bit synchronous counter with parallel load. Your submission must
-                    include:
+                    {assignment.description ?? "Follow the instructions provided by your instructor. Make sure your submission is complete before the due date."}
                   </p>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>Gate-level schematic (draw.io or PNG)</li>
-                    <li>Verilog implementation with testbench</li>
-                    <li>Truth table and K-map simplification</li>
-                    <li>Simulation waveform screenshot</li>
-                  </ul>
                 </div>
               </div>
 
@@ -82,8 +126,8 @@ export default function AssignmentSubmissionPage() {
                     <FileText className="h-5 w-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-on-surface truncate">DLD-Lab-Manual.pdf</p>
-                    <p className="text-xs text-text-muted">2.4 MB</p>
+                    <p className="text-sm font-medium text-on-surface truncate">Course material</p>
+                    <p className="text-xs text-text-muted">{assignment.course}</p>
                   </div>
                   <Button variant="ghost" size="sm">
                     <Icon name="download" className="h-4 w-4" />
@@ -101,12 +145,21 @@ export default function AssignmentSubmissionPage() {
             <CardContent className="space-y-4">
               <label className="block">
                 <span className="text-sm text-text-muted mb-1.5 block">Title</span>
-                <Input placeholder="e.g. 4-bit counter design" />
+                <Input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. 4-bit counter design"
+                />
               </label>
 
               <label className="block">
                 <span className="text-sm text-text-muted mb-1.5 block">Notes for instructor</span>
-                <Textarea rows={4} placeholder="Add any comments about your submission..." />
+                <Textarea
+                  rows={4}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Add any comments about your submission..."
+                />
               </label>
 
               <div>
@@ -138,7 +191,7 @@ export default function AssignmentSubmissionPage() {
                 </div>
               </div>
 
-              <Button className="w-full" onClick={submit}>
+              <Button className="w-full" onClick={submit} disabled={submitting}>
                 <CheckCircle2 className="h-4 w-4" />
                 Submit Assignment
               </Button>
