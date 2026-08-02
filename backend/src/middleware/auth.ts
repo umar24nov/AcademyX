@@ -64,6 +64,7 @@ export function requireRole(...roles: Role[]) {
 
 export function requireInstitute(req: Request, _res: Response, next: NextFunction) {
   if (!req.user) throw ApiError.unauthorized();
+  if (req.user.role === Role.SUPER_ADMIN) return next();
   if (!req.user.instituteId) {
     throw ApiError.forbidden("This action requires an institute context");
   }
