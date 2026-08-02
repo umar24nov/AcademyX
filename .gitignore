@@ -1,0 +1,11 @@
+# Original design mockups (reference downloads — not part of the app)
+*.zip
+
+# OS junk
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editor
+.idea/
+.vscode/

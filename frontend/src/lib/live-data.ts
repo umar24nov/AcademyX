@@ -1,0 +1,1027 @@
+import { api } from "@/lib/api";
+import {
+  courses as mockCourses,
+  batches as mockBatches,
+  students as mockStudents,
+  teachers as mockTeachers,
+  liveClasses as mockLiveClasses,
+  recordedLectures as mockLectures,
+  exams as mockExams,
+  assignments as mockAssignments,
+  payments as mockPayments,
+  revenueSeries as mockRevenueSeries,
+  messages as mockConversations,
+  institutes as mockInstitutes,
+  dashboardStats as mockDashboardStats,
+  announcements as mockAnnouncements,
+  recentAdmissions as mockRecentAdmissions,
+  activity as mockActivity,
+} from "@/lib/mock-data";
+
+const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+const MONTH_FULL = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+export function formatDate(d: string | Date | null | undefined): string {
+  if (!d) return "—";
+  const dt = new Date(d);
+  if (Number.isNaN(dt.getTime())) return "—";
+  const hrs = dt.getHours();
+  const mins = dt.getMinutes();
+  const ampm = hrs >= 12 ? "PM" : "AM";
+  const h12 = hrs % 12 === 0 ? 12 : hrs % 12;
+  return `${MONTH_FULL[dt.getMonth()]} ${dt.getDate()}, ${dt.getFullYear()} • ${h12}:${mins
+    .toString()
+    .padStart(2, "0")} ${ampm}`;
+}
+
+export function formatTime(d: string | Date | null | undefined): string {
+  if (!d) return "—";
+  const dt = new Date(d);
+  if (Number.isNaN(dt.getTime())) return "—";
+  const hrs = dt.getHours();
+  const mins = dt.getMinutes();
+  const ampm = hrs >= 12 ? "PM" : "AM";
+  const h12 = hrs % 12 === 0 ? 12 : hrs % 12;
+  return `${h12}:${mins.toString().padStart(2, "0")} ${ampm}`;
+}
+
+export function timeAgo(d: string | Date | null | undefined): string {
+  if (!d) return "—";
+  const diff = Date.now() - new Date(d).getTime();
+  if (Number.isNaN(diff)) return "—";
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 30) return `${days}d ago`;
+  return formatDate(d);
+}
+
+function initialsOf(name: string): string {
+  return name
+    .split(" ")
+    .map((p) => p[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
+async function tryGet<T>(path: string): Promise<T | null> {
+  try {
+    return await api.get<T>(path);
+  } catch {
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Courses
+// ---------------------------------------------------------------------------
+
+export interface CourseRow {
+  id: string;
+  code: string;
+  title: string;
+  track: string;
+  status: string;
+  enrolled: number;
+  rating: number;
+  reviews: number;
+  thumbnail: string | null;
+  instructor: string;
+  modules: number;
+  lessons: number;
+}
+
+interface ApiCourse {
+  id: string;
+  title: string;
+  code?: string | null;
+  category?: string | null;
+  status: string;
+  thumbnailUrl?: string | null;
+  createdByName?: string | null;
+  _count?: { modules?: number; batches?: number };
+}
+
+export const mockCoursesData: CourseRow[] = mockCourses;
+
+export async function fetchCourses(): Promise<CourseRow[]> {
+  const live = await tryGet<{ courses: ApiCourse[] }>("/courses");
+  if (!live) return mockCoursesData;
+  return live.courses.map((c) => ({
+    id: c.id,
+    code: c.code ?? c.title.slice(0, 3).toUpperCase(),
+    title: c.title,
+    track: c.category ?? "General",
+    status: c.status === "PUBLISHED" ? "Published" : c.status === "ARCHIVED" ? "Archived" : "Draft",
+    enrolled: c._count?.batches ?? 0,
+    rating: 0,
+    reviews: 0,
+    thumbnail: c.thumbnailUrl ?? null,
+    instructor: c.createdByName ?? "—",
+    modules: c._count?.modules ?? 0,
+    lessons: 0,
+  }));
+}
+
+// ---------------------------------------------------------------------------
+// Batches
+// ---------------------------------------------------------------------------
+
+export interface BatchRow {
+  id: string;
+  name: string;
+  code: string;
+  course: string;
+  teacher: string;
+  schedule: string;
+  students: number;
+  capacity: number;
+  status: string;
+  startDate: string;
+}
+
+interface ApiBatch {
+  id: string;
+  name: string;
+  code: string;
+  course?: { title: string } | null;
+  capacity?: number | null;
+  startDate?: string | null;
+  status: string;
+  _count?: { students?: number };
+}
+
+export const mockBatchesData: BatchRow[] = mockBatches;
+
+export async function fetchBatches(): Promise<BatchRow[]> {
+  const live = await tryGet<{ batches: ApiBatch[] }>("/batches");
+  if (!live) return mockBatchesData;
+  return live.batches.map((b) => {
+    const students = b._count?.students ?? 0;
+    const capacity = b.capacity ?? 0;
+    const status =
+      b.status === "UPCOMING"
+        ? "Upcoming"
+        : b.status === "COMPLETED"
+          ? "Completed"
+          : capacity > 0 && students >= capacity
+            ? "Full"
+            : "Active";
+    return {
+      id: b.id,
+      name: b.name,
+      code: b.code,
+      course: b.course?.title ?? "—",
+      teacher: "—",
+      schedule: "—",
+      students,
+      capacity,
+      status,
+      startDate: b.startDate ? new Date(b.startDate).toISOString().slice(0, 10) : "",
+    };
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Students
+// ---------------------------------------------------------------------------
+
+export interface StudentRow {
+  id: string;
+  studentId: string;
+  name: string;
+  initials: string;
+  email: string;
+  phone: string;
+  course: string;
+  batch: string;
+  attendance: number;
+  status: string;
+  enrolledOn: string;
+}
+
+interface ApiStudent {
+  id: string;
+  rollNumber?: string | null;
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  status?: string;
+  createdAt?: string;
+  batch?: { id: string; name: string; code: string } | null;
+}
+
+export const mockStudentsData: StudentRow[] = mockStudents;
+
+export async function fetchStudents(): Promise<StudentRow[]> {
+  const live = await tryGet<{ students: ApiStudent[] }>("/students");
+  if (!live) return mockStudentsData;
+  return live.students.map((s) => ({
+    id: s.id,
+    studentId: s.rollNumber ?? s.id,
+    name: s.name ?? "—",
+    initials: initialsOf(s.name ?? "—"),
+    email: s.email ?? "—",
+    phone: s.phone ?? "—",
+    course: s.batch?.name ?? "—",
+    batch: s.batch?.code ?? s.batch?.name ?? "—",
+    attendance: 0,
+    status: s.status === "ACTIVE" ? "Active" : "Suspended",
+    enrolledOn: formatDate(s.createdAt),
+  }));
+}
+
+// ---------------------------------------------------------------------------
+// Teachers
+// ---------------------------------------------------------------------------
+
+export interface TeacherRow {
+  id: string;
+  name: string;
+  initials: string;
+  email: string;
+  phone: string;
+  subjects: string[];
+  batches: number;
+  students: number;
+  attendance: number;
+  status: string;
+}
+
+interface ApiTeacher {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  department?: string | null;
+  specialization?: string | null;
+  status?: string;
+  _count?: { courses?: number };
+}
+
+export const mockTeachersData: TeacherRow[] = mockTeachers;
+
+export async function fetchTeachers(): Promise<TeacherRow[]> {
+  const live = await tryGet<{ teachers: ApiTeacher[] }>("/teachers");
+  if (!live) return mockTeachersData;
+  return live.teachers.map((t) => ({
+    id: t.id,
+    name: t.name ?? "—",
+    initials: initialsOf(t.name ?? "—"),
+    email: t.email ?? "—",
+    phone: t.phone ?? "—",
+    subjects: [t.department, t.specialization].filter((x): x is string => Boolean(x)),
+    batches: 0,
+    students: 0,
+    attendance: 0,
+    status: t.status === "ACTIVE" ? "Active" : t.status === "INVITED" ? "Invited" : "Suspended",
+  }));
+}
+
+// ---------------------------------------------------------------------------
+// Live classes
+// ---------------------------------------------------------------------------
+
+export interface LiveClassRow {
+  id: string;
+  title: string;
+  course: string;
+  batch: string;
+  teacher: string;
+  roomId?: string;
+  status: string;
+  startsIn: string;
+  location: string;
+  registered: number;
+  startTime: string;
+  recordingUrl?: string;
+}
+
+interface ApiLiveClass {
+  id: string;
+  title: string;
+  course: string;
+  batch: string;
+  teacher: string;
+  roomId?: string | null;
+  status: string;
+  startsIn: string;
+  location: string;
+  registered: number;
+  startsAt: string;
+  recordingUrl?: string | null;
+}
+
+export const mockLiveClassesData: LiveClassRow[] = mockLiveClasses;
+
+export async function fetchLiveClasses(): Promise<LiveClassRow[]> {
+  const live = await tryGet<{ liveClasses: ApiLiveClass[] }>("/live-classes");
+  if (!live) return mockLiveClassesData;
+  return live.liveClasses.map((l) => ({
+    id: l.id,
+    title: l.title,
+    course: l.course,
+    batch: l.batch,
+    teacher: l.teacher,
+    roomId: l.roomId ?? undefined,
+    status: l.status,
+    startsIn: l.startsIn,
+    location: l.location,
+    registered: l.registered,
+    startTime: l.startsAt,
+    recordingUrl: l.recordingUrl ?? undefined,
+  }));
+}
+
+// ---------------------------------------------------------------------------
+// Recorded lectures
+// ---------------------------------------------------------------------------
+
+export interface LectureRow {
+  id: string;
+  title: string;
+  course: string;
+  module: string;
+  duration: string;
+  size: string;
+  uploadedBy: string;
+  uploadedAt: string;
+  visibility: string;
+  thumbnail: string | null;
+}
+
+interface ApiLecture {
+  id: string;
+  title: string;
+  course: string;
+  module: string;
+  duration?: string | null;
+  size?: string | null;
+  visibility: string;
+  uploadedBy: string;
+  uploadedAt: string;
+}
+
+export const mockLecturesData: LectureRow[] = mockLectures;
+
+export async function fetchLectures(): Promise<LectureRow[]> {
+  const live = await tryGet<{ lectures: ApiLecture[] }>("/lectures");
+  if (!live) return mockLecturesData;
+  return live.lectures.map((l) => ({
+    id: l.id,
+    title: l.title,
+    course: l.course,
+    module: l.module,
+    duration: l.duration ?? "—",
+    size: l.size ?? "—",
+    uploadedBy: l.uploadedBy,
+    uploadedAt: l.uploadedAt,
+    visibility: l.visibility,
+    thumbnail: null,
+  }));
+}
+
+// ---------------------------------------------------------------------------
+// Exams
+// ---------------------------------------------------------------------------
+
+export interface ExamRow {
+  id: string;
+  title: string;
+  course: string;
+  batch: string;
+  type: string;
+  questions: number;
+  duration: string;
+  totalMarks: number;
+  scheduledFor: string;
+  status: string;
+  attempts: number;
+}
+
+interface ApiExam {
+  id: string;
+  title: string;
+  type: string;
+  durationMin: number;
+  totalMarks: number;
+  scheduledAt?: string | null;
+  status: string;
+  course?: { title: string } | null;
+  batch?: { name: string } | null;
+  _count?: { questions?: number; attempts?: number };
+}
+
+export const mockExamsData: ExamRow[] = mockExams;
+
+function examStatusLabel(s: string): string {
+  switch (s) {
+    case "PUBLISHED": return "Published";
+    case "SCHEDULED": return "Scheduled";
+    case "LIVE": return "Live";
+    case "COMPLETED": return "Completed";
+    default: return "Draft";
+  }
+}
+
+export async function fetchExams(): Promise<ExamRow[]> {
+  const live = await tryGet<{ exams: ApiExam[] }>("/exams");
+  if (!live) return mockExamsData;
+  return live.exams.map((e) => ({
+    id: e.id,
+    title: e.title,
+    course: e.course?.title ?? "—",
+    batch: e.batch?.name ?? "—",
+    type: e.type === "SUBJECTIVE" ? "Subjective" : e.type === "MIXED" ? "Mixed" : "MCQ",
+    questions: e._count?.questions ?? 0,
+    duration: `${e.durationMin} min`,
+    totalMarks: e.totalMarks,
+    scheduledFor: e.scheduledAt ? formatDate(e.scheduledAt) : "—",
+    status: examStatusLabel(e.status),
+    attempts: e._count?.attempts ?? 0,
+  }));
+}
+
+// ---------------------------------------------------------------------------
+// Assignments
+// ---------------------------------------------------------------------------
+
+export interface AssignmentRow {
+  id: string;
+  title: string;
+  course: string;
+  batch: string;
+  due: string;
+  submissions: number;
+  totalStudents: number;
+  status: string;
+}
+
+interface ApiAssignment {
+  id: string;
+  title: string;
+  dueAt?: string | null;
+  status: string;
+  course?: { title: string } | null;
+  batch?: { name: string } | null;
+  _count?: { submissions?: number };
+}
+
+export const mockAssignmentsData: AssignmentRow[] = mockAssignments;
+
+export async function fetchAssignments(): Promise<AssignmentRow[]> {
+  const live = await tryGet<{ assignments: ApiAssignment[] }>("/assignments");
+  if (!live) return mockAssignmentsData;
+  return live.assignments.map((a) => ({
+    id: a.id,
+    title: a.title,
+    course: a.course?.title ?? "—",
+    batch: a.batch?.name ?? "—",
+    due: a.dueAt ? formatDate(a.dueAt) : "—",
+    submissions: a._count?.submissions ?? 0,
+    totalStudents: 0,
+    status: a.status === "GRADING" ? "Grading" : "Active",
+  }));
+}
+
+// ---------------------------------------------------------------------------
+// Financials (payments + revenue series)
+// ---------------------------------------------------------------------------
+
+export interface PaymentRow {
+  id: string;
+  txId: string;
+  student: string;
+  studentId: string;
+  course: string;
+  amount: number;
+  method: string;
+  status: string;
+  date: string;
+  invoice: string;
+}
+
+interface ApiPayment {
+  id: string;
+  txId: string;
+  student?: string | null;
+  amount: number;
+  method?: string;
+  status?: string;
+  date?: string;
+  purpose?: string | null;
+}
+
+export interface RevenuePoint {
+  month: string;
+  revenue: number;
+  enrollments: number;
+  [key: string]: string | number;
+}
+
+export interface FinancialsData {
+  payments: PaymentRow[];
+  revenueSeries: RevenuePoint[];
+}
+
+export const mockFinancialsData: FinancialsData = {
+  payments: mockPayments,
+  revenueSeries: mockRevenueSeries,
+};
+
+function methodLabel(m: string | undefined): string {
+  switch (m) {
+    case "RAZORPAY": return "Razorpay";
+    case "CARD": return "Card";
+    case "UPI": return "UPI";
+    case "NETBANKING": return "Net Banking";
+    case "OFFLINE": return "Offline";
+    default: return m ?? "—";
+  }
+}
+
+function paymentStatusLabel(s: string | undefined): string {
+  switch (s) {
+    case "SUCCESS": return "Success";
+    case "PENDING": return "Pending";
+    case "FAILED": return "Failed";
+    case "REFUNDED": return "Refunded";
+    default: return s ?? "—";
+  }
+}
+
+function buildRevenueSeries(payments: { amount: number; date?: string }[]): RevenuePoint[] {
+  const now = new Date();
+  const map = new Map<string, RevenuePoint>();
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    map.set(`${d.getFullYear()}-${d.getMonth()}`, {
+      month: MONTHS[d.getMonth()],
+      revenue: 0,
+      enrollments: 0,
+    });
+  }
+  for (const p of payments) {
+    const dt = new Date(p.date ?? "");
+    if (Number.isNaN(dt.getTime())) continue;
+    const bucket = map.get(`${dt.getFullYear()}-${dt.getMonth()}`);
+    if (bucket) bucket.revenue += Number(p.amount) || 0;
+  }
+  const series = [...map.values()];
+  return series.some((p) => p.revenue > 0) ? series : mockRevenueSeries;
+}
+
+export async function fetchFinancials(): Promise<FinancialsData> {
+  const live = await tryGet<{ payments: ApiPayment[] }>("/payments");
+  if (!live) return mockFinancialsData;
+  const payments: PaymentRow[] = live.payments.map((p) => ({
+    id: p.id,
+    txId: p.txId,
+    student: p.student ?? "—",
+    studentId: "—",
+    course: p.purpose ?? "—",
+    amount: p.amount,
+    method: methodLabel(p.method),
+    status: paymentStatusLabel(p.status),
+    date: formatDate(p.date),
+    invoice: "—",
+  }));
+  return { payments, revenueSeries: buildRevenueSeries(live.payments) };
+}
+
+// ---------------------------------------------------------------------------
+// Messages
+// ---------------------------------------------------------------------------
+
+export interface ConversationRow {
+  id: string;
+  name: string;
+  role: string;
+  preview: string;
+  time: string;
+  unread: number;
+  online: boolean;
+  initials: string;
+}
+
+interface ApiConversation {
+  id: string;
+  title?: string | null;
+  isGroup: boolean;
+  members: { id: string; name: string; role: string }[];
+  preview?: string;
+  time?: string;
+  unread?: number;
+}
+
+export const mockConversationsData: ConversationRow[] = mockConversations;
+
+export async function fetchConversations(): Promise<ConversationRow[]> {
+  const live = await tryGet<{ conversations: ApiConversation[] }>("/messages/conversations");
+  if (!live) return mockConversationsData;
+  return live.conversations.map((c) => {
+    const name = c.title ?? c.members[0]?.name ?? "Chat";
+    return {
+      id: c.id,
+      name,
+      role: c.isGroup ? "Group" : c.members[0]?.role ?? "Member",
+      preview: c.preview ?? "",
+      time: timeAgo(c.time),
+      unread: c.unread ?? 0,
+      online: false,
+      initials: initialsOf(name),
+    };
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Institutes
+// ---------------------------------------------------------------------------
+
+export interface InstituteRow {
+  id: string;
+  name: string;
+  initials: string;
+  domain: string;
+  owner: string;
+  plan: string;
+  students: number;
+  courses: number;
+  mrr: number;
+  status: string;
+  joined: string;
+}
+
+interface ApiInstitute {
+  id: string;
+  name: string;
+  slug: string;
+  plan: string;
+  status: string;
+  owner?: string;
+  students?: number;
+  courses?: number;
+  mrr?: number;
+  initials?: string;
+}
+
+export const mockInstitutesData: InstituteRow[] = mockInstitutes;
+
+function planLabel(p: string): string {
+  switch (p) {
+    case "ENTERPRISE": return "Enterprise";
+    case "PRO": return "Pro";
+    case "BASIC": return "Basic";
+    case "FREE": return "Free";
+    default: return p;
+  }
+}
+
+function instituteStatusLabel(s: string): string {
+  switch (s) {
+    case "ACTIVE": return "Active";
+    case "SUSPENDED": return "Suspended";
+    case "TRIAL": return "Trial";
+    default: return s;
+  }
+}
+
+export async function fetchInstitutes(): Promise<InstituteRow[]> {
+  const live = await tryGet<{ institutes: ApiInstitute[] }>("/institutes");
+  if (!live) return mockInstitutesData;
+  return live.institutes.map((i) => ({
+    id: i.id,
+    name: i.name,
+    initials: i.initials ?? initialsOf(i.name),
+    domain: i.slug,
+    owner: i.owner ?? "—",
+    plan: planLabel(i.plan),
+    students: i.students ?? 0,
+    courses: i.courses ?? 0,
+    mrr: i.mrr ?? 0,
+    status: instituteStatusLabel(i.status),
+    joined: "—",
+  }));
+}
+
+// ---------------------------------------------------------------------------
+// Admin dashboard
+// ---------------------------------------------------------------------------
+
+export interface AnnouncementRow {
+  id: string;
+  type: string;
+  title: string;
+  description: string;
+  time: string;
+  audience: string;
+}
+
+export interface AdmissionRow {
+  id: string;
+  name: string;
+  initials: string;
+  department: string;
+  date: string;
+  status: string;
+  fees: string;
+}
+
+export interface AdminOverviewData {
+  dashboardStats: typeof mockDashboardStats;
+  revenueSeries: RevenuePoint[];
+  announcements: AnnouncementRow[];
+  recentAdmissions: AdmissionRow[];
+  activity: typeof mockActivity;
+}
+
+export const mockAdminOverviewData: AdminOverviewData = {
+  dashboardStats: mockDashboardStats,
+  revenueSeries: mockRevenueSeries,
+  announcements: mockAnnouncements,
+  recentAdmissions: mockRecentAdmissions,
+  activity: mockActivity,
+};
+
+interface ApiOverviewStats {
+  students?: number;
+  teachers?: number;
+  courses?: number;
+  batches?: number;
+  exams?: number;
+  activeAssignments?: number;
+  liveNow?: number;
+  revenue?: number;
+}
+
+interface ApiAnnouncement {
+  id: string;
+  title: string;
+  content?: string | null;
+  author?: string | null;
+  createdAt: string;
+}
+
+export async function fetchAdminOverview(): Promise<AdminOverviewData> {
+  const [overview, payments, studentList] = await Promise.all([
+    tryGet<{ stats: ApiOverviewStats; announcements?: ApiAnnouncement[] }>("/dashboard/overview"),
+    tryGet<{ payments: ApiPayment[] }>("/payments"),
+    tryGet<{ students: ApiStudent[] }>("/students"),
+  ]);
+
+  if (!overview) return mockAdminOverviewData;
+
+  const successSum = (payments?.payments ?? [])
+    .filter((p) => p.status === "SUCCESS")
+    .reduce((s, p) => s + (Number(p.amount) || 0), 0);
+  const pendingSum = (payments?.payments ?? [])
+    .filter((p) => p.status === "PENDING")
+    .reduce((s, p) => s + (Number(p.amount) || 0), 0);
+
+  const stats = {
+    ...mockDashboardStats,
+    activeStudents: { ...mockDashboardStats.activeStudents, total: overview.stats.students ?? mockDashboardStats.activeStudents.total },
+    netGrowth: { ...mockDashboardStats.netGrowth, total: successSum || (overview.stats.revenue ?? mockDashboardStats.netGrowth.total) },
+    pendingFees: { ...mockDashboardStats.pendingFees, total: pendingSum || mockDashboardStats.pendingFees.total },
+    todayClasses: { ...mockDashboardStats.todayClasses, total: overview.stats.liveNow ?? mockDashboardStats.todayClasses.total },
+  };
+
+  const announcements: AnnouncementRow[] =
+    overview.announcements && overview.announcements.length
+      ? overview.announcements.map((a) => ({
+          id: a.id,
+          type: "Update",
+          title: a.title,
+          description: a.content ?? "",
+          time: timeAgo(a.createdAt),
+          audience: "Institute",
+        }))
+      : mockAnnouncements;
+
+  const recentAdmissions: AdmissionRow[] =
+    studentList && studentList.students.length
+      ? studentList.students.slice(0, 5).map((s) => ({
+          id: s.rollNumber ?? s.id,
+          name: s.name ?? "—",
+          initials: initialsOf(s.name ?? "—"),
+          department: s.batch?.name ?? "—",
+          date: formatDate(s.createdAt),
+          status: s.status === "ACTIVE" ? "Verified" : "Processing",
+          fees: "Paid",
+        }))
+      : mockRecentAdmissions;
+
+  return {
+    dashboardStats: stats,
+    revenueSeries: buildRevenueSeries(payments?.payments ?? []),
+    announcements,
+    recentAdmissions,
+    activity: mockActivity,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Super-admin dashboard
+// ---------------------------------------------------------------------------
+
+export interface SuperAdminInstituteRow {
+  id: string;
+  name: string;
+  plan: string;
+  students: number;
+  mrr: number;
+  status: string;
+  health: number;
+}
+
+export interface SuperAdminOverviewData {
+  platformStats: {
+    totalInstitutes: number;
+    activeInstitutes: number;
+    totalStudents: number;
+    mrr: number;
+    revenueGrowth: number;
+    churn: number;
+    trialConversions: number;
+    avgRevenuePerInstitute: number;
+  };
+  mrrSeries: RevenuePoint[];
+  institutes: SuperAdminInstituteRow[];
+}
+
+export const mockSuperAdminOverviewData: SuperAdminOverviewData = {
+  platformStats: {
+    totalInstitutes: 1284,
+    activeInstitutes: 1022,
+    totalStudents: 348200,
+    mrr: 465000,
+    revenueGrowth: 18,
+    churn: 2.4,
+    trialConversions: 38,
+    avgRevenuePerInstitute: 455,
+  },
+  mrrSeries: mockRevenueSeries.map((p) => ({ ...p, institutes: p.enrollments })),
+  institutes: [
+    { id: "inst_001", name: "Vantage Institute of Technology", plan: "Professional", students: 2842, mrr: 1240, status: "Active", health: 96 },
+    { id: "inst_002", name: "Bright Minds Academy", plan: "Starter", students: 540, mrr: 340, status: "Active", health: 82 },
+    { id: "inst_003", name: "Kovacs Learning Hub", plan: "Enterprise", students: 12300, mrr: 8900, status: "Active", health: 99 },
+    { id: "inst_004", name: "Nexus Prep", plan: "Professional", students: 2100, mrr: 980, status: "Trial", health: 61 },
+    { id: "inst_005", name: "Everest Coaching", plan: "Starter", students: 320, mrr: 0, status: "Paused", health: 40 },
+  ],
+};
+
+export async function fetchSuperAdminOverview(): Promise<SuperAdminOverviewData> {
+  const [overview, institutes] = await Promise.all([
+    tryGet<{ stats: { institutes?: number; totalUsers?: number; totalCourses?: number; mrr?: number } }>("/dashboard/overview"),
+    tryGet<{ institutes: ApiInstitute[] }>("/institutes"),
+  ]);
+
+  if (!overview) return mockSuperAdminOverviewData;
+
+  const base = mockSuperAdminOverviewData.platformStats;
+  const stats = {
+    ...base,
+    totalInstitutes: overview.stats.institutes ?? base.totalInstitutes,
+    activeInstitutes: overview.stats.institutes ?? base.activeInstitutes,
+    totalStudents: overview.stats.totalUsers ?? base.totalStudents,
+    mrr: overview.stats.mrr ?? base.mrr,
+  };
+
+  const rows: SuperAdminInstituteRow[] =
+    institutes && institutes.institutes.length
+      ? institutes.institutes.map((i) => ({
+          id: i.id,
+          name: i.name,
+          plan: planLabel(i.plan),
+          students: i.students ?? 0,
+          mrr: i.mrr ?? 0,
+          status: instituteStatusLabel(i.status),
+          health: 0,
+        }))
+      : mockSuperAdminOverviewData.institutes;
+
+  return {
+    platformStats: stats,
+    mrrSeries: mockSuperAdminOverviewData.mrrSeries,
+    institutes: rows,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Student dashboard
+// ---------------------------------------------------------------------------
+
+export interface StudentCourseRow {
+  title: string;
+  progress: number;
+  lessons: string;
+  next: string;
+}
+
+export interface StudentAssignmentRow {
+  title: string;
+  course: string;
+  due: string;
+  status: "Pending" | "In Progress" | "Submitted";
+}
+
+export interface StudentDashboardData {
+  attendanceRate: number;
+  avgScore: number;
+  courseCount: number;
+  certificates: number;
+  courses: StudentCourseRow[];
+  nextClass: { title: string; meta: string; time: string };
+  assignments: StudentAssignmentRow[];
+}
+
+export const mockStudentDashboardData: StudentDashboardData = {
+  attendanceRate: 92,
+  avgScore: 87,
+  courseCount: 3,
+  certificates: 2,
+  courses: [
+    { title: "Advanced Distributed Systems", progress: 68, lessons: "24/35 lessons", next: "CAP Theorem Deep Dive" },
+    { title: "Foundations of Neural Networks", progress: 42, lessons: "11/26 lessons", next: "Backpropagation" },
+    { title: "Data Visualization with D3", progress: 85, lessons: "19/22 lessons", next: "Final Project Brief" },
+  ],
+  nextClass: {
+    title: "Introduction to UI Design Systems",
+    meta: "WEB-W1 • Sarah Chen, PhD • 2:00 PM",
+    time: "LIVE TODAY",
+  },
+  assignments: [
+    { title: "Distributed KV Store Implementation", course: "Distributed Systems", due: "Due in 3 days", status: "Pending" },
+    { title: "Backpropagation Notebook", course: "Neural Networks", due: "Due in 6 days", status: "In Progress" },
+    { title: "D3 Interactive Dashboard", course: "Data Visualization", due: "Submitted", status: "Submitted" },
+  ],
+};
+
+interface ApiStudentDashboard {
+  enrollments?: { course?: { title?: string } | null }[];
+  upcomingClasses?: {
+    title: string;
+    startsAt: string;
+    status: string;
+  }[];
+  pendingAssignments?: {
+    id: string;
+    title: string;
+    course?: string | null;
+    dueAt?: string | null;
+    submitted: boolean;
+  }[];
+  attendanceRate?: number;
+}
+
+export async function fetchStudentDashboard(): Promise<StudentDashboardData> {
+  const live = await tryGet<ApiStudentDashboard>("/dashboard/student");
+  if (!live) return mockStudentDashboardData;
+
+  const courses: StudentCourseRow[] = (live.enrollments ?? []).map((e) => ({
+    title: e.course?.title ?? "Untitled Course",
+    progress: 0,
+    lessons: "0 lessons",
+    next: "—",
+  }));
+
+  const nextClass =
+    live.upcomingClasses && live.upcomingClasses.length
+      ? (() => {
+          const c = live.upcomingClasses[0];
+          return {
+            title: c.title,
+            meta: c.status === "LIVE" ? formatTime(c.startsAt) : `Starts at ${formatTime(c.startsAt)}`,
+            time: c.status === "LIVE" ? "LIVE TODAY" : "UPCOMING",
+          };
+        })()
+      : mockStudentDashboardData.nextClass;
+
+  const assignments: StudentAssignmentRow[] =
+    live.pendingAssignments && live.pendingAssignments.length
+      ? live.pendingAssignments.slice(0, 6).map((a) => ({
+          title: a.title,
+          course: a.course ?? "—",
+          due: a.submitted ? "Submitted" : formatDate(a.dueAt),
+          status: a.submitted ? "Submitted" : "Pending",
+        }))
+      : mockStudentDashboardData.assignments;
+
+  return {
+    attendanceRate: live.attendanceRate ?? mockStudentDashboardData.attendanceRate,
+    avgScore: mockStudentDashboardData.avgScore,
+    courseCount: courses.length || mockStudentDashboardData.courseCount,
+    certificates: mockStudentDashboardData.certificates,
+    courses: courses.length ? courses : mockStudentDashboardData.courses,
+    nextClass,
+    assignments: assignments.length ? assignments : mockStudentDashboardData.assignments,
+  };
+}
