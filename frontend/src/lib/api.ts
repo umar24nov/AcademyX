@@ -1,7 +1,7 @@
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api/v1";
+import type { Role, UserSession } from "./types";
 
-type RequestOptions = {
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api/v1";type RequestOptions = {
   method?: string;
   body?: unknown;
   headers?: Record<string, string>;
@@ -112,5 +112,54 @@ export function clearTokens() {
   if (typeof window !== "undefined") {
     localStorage.removeItem("ax_access_token");
     localStorage.removeItem("ax_refresh_token");
+  }
+}
+
+export function getStoredUser(): UserSession | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem("ax_session");
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object" && parsed.id && parsed.role) {
+      return parsed as UserSession;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function clearSession() {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("ax_session");
+  }
+  clearTokens();
+}
+
+export async function signOut(): Promise<void> {
+  if (typeof window !== "undefined") {
+    const refreshToken = localStorage.getItem("ax_refresh_token");
+    if (refreshToken) {
+      try {
+        await api.post("/auth/logout", { refreshToken });
+      } catch {
+        // best effort — the session is cleared regardless
+      }
+    }
+  }
+  clearSession();
+}
+
+export function dashboardPathFor(role: Role): string {
+  switch (role) {
+    case "SUPER_ADMIN":
+      return "/dashboard/super-admin";
+    case "TEACHER":
+      return "/dashboard/teacher";
+    case "STUDENT":
+      return "/dashboard/student";
+    default:
+      return "/dashboard/admin";
   }
 }

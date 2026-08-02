@@ -16,6 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { notifications } from "@/lib/mock-data";
+import { signOut } from "@/lib/api";
 import type { UserSession } from "@/lib/types";
 
 export function TopNav({
@@ -33,6 +34,12 @@ export function TopNav({
     .slice(0, 2)
     .join("")
     .toUpperCase();
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/login");
+    router.refresh();
+  };
 
   return (
     <header className="w-full sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border-subtle h-16 flex items-center px-6">
@@ -102,7 +109,7 @@ export function TopNav({
               Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => router.push("/login")}>Sign Out</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

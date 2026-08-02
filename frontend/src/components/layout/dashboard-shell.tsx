@@ -7,19 +7,31 @@ import { TopNav } from "@/components/layout/top-nav";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { currentUser } from "@/lib/mock-data";
+import { getStoredUser } from "@/lib/api";
 import type { UserSession } from "@/lib/types";
+
+const mockSession: UserSession = {
+  id: currentUser.id,
+  name: currentUser.name,
+  email: currentUser.email,
+  role: currentUser.role,
+  instituteId: currentUser.instituteId,
+  instituteName: currentUser.instituteName,
+  avatar: currentUser.avatar,
+};
+
+function useSession(): UserSession {
+  const [user, setUser] = React.useState<UserSession>(mockSession);
+  React.useEffect(() => {
+    const stored = getStoredUser();
+    if (stored) setUser({ ...mockSession, ...stored });
+  }, []);
+  return user;
+}
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const user: UserSession = {
-    id: currentUser.id,
-    name: currentUser.name,
-    email: currentUser.email,
-    role: currentUser.role,
-    instituteId: currentUser.instituteId,
-    instituteName: currentUser.instituteName,
-    avatar: currentUser.avatar,
-  };
+  const user = useSession();
 
   return (
     <div className="min-h-screen">
@@ -41,7 +53,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 AcademyX
               </span>
               <p className="text-sm text-text-muted">
-                © 2026 {currentUser.instituteName}. All rights reserved.
+                © 2026 {user.instituteName ?? "AcademyX"}. All rights reserved.
               </p>
             </div>
             <div className="flex gap-6">

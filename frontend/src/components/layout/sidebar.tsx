@@ -1,21 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { GraduationCap, LifeBuoy, LogOut, Sparkles } from "lucide-react";
 import { getNavForRole } from "@/config/navigation";
 import { Icon } from "@/components/shared/icon";
 import { cn } from "@/lib/utils";
+import { dashboardPathFor, signOut } from "@/lib/api";
 import type { UserSession } from "@/lib/types";
 
 export function Sidebar({ user }: { user: UserSession }) {
   const pathname = usePathname();
+  const router = useRouter();
   const main = getNavForRole(user.role, "main");
   const manage = getNavForRole(user.role, "manage");
 
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/login");
+    router.refresh();
+  };
+
   return (
     <aside className="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-surface border-r border-border-subtle flex-col p-4 gap-2 z-40">
-      <div className="flex items-center gap-3 px-2 py-4 mb-4">
+      <Link href={dashboardPathFor(user.role)} className="flex items-center gap-3 px-2 py-4 mb-4">
         <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
           <GraduationCap className="h-6 w-6" />
         </div>
@@ -27,7 +35,7 @@ export function Sidebar({ user }: { user: UserSession }) {
             {user.role === "SUPER_ADMIN" ? "Platform Admin" : user.instituteName ?? "Institute"}
           </p>
         </div>
-      </div>
+      </Link>
 
       <nav className="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
         {main.map((item) => (
@@ -56,14 +64,20 @@ export function Sidebar({ user }: { user: UserSession }) {
             Upgrade Plan
           </Link>
         </div>
-        <a className="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors duration-150 cursor-pointer">
+        <Link
+          href="/support"
+          className="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors duration-150 cursor-pointer"
+        >
           <LifeBuoy className="h-5 w-5" />
           <span className="text-sm">Support</span>
-        </a>
-        <a className="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors duration-150 cursor-pointer">
+        </Link>
+        <button
+          onClick={handleSignOut}
+          className="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors duration-150 cursor-pointer text-left"
+        >
           <LogOut className="h-5 w-5" />
           <span className="text-sm">Sign Out</span>
-        </a>
+        </button>
       </div>
     </aside>
   );
