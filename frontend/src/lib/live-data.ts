@@ -1757,6 +1757,15 @@ export async function fetchLiveClassDetail(id?: string): Promise<LiveClassDetail
   };
 }
 
+export async function setLiveClassStatus(id: string, status: "LIVE" | "SCHEDULED" | "ENDED"): Promise<boolean> {
+  try {
+    await api.post(`/live-classes/${id}/status`, { status });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Batch detail (student progress registry & schedule)
 // ---------------------------------------------------------------------------

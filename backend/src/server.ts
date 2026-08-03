@@ -1,6 +1,7 @@
 import { createApp } from "./app";
 import { env } from "./config/env";
 import { prisma } from "./lib/prisma";
+import { initLiveSocket } from "./sockets/live-socket";
 
 async function main() {
   const app = createApp();
@@ -9,6 +10,9 @@ async function main() {
     console.log(`🚀 AcademyX API listening on http://localhost:${env.PORT}`);
     console.log(`   Health: http://localhost:${env.PORT}/health`);
   });
+
+  initLiveSocket(server);
+  console.log("📡 Live class sockets ready at /socket.io");
 
   const shutdown = async (signal: string) => {
     console.log(`\n${signal} received, shutting down gracefully...`);
