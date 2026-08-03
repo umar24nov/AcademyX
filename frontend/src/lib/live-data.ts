@@ -467,6 +467,8 @@ export interface AssignmentRow {
   submissions: number;
   totalStudents: number;
   status: string;
+  myStatus?: string;
+  myMarks?: number | null;
 }
 
 interface ApiAssignment {
@@ -479,21 +481,37 @@ interface ApiAssignment {
   _count?: { submissions?: number };
 }
 
+interface ApiAssignmentList {
+  assignments: ApiAssignment[];
+  mySubmissions?: {
+    assignmentId: string;
+    status: string;
+    marks?: number | null;
+    feedback?: string | null;
+  }[];
+}
+
 export const mockAssignmentsData: AssignmentRow[] = mockAssignments;
 
 export async function fetchAssignments(): Promise<AssignmentRow[]> {
-  const live = await tryGet<{ assignments: ApiAssignment[] }>("/assignments");
+  const live = await tryGet<ApiAssignmentList>("/assignments");
   if (!live) return mockAssignmentsData;
-  return live.assignments.map((a) => ({
-    id: a.id,
-    title: a.title,
-    course: a.course?.title ?? "—",
-    batch: a.batch?.name ?? "—",
-    due: a.dueAt ? formatDate(a.dueAt) : "—",
-    submissions: a._count?.submissions ?? 0,
-    totalStudents: 0,
-    status: a.status === "GRADING" ? "Grading" : "Active",
-  }));
+  const mine = new Map((live.mySubmissions ?? []).map((s) => [s.assignmentId, s]));
+  return live.assignments.map((a) => {
+    const m = mine.get(a.id);
+    return {
+      id: a.id,
+      title: a.title,
+      course: a.course?.title ?? "—",
+      batch: a.batch?.name ?? "—",
+      due: a.dueAt ? formatDate(a.dueAt) : "—",
+      submissions: a._count?.submissions ?? 0,
+      totalStudents: 0,
+      status: a.status === "GRADING" ? "Grading" : "Active",
+      myStatus: m?.status,
+      myMarks: m?.marks ?? null,
+    };
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -1437,6 +1455,61 @@ export async function submitAssignment(
 ): Promise<boolean> {
   try {
     await api.post(`/assignments/${id}/submit`, payload);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export interface AssignmentSubmissionRow {
+  id: string;
+  studentName: string;
+  studentEmail?: string;
+  status: string;
+  marks: number | null;
+  feedback: string | null;
+  submittedAt: string | null;
+  title?: string | null;
+  notes?: string | null;
+  attachments?: string[] | null;
+}
+
+interface ApiSubmission {
+  id: string;
+  status: string;
+  marks?: number | null;
+  feedback?: string | null;
+  submittedAt?: string;
+  title?: string | null;
+  notes?: string | null;
+  attachments?: unknown;
+  student?: { user?: { name?: string; email?: string } } | null;
+}
+
+export async function fetchAssignmentSubmissions(id?: string): Promise<AssignmentSubmissionRow[]> {
+  if (!id) return [];
+  const live = await tryGet<{ assignment: { submissions?: ApiSubmission[] } }>(`/assignments/${id}`);
+  if (!live) return [];
+  return (live.assignment.submissions ?? []).map((s) => ({
+    id: s.id,
+    studentName: s.student?.user?.name ?? "Unknown",
+    studentEmail: s.student?.user?.email,
+    status: s.status,
+    marks: s.marks ?? null,
+    feedback: s.feedback ?? null,
+    submittedAt: s.submittedAt ?? null,
+    title: s.title ?? null,
+    notes: s.notes ?? null,
+    attachments: Array.isArray(s.attachments) ? (s.attachments as string[]) : null,
+  }));
+}
+
+export async function gradeSubmission(
+  submissionId: string,
+  payload: { marks: number; feedback?: string }
+): Promise<boolean> {
+  try {
+    await api.post(`/assignments/${submissionId}/grade`, payload);
     return true;
   } catch {
     return false;

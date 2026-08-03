@@ -40,8 +40,14 @@ router.get("/", async (req, res, next) => {
       orderBy: { updatedAt: "desc" },
     });
 
-    // If student, also include their submission status
+    // If student, also include their own submission status and grade
     let mySubmissionIds = new Set<string>();
+    let mySubmissions: {
+      assignmentId: string;
+      status: string;
+      marks: number | null;
+      feedback: string | null;
+    }[] = [];
     if (req.user!.role === Role.STUDENT) {
       const profile = await prisma.studentProfile.findFirst({
         where: { userId: req.user!.id, instituteId: req.user!.instituteId! },
@@ -50,13 +56,22 @@ router.get("/", async (req, res, next) => {
       if (profile) {
         const subs = await prisma.assignmentSubmission.findMany({
           where: { studentId: profile.id },
-          select: { assignmentId: true, status: true, marks: true },
+          select: { assignmentId: true, status: true, marks: true, feedback: true },
         });
         mySubmissionIds = new Set(subs.map((s) => s.assignmentId));
+        mySubmissions = subs.map((s) => ({
+          assignmentId: s.assignmentId,
+          status: s.status,
+          marks: s.marks,
+          feedback: s.feedback,
+        }));
       }
     }
 
-    res.json({ success: true, data: { assignments, mySubmissionIds: [...mySubmissionIds] } });
+    res.json({
+      success: true,
+      data: { assignments, mySubmissionIds: [...mySubmissionIds], mySubmissions },
+    });
   } catch (err) {
     next(err);
   }
