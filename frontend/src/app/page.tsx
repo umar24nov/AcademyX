@@ -2,10 +2,17 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Sparkles, ChevronDown } from "lucide-react";
+import { ArrowRight, CheckCircle2, Sparkles, ChevronDown, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Icon } from "@/components/shared/icon";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { cn } from "@/lib/utils";
@@ -171,7 +178,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-background text-on-surface">
       {/* Nav */}
       <header className="sticky top-0 z-50 border-b border-border-subtle bg-background/80 backdrop-blur-md">
-        <div className="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <BrandLogo boxClass="w-9 h-9 rounded-lg" iconClass="h-5 w-5" textClass="text-xl" />
           <nav className="hidden md:flex items-center gap-8 text-sm text-text-muted">
             <a href="#features" className="hover:text-primary transition-colors">Features</a>
@@ -179,7 +186,7 @@ export default function LandingPage() {
             <a href="#pricing" className="hover:text-primary transition-colors">Pricing</a>
             <a href="#faq" className="hover:text-primary transition-colors">FAQ</a>
           </nav>
-          <div className="flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3">
             <Link href="/login" className="text-sm text-on-surface-variant hover:text-primary transition-colors">
               Sign in
             </Link>
@@ -187,13 +194,52 @@ export default function LandingPage() {
               <Link href="/register">Get Started</Link>
             </Button>
           </div>
+          <div className="md:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Open menu">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-72">
+                <SheetTitle className="sr-only">Menu</SheetTitle>
+                <div className="flex flex-col gap-1">
+                  {["Features", "Testimonials", "Pricing", "FAQ"].map((label) => (
+                    <SheetClose asChild key={label}>
+                      <a
+                        href={`#${label.toLowerCase()}`}
+                        className="rounded-lg px-3 py-2.5 text-sm font-medium text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors"
+                      >
+                        {label}
+                      </a>
+                    </SheetClose>
+                  ))}
+                  <div className="mt-3 border-t border-border-subtle pt-4 flex flex-col gap-2 px-1">
+                    <SheetClose asChild>
+                      <Link
+                        href="/login"
+                        className="rounded-lg px-3 py-2.5 text-sm font-medium text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors"
+                      >
+                        Sign in
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Button asChild className="w-full">
+                        <Link href="/register">Get Started</Link>
+                      </Button>
+                    </SheetClose>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </header>
 
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
-        <div className="max-w-[1280px] mx-auto px-6 py-24 md:py-32 text-center relative">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-6 py-24 md:py-32 text-center relative">
           <Badge className="mb-6">
             <Sparkles className="h-3.5 w-3.5 mr-1" />
             The Operating System for Coaching Institutes
@@ -230,7 +276,7 @@ export default function LandingPage() {
 
       {/* Stats */}
       <section className="border-t border-border-subtle bg-surface-dim/50">
-        <div className="max-w-[1280px] mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {stats.map((s) => (
             <div key={s.label}>
               <p className="font-bold text-4xl tracking-tight text-text-heading">{s.value}</p>
@@ -242,7 +288,7 @@ export default function LandingPage() {
 
       {/* Trusted by */}
       <section className="border-t border-border-subtle">
-        <div className="max-w-[1280px] mx-auto px-6 py-12">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-6 py-12">
           <p className="text-center text-sm text-text-muted mb-6">
             Trusted by coaching institutes across India
           </p>
@@ -261,7 +307,7 @@ export default function LandingPage() {
 
       {/* Features */}
       <section id="features" className="border-t border-border-subtle">
-        <div className="max-w-[1280px] mx-auto px-6 py-24">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-6 py-24">
           <div className="text-center mb-16">
             <h2 className="font-bold text-4xl tracking-tight text-text-heading">
               Everything your institute needs
@@ -289,7 +335,7 @@ export default function LandingPage() {
 
       {/* Testimonials */}
       <section id="testimonials" className="border-t border-border-subtle bg-surface-dim/50">
-        <div className="max-w-[1280px] mx-auto px-6 py-24">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-6 py-24">
           <div className="text-center mb-16">
             <h2 className="font-bold text-4xl tracking-tight text-text-heading">
               Loved by academies across India
@@ -326,7 +372,7 @@ export default function LandingPage() {
 
       {/* Pricing */}
       <section id="pricing" className="border-t border-border-subtle">
-        <div className="max-w-[1280px] mx-auto px-6 py-24">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-6 py-24">
           <div className="text-center mb-16">
             <h2 className="font-bold text-4xl tracking-tight text-text-heading">Transparent Pricing</h2>
             <p className="text-text-muted mt-4 text-lg">Scale as your institute grows. Cancel anytime.</p>
@@ -369,7 +415,7 @@ export default function LandingPage() {
 
       {/* FAQ */}
       <section id="faq" className="border-t border-border-subtle bg-surface-dim/50">
-        <div className="max-w-[768px] mx-auto px-6 py-24">
+        <div className="max-w-[768px] mx-auto px-4 md:px-6 py-24">
           <div className="text-center mb-12">
             <h2 className="font-bold text-4xl tracking-tight text-text-heading">
               Frequently asked questions
@@ -415,7 +461,7 @@ export default function LandingPage() {
 
       {/* CTA */}
       <section className="border-t border-border-subtle">
-        <div className="max-w-[1280px] mx-auto px-6 py-24 text-center">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-6 py-24 text-center">
           <h2 className="font-bold text-4xl md:text-5xl tracking-tight text-text-heading max-w-2xl mx-auto">
             Ready to scale your academy?
           </h2>
