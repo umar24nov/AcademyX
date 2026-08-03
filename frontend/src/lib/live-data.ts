@@ -874,11 +874,11 @@ export const mockSuperAdminOverviewData: SuperAdminOverviewData = {
   },
   mrrSeries: mockRevenueSeries.map((p) => ({ ...p, institutes: p.enrollments })),
   institutes: [
-    { id: "inst_001", name: "Vantage Institute of Technology", plan: "Professional", students: 2842, mrr: 1240, status: "Active", health: 96 },
-    { id: "inst_002", name: "Bright Minds Academy", plan: "Starter", students: 540, mrr: 340, status: "Active", health: 82 },
-    { id: "inst_003", name: "Kovacs Learning Hub", plan: "Enterprise", students: 12300, mrr: 8900, status: "Active", health: 99 },
-    { id: "inst_004", name: "Nexus Prep", plan: "Professional", students: 2100, mrr: 980, status: "Trial", health: 61 },
-    { id: "inst_005", name: "Everest Coaching", plan: "Starter", students: 320, mrr: 0, status: "Paused", health: 40 },
+    { id: "inst_001", name: "Sunrise Academy", plan: "Professional", students: 2842, mrr: 1240, status: "Active", health: 96 },
+    { id: "inst_002", name: "Sharma Classes", plan: "Starter", students: 540, mrr: 340, status: "Active", health: 82 },
+    { id: "inst_003", name: "Al-Madina Coaching Centre", plan: "Enterprise", students: 12300, mrr: 8900, status: "Active", health: 99 },
+    { id: "inst_004", name: "Navodaya Academy", plan: "Professional", students: 2100, mrr: 980, status: "Trial", health: 61 },
+    { id: "inst_005", name: "Crescent Institute", plan: "Starter", students: 320, mrr: 0, status: "Paused", health: 40 },
   ],
 };
 
@@ -959,7 +959,7 @@ export const mockStudentDashboardData: StudentDashboardData = {
   ],
   nextClass: {
     title: "Introduction to UI Design Systems",
-    meta: "WEB-W1 • Sarah Chen, PhD • 2:00 PM",
+    meta: "WEB-W1 • Dr. Kavya Reddy • 2:00 PM",
     time: "LIVE TODAY",
   },
   assignments: [
@@ -1132,7 +1132,7 @@ function teacherClassRow(c: NonNullable<ApiTeacherDashboard["nextClass"]>, next:
 }
 
 export const mockTeacherDashboardData: TeacherDashboardData = {
-  name: "Prof. Aris",
+  name: "Prof. Imtiaz Ahmed",
   stats: { classesToday: 3, ungradedAssignments: 12, students: 96, attendanceRate: 94 },
   weeklyPerformance: [40, 65, 55, 80, 72, 90, 45],
   attendanceToday: { present: 42, total: 45, rate: 94 },
@@ -1489,9 +1489,9 @@ export interface InstituteProfile {
 
 export const mockInstituteProfile: InstituteProfile = {
   id: "ins_001",
-  name: "Vantage Institute",
-  slug: "vantage",
-  contactEmail: "contact@vantage.edu",
+  name: "Sunrise Academy",
+  slug: "sunrise",
+  contactEmail: "contact@sunriseacademy.edu",
   phone: "+91 98765 43210",
   address: "221B, Tech Park, Bangalore",
   about: "Leading institute for engineering and computer science education.",
@@ -1593,7 +1593,7 @@ export const mockLiveClassDetailData: LiveClassDetailData = {
   title: "Introduction to UI Design Systems",
   course: "Mastering the Modern Toolchain",
   batch: "WEB-W1",
-  teacher: "Sarah Chen, PhD",
+  teacher: "Dr. Kavya Reddy",
   status: "Live",
   startsIn: "14m",
   location: "Main Lecture Hall A2",
@@ -1703,7 +1703,7 @@ export const mockBatchDetailData: BatchDetailData = {
   name: "Advanced AI - Night Shift",
   code: "AI-N1",
   course: "Foundations of Neural Networks",
-  teacher: "Prof. Marcus Thorne",
+  teacher: "Prof. Arjun Nair",
   status: "Active",
   schedule: "Mon, Wed, Fri • 7:00 PM - 9:00 PM",
   startDate: "2024-04-01",
@@ -1713,11 +1713,11 @@ export const mockBatchDetailData: BatchDetailData = {
   exams: 4,
   assignments: 6,
   students: [
-    { id: "stu_001", name: "Elena Martinez", rollNumber: "AX-2023-001", email: "elena@vantage.edu", attendanceRate: 95, status: "Active" },
-    { id: "stu_002", name: "Marcus Chen", rollNumber: "AX-2023-002", email: "marcus@vantage.edu", attendanceRate: 88, status: "Active" },
-    { id: "stu_003", name: "Priya Sharma", rollNumber: "AX-2023-003", email: "priya@vantage.edu", attendanceRate: 91, status: "Active" },
-    { id: "stu_004", name: "Julian Wright", rollNumber: "AX-2023-004", email: "julian@vantage.edu", attendanceRate: 79, status: "Active" },
-    { id: "stu_005", name: "Sarah Lofton", rollNumber: "AX-2023-005", email: "sarah@vantage.edu", attendanceRate: 97, status: "Active" },
+    { id: "stu_001", name: "Ayesha Khan", rollNumber: "AX-2023-001", email: "ayesha@sunriseacademy.edu", attendanceRate: 95, status: "Active" },
+    { id: "stu_002", name: "Mohammed Imran", rollNumber: "AX-2023-002", email: "mohammed@sunriseacademy.edu", attendanceRate: 88, status: "Active" },
+    { id: "stu_003", name: "Aisha Siddiqui", rollNumber: "AX-2023-003", email: "aisha@sunriseacademy.edu", attendanceRate: 91, status: "Active" },
+    { id: "stu_004", name: "Rohan Sharma", rollNumber: "AX-2023-004", email: "rohan@sunriseacademy.edu", attendanceRate: 79, status: "Active" },
+    { id: "stu_005", name: "Priya Patel", rollNumber: "AX-2023-005", email: "priya@sunriseacademy.edu", attendanceRate: 97, status: "Active" },
   ],
   liveClasses: [
     { id: "live_003", title: "Backpropagation Deep Dive", startsAt: "2024-06-16T19:00:00Z", status: "Scheduled" },

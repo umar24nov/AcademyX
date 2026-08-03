@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { GraduationCap } from "lucide-react";
 import { Sidebar } from "@/components/layout/sidebar";
 import { TopNav } from "@/components/layout/top-nav";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
+import { BrandLogo } from "@/components/layout/brand-logo";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { currentUser } from "@/lib/mock-data";
 import { getStoredUser } from "@/lib/api";
@@ -48,10 +48,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <footer className="w-full py-8 mt-auto border-t border-border-subtle bg-surface-container-lowest">
           <div className="flex flex-col md:flex-row justify-between items-center px-6 max-w-[1280px] mx-auto gap-4">
             <div className="flex flex-col md:flex-row items-center gap-6">
-              <span className="flex items-center gap-2 text-lg font-semibold text-primary">
-                <GraduationCap className="h-5 w-5" />
-                AcademyX
-              </span>
+              <BrandLogo boxClass="w-8 h-8 rounded-md" iconClass="h-4 w-4" textClass="text-lg text-primary" />
               <p className="text-sm text-text-muted">
                 © 2026 {user.instituteName ?? "AcademyX"}. All rights reserved.
               </p>

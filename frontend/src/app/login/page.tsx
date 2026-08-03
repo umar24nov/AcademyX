@@ -3,12 +3,14 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { GraduationCap, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
+import { SiteFooter } from "@/components/marketing/site-footer";
+import { BrandLogo } from "@/components/layout/brand-logo";
 import { api, setTokens } from "@/lib/api";
 
 type LoginResponse = {
@@ -57,15 +59,24 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen relative">
+      <Link
+        href="/"
+        aria-label="Close and return to home"
+        className="fixed top-4 left-4 z-10 h-10 w-10 rounded-lg border border-border-subtle bg-surface flex items-center justify-center text-text-muted hover:text-error hover:border-error/40 transition-colors"
+      >
+        <X className="h-5 w-5" />
+      </Link>
       <div className="pointer-events-none fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl" />
-      <main className="flex-grow flex items-center justify-center px-4 md:px-8 py-12">
-        <div className="w-full max-w-[420px] p-8 rounded-xl flex flex-col gap-8 border border-border-subtle bg-surface hover:indigo-glow transition-shadow duration-150">
-          <div className="flex flex-col gap-2 text-center">
-            <div className="flex justify-center mb-2">
-              <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-primary-foreground">
-                <GraduationCap className="h-7 w-7" />
-              </div>
+      <main className="flex-grow flex items-center justify-center px-4 md:px-8 py-8">
+        <div className="w-full max-w-[420px] p-6 rounded-xl flex flex-col gap-5 border border-border-subtle bg-surface hover:indigo-glow transition-shadow duration-150">
+          <div className="flex flex-col gap-1.5 text-center">
+            <div className="flex justify-center mb-1">
+              <BrandLogo
+                boxClass="w-12 h-12 rounded-xl"
+                iconClass="h-7 w-7"
+                showText={false}
+              />
             </div>
             <h1 className="font-semibold text-2xl text-text-heading tracking-tight">
               Welcome back to AcademyX
@@ -75,11 +86,11 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <form className="flex flex-col gap-6" onSubmit={onSubmit}>
+          <form className="flex flex-col gap-5" onSubmit={onSubmit}>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="email" className="text-on-surface">Email address</Label>
-                <Input id="email" name="email" type="email" placeholder="name@company.com" required autoFocus />
+                <Input id="email" name="email" type="email" placeholder="name@institute.com" required autoFocus />
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between">
@@ -131,20 +142,7 @@ export default function LoginPage() {
         </div>
       </main>
 
-      <footer className="w-full py-8 mt-auto border-t border-border-subtle bg-surface-container-lowest">
-        <div className="flex flex-col md:flex-row justify-between items-center px-6 max-w-[1280px] mx-auto gap-4">
-          <div className="flex items-center gap-2">
-            <GraduationCap className="h-5 w-5 text-primary" />
-            <span className="font-semibold text-lg text-primary">AcademyX</span>
-          </div>
-          <div className="flex flex-wrap justify-center gap-6">
-            <a className="text-sm text-text-muted hover:text-primary transition-colors" href="#">Privacy Policy</a>
-            <a className="text-sm text-text-muted hover:text-primary transition-colors" href="#">Terms of Service</a>
-            <a className="text-sm text-text-muted hover:text-primary transition-colors" href="#">Contact Us</a>
-          </div>
-          <p className="text-sm text-text-muted opacity-80">© 2026 AcademyX. All rights reserved.</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
