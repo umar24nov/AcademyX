@@ -29,33 +29,49 @@ router.get("/conversations", async (req, res, next) => {
           include: {
             members: { include: { user: { select: { id: true, name: true, avatarUrl: true, role: true } } } },
             messages: { orderBy: { sentAt: "desc" }, take: 1 },
-            _count: {
-              select: {
-                messages: {
-                  where: { senderId: { not: req.user!.id }, deletedAt: null },
-                },
-              },
-            },
           },
         },
       },
       orderBy: { joinedAt: "desc" },
     });
 
-    res.json({
-      success: true,
-      data: {
-        conversations: memberships.map((m) => ({
+    const conversations = await Promise.all(
+      memberships.map(async (m) => {
+        const unread = await prisma.message.count({
+          where: {
+            conversationId: m.conversation.id,
+            senderId: { not: req.user!.id },
+            deletedAt: null,
+            sentAt: { gt: m.lastReadAt ?? new Date(0) },
+          },
+        });
+        return {
           id: m.conversation.id,
           title: m.conversation.title,
           isGroup: m.conversation.isGroup,
           members: m.conversation.members.map((x) => x.user),
           preview: m.conversation.messages[0]?.content ?? "",
           time: m.conversation.messages[0]?.sentAt ?? m.conversation.updatedAt,
-          unread: m.conversation._count.messages,
-        })),
-      },
+          unread,
+        };
+      }),
+    );
+
+    res.json({ success: true, data: { conversations } });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Institute contacts for starting new conversations (excludes self)
+router.get("/contacts", async (req, res, next) => {
+  try {
+    const contacts = await prisma.user.findMany({
+      where: { instituteId: req.user!.instituteId!, id: { not: req.user!.id }, status: "ACTIVE" },
+      select: { id: true, name: true, email: true, role: true, avatarUrl: true },
+      orderBy: { name: "asc" },
     });
+    res.json({ success: true, data: { contacts } });
   } catch (err) {
     next(err);
   }
@@ -67,27 +83,40 @@ router.post("/conversations", validate(conversationSchema), async (req, res, nex
     const { participantIds, title } = req.body;
 
     if (participantIds.length === 1) {
-      // DM: find-or-create
-      const members = [req.user!.id, participantIds[0]].sort();
-      const existing = await prisma.conversation.findFirst({
-        where: { isGroup: false },
+      // DM: find-or-create between exactly two members
+      const otherId = participantIds[0];
+      if (otherId === req.user!.id) throw ApiError.badRequest("You cannot message yourself");
+
+      const candidates = await prisma.conversation.findMany({
+        where: {
+          isGroup: false,
+          instituteId: req.user!.instituteId!,
+          members: { some: { userId: req.user!.id } },
+        },
         include: { members: true },
       });
+      const dm = candidates.find(
+        (c) =>
+          c.members.length === 2 &&
+          c.members.some((x) => x.userId === req.user!.id) &&
+          c.members.some((x) => x.userId === otherId),
+      );
+      if (dm) {
+        return res.status(200).json({ success: true, data: { conversation: dm } });
+      }
 
-      const dm = existing
-        ? existing
-        : await prisma.conversation.create({
-            data: {
-              instituteId: req.user!.instituteId!,
-              isGroup: false,
-              createdById: req.user!.id,
-              members: {
-                create: members.map((userId) => ({ userId })),
-              },
-            },
-          });
-
-      return res.status(201).json({ success: true, data: { conversation: dm } });
+      const created = await prisma.conversation.create({
+        data: {
+          instituteId: req.user!.instituteId!,
+          isGroup: false,
+          createdById: req.user!.id,
+          members: {
+            create: [req.user!.id, otherId].map((userId) => ({ userId })),
+          },
+        },
+        include: { members: true },
+      });
+      return res.status(201).json({ success: true, data: { conversation: created } });
     }
 
     const conversation = await prisma.conversation.create({
@@ -104,6 +133,25 @@ router.post("/conversations", validate(conversationSchema), async (req, res, nex
     });
 
     res.status(201).json({ success: true, data: { conversation } });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Mark a conversation as read
+router.post("/conversations/:id/read", async (req, res, next) => {
+  try {
+    const membership = await prisma.conversationMember.findFirst({
+      where: { conversationId: req.params.id, userId: req.user!.id },
+    });
+    if (!membership) throw ApiError.forbidden("You are not a member of this conversation");
+
+    await prisma.conversationMember.update({
+      where: { id: membership.id },
+      data: { lastReadAt: new Date() },
+    });
+
+    res.json({ success: true, data: { ok: true } });
   } catch (err) {
     next(err);
   }

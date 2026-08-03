@@ -1,4 +1,4 @@
-import { api } from "@/lib/api";
+import { api, getStoredUser } from "@/lib/api";
 import {
   courses as mockCourses,
   batches as mockBatches,
@@ -631,12 +631,16 @@ export const mockConversationsData: ConversationRow[] = mockConversations;
 export async function fetchConversations(): Promise<ConversationRow[]> {
   const live = await tryGet<{ conversations: ApiConversation[] }>("/messages/conversations");
   if (!live) return mockConversationsData;
+  const me = getStoredUser();
   return live.conversations.map((c) => {
-    const name = c.title ?? c.members[0]?.name ?? "Chat";
+    const others = c.members.filter((m) => m.id !== me?.id);
+    const isGroup = c.isGroup || others.length > 1;
+    const name = c.title ?? others[0]?.name ?? "Chat";
+    const role = isGroup ? (c.title ? "Community Group" : "Group") : others[0]?.role ?? "Member";
     return {
       id: c.id,
       name,
-      role: c.isGroup ? "Group" : c.members[0]?.role ?? "Member",
+      role,
       preview: c.preview ?? "",
       time: timeAgo(c.time),
       unread: c.unread ?? 0,
@@ -644,6 +648,28 @@ export async function fetchConversations(): Promise<ConversationRow[]> {
       initials: initialsOf(name),
     };
   });
+}
+
+export async function markConversationRead(conversationId: string): Promise<void> {
+  try {
+    await api.post(`/messages/conversations/${conversationId}/read`, {});
+  } catch {
+    // best effort
+  }
+}
+
+export interface Contact {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  avatarUrl?: string | null;
+}
+
+export async function fetchContacts(): Promise<Contact[]> {
+  const live = await tryGet<{ contacts: Contact[] }>("/messages/contacts");
+  if (!live) return [];
+  return live.contacts;
 }
 
 // ---------------------------------------------------------------------------
@@ -1433,13 +1459,13 @@ export const mockThreadData: ThreadMessage[] = mockChatThread;
 
 export async function fetchThreadMessages(conversationId?: string): Promise<ThreadMessage[]> {
   if (!conversationId) return mockThreadData;
+  const me = getStoredUser();
   const live = await tryGet<{ messages: ApiMessage[] }>(`/messages/conversations/${conversationId}/messages`);
   if (!live) return mockThreadData;
-  if (!live.messages.length) return mockThreadData;
   return live.messages.map((m) => ({
     id: m.id,
     from: m.sender?.name ?? "Unknown",
-    mine: false,
+    mine: m.sender?.id != null && me?.id != null && m.sender.id === me.id,
     text: m.content ?? "",
     time: formatTime(m.sentAt),
   }));
@@ -1450,6 +1476,24 @@ interface ApiMessage {
   content?: string | null;
   sentAt?: string;
   sender?: { id: string; name?: string } | null;
+}
+
+export interface ApiConversationResult {
+  id: string;
+  title?: string | null;
+  isGroup: boolean;
+}
+
+export async function createConversation(participantIds: string[], title?: string): Promise<ApiConversationResult | null> {
+  try {
+    const res = await api.post<{ conversation: ApiConversationResult }>("/messages/conversations", {
+      participantIds,
+      title,
+    });
+    return res.conversation;
+  } catch {
+    return null;
+  }
 }
 
 export async function sendThreadMessage(conversationId: string, content: string): Promise<ThreadMessage | null> {

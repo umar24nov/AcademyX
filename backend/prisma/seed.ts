@@ -156,6 +156,7 @@ interface InstituteSeedConfig {
   batchId: string;
   batchName: string;
   batchCode: string;
+  communityId: string;
   courseId: string;
   courseTitle: string;
   courseCode: string;
@@ -195,7 +196,7 @@ async function seedInstitute(cfg: InstituteSeedConfig) {
     },
   });
 
-  await upsertUser(cfg.admin.email, cfg.admin.name, Role.INSTITUTE_ADMIN, institute.id, passwordHash);
+  const adminUser = await upsertUser(cfg.admin.email, cfg.admin.name, Role.INSTITUTE_ADMIN, institute.id, passwordHash);
 
   const teacherUsers = [];
   for (const t of cfg.teachers) {
@@ -249,7 +250,38 @@ async function seedInstitute(cfg: InstituteSeedConfig) {
     await createEnrollmentIfMissing(profile.id, batch.id, course.id, 150000);
   }
 
-  return { institute, batch, course, teacherUsers };
+  // ---- Community group chat for this batch ----
+  const memberIds = [
+    adminUser.id,
+    ...teacherUsers.map((t) => t.user.id),
+    ...(await prisma.user.findMany({ where: { instituteId: institute.id, role: Role.STUDENT }, select: { id: true } })).map((u) => u.id),
+  ];
+  const community = await prisma.conversation.upsert({
+    where: { id: cfg.communityId },
+    update: {},
+    create: {
+      id: cfg.communityId,
+      instituteId: institute.id,
+      isGroup: true,
+      title: `${cfg.batchName} – Community`,
+      createdById: adminUser.id,
+      members: {
+        create: [...new Set(memberIds)].map((userId) => ({ userId })),
+      },
+    },
+  });
+  const welcomeExists = await prisma.message.findFirst({ where: { conversationId: community.id } });
+  if (!welcomeExists) {
+    await prisma.message.create({
+      data: {
+        conversationId: community.id,
+        senderId: adminUser.id,
+        content: `Welcome to the ${cfg.batchName} community group! Ask doubts, share notes and stay updated with announcements here.`,
+      },
+    });
+  }
+
+  return { institute, batch, course, teacherUsers, adminUser, community };
 }
 
 async function main() {
@@ -346,6 +378,7 @@ async function main() {
     batchId: "seed_batch_sunrise_01",
     batchName: "JEE Advanced 2027 – Batch A",
     batchCode: "JE-A",
+    communityId: "seed_conv_sunrise",
     courseId: "seed_course_001",
     courseTitle: "JEE Advanced Physics – Complete Syllabus",
     courseCode: "PHY-101",
@@ -651,6 +684,7 @@ async function main() {
     batchId: "seed_batch_sharma_01",
     batchName: "Class 12 Board + JEE Foundation",
     batchCode: "SC-12",
+    communityId: "seed_conv_sharma",
     courseId: "seed_course_sharma_001",
     courseTitle: "Mathematics & Science – Class 12 Boards",
     courseCode: "MATH-12",
@@ -692,6 +726,7 @@ async function main() {
     batchId: "seed_batch_almadina_01",
     batchName: "NEET 2027 – Target Batch",
     batchCode: "NEET-1",
+    communityId: "seed_conv_almadina",
     courseId: "seed_course_almadina_001",
     courseTitle: "NEET Biology & Chemistry",
     courseCode: "NEET-BC",
@@ -733,6 +768,7 @@ async function main() {
     batchId: "seed_batch_navodaya_01",
     batchName: "JEE Main 2027 – Crash Batch",
     batchCode: "JM-C",
+    communityId: "seed_conv_navodaya",
     courseId: "seed_course_navodaya_001",
     courseTitle: "JEE Main Physics & Maths",
     courseCode: "JM-PM",
@@ -774,6 +810,7 @@ async function main() {
     batchId: "seed_batch_crescent_01",
     batchName: "KEAM 2027 – Physics Batch",
     batchCode: "KEAM-P",
+    communityId: "seed_conv_crescent",
     courseId: "seed_course_crescent_001",
     courseTitle: "KEAM Physics & Maths",
     courseCode: "KEAM-PM",
@@ -815,6 +852,7 @@ async function main() {
     batchId: "seed_batch_iqra_01",
     batchName: "NEET 2027 – Girls Batch",
     batchCode: "NEET-G",
+    communityId: "seed_conv_iqra",
     courseId: "seed_course_iqra_001",
     courseTitle: "NEET Biology, Physics & Chemistry",
     courseCode: "NEET-BPC",
