@@ -44,7 +44,7 @@ export default function SuperAdminDashboardPage() {
           />
           <StatCard
             label="MRR"
-            value={`$${(platformStats.mrr / 1000).toFixed(0)}k`}
+            value={`₹${(platformStats.mrr / 1000).toFixed(0)}k`}
             icon="payments"
             trend="+18%"
             trendUp
@@ -96,7 +96,7 @@ export default function SuperAdminDashboardPage() {
               <div>
                 <div className="flex justify-between text-xs mb-2">
                   <span className="text-text-muted">Avg Revenue / Institute</span>
-                  <span className="text-text-heading font-bold">${platformStats.avgRevenuePerInstitute}</span>
+                  <span className="text-text-heading font-bold">₹{platformStats.avgRevenuePerInstitute.toLocaleString("en-IN")}</span>
                 </div>
                 <div className="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
                   <div className="h-full bg-primary w-[62%] rounded-full" />
@@ -151,7 +151,7 @@ export default function SuperAdminDashboardPage() {
                       </Badge>
                     </TableCell>
                     <TableCell className="font-mono text-sm">{i.students.toLocaleString()}</TableCell>
-                    <TableCell className="font-mono text-sm">${i.mrr.toLocaleString()}</TableCell>
+                    <TableCell className="font-mono text-sm">₹{i.mrr.toLocaleString("en-IN")}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <div className="w-20 h-1.5 bg-surface-container-high rounded-full overflow-hidden">

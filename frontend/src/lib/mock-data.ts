@@ -20,8 +20,8 @@ export const mockInstitute = {
   primaryColor: "#6366f1",
   secondaryColor: "#18181b",
   email: "admin@sunriseacademy.edu",
-  phone: "+1 (555) 012-3456",
-  address: "221 Innovation Drive, San Francisco, CA",
+  phone: "+91 98765 43210",
+  address: "Begumpet, Hyderabad, Telangana 500016",
   website: "https://sunriseacademy.in",
   studentsCount: 2842,
   teachersCount: 96,
@@ -31,7 +31,7 @@ export const mockInstitute = {
 };
 
 export const dashboardStats = {
-  revenue: { total: 128400, growth: 12, currency: "USD" },
+  revenue: { total: 128400, growth: 12, currency: "INR" },
   activeStudents: { total: 2842, growth: 12 },
   todayClasses: { total: 18 },
   pendingAssignments: { total: 94 },
@@ -56,7 +56,7 @@ export const announcements = [
     id: "ann_1",
     type: "Urgent",
     title: "System Maintenance",
-    description: "Portal will be down for scheduled maintenance tonight at 11:00 PM EST...",
+    description: "Portal will be down for scheduled maintenance tonight at 11:00 PM IST...",
     time: "2h ago",
     audience: "Institute",
   },
@@ -665,7 +665,7 @@ export const activity = [
     id: "act_004",
     actor: "Payments",
     action: "received payment",
-    target: "$499 from Rohan Sharma",
+    target: "₹4,999 from Rohan Sharma",
     time: "2h ago",
     type: "payment",
   },

@@ -36,17 +36,17 @@ interface ChatMessage {
 }
 
 const mockParticipants = [
-  { name: "Elena Martinez", initials: "EM", online: true },
-  { name: "Marcus Chen", initials: "MC", online: true },
-  { name: "Priya Sharma", initials: "PS", online: false },
-  { name: "Julian Wright", initials: "JW", online: true },
-  { name: "Sarah Lofton", initials: "SL", online: false },
-  { name: "Ravi Kumar", initials: "RK", online: false },
+  { name: "Ayesha Khan", initials: "AK", online: true },
+  { name: "Mohammed Imran", initials: "MI", online: true },
+  { name: "Aisha Siddiqui", initials: "AS", online: false },
+  { name: "Rohan Sharma", initials: "RS", online: true },
+  { name: "Priya Patel", initials: "PP", online: false },
+  { name: "Rahul Verma", initials: "RV", online: false },
 ];
 
 const seedChat: ChatMessage[] = [
-  { id: "m1", from: "Marcus Chen", mine: false, text: "Is the recording going to be uploaded?", time: "just now" },
-  { id: "m2", from: "Elena Martinez", mine: false, text: "Could you go over the last slide again?", time: "just now" },
+  { id: "m1", from: "Mohammed Imran", mine: false, text: "Is the recording going to be uploaded?", time: "just now" },
+  { id: "m2", from: "Ayesha Khan", mine: false, text: "Could you go over the last slide again?", time: "just now" },
 ];
 
 function LiveClassSessionPageInner() {

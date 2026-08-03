@@ -123,7 +123,7 @@ export default function CourseManagementPage() {
                   Revenue Performance
                 </h3>
                 <div className="flex items-baseline gap-2 mb-2">
-                  <span className="font-bold text-4xl text-text-heading">$124,500</span>
+                  <span className="font-bold text-4xl text-text-heading">₹1,24,500</span>
                   <span className="text-sm text-success-green flex items-center">
                     <Icon name="trending_up" className="h-4 w-4" />
                     12%
@@ -132,7 +132,7 @@ export default function CourseManagementPage() {
                 <p className="text-text-muted text-sm mb-6">Net enrollment revenue this quarter</p>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center text-xs">
-                    <span className="text-text-muted">Target: $150k</span>
+                    <span className="text-text-muted">Target: ₹1.5L</span>
                     <span className="text-text-heading font-bold">83%</span>
                   </div>
                   <div className="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
@@ -232,15 +232,15 @@ function CreateCourseModal({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ev">Dr. Elena Vance</SelectItem>
-                  <SelectItem value="mt">Prof. Marcus Thorne</SelectItem>
-                  <SelectItem value="sc">Sarah Chen, PhD</SelectItem>
+                  <SelectItem value="ev">Dr. Ayesha Ansari</SelectItem>
+                  <SelectItem value="mt">Prof. Arjun Nair</SelectItem>
+                  <SelectItem value="sc">Dr. Kavya Reddy</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label className="font-mono text-xs text-text-muted uppercase">Course Pricing (USD)</Label>
-              <Input className="mt-2" type="number" placeholder="499" />
+              <Label className="font-mono text-xs text-text-muted uppercase">Course Pricing (INR)</Label>
+              <Input className="mt-2" type="number" placeholder="4,999" />
             </div>
             <div>
               <Label className="font-mono text-xs text-text-muted uppercase">Visibility</Label>

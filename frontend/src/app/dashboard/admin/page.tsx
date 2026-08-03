@@ -58,7 +58,7 @@ export default function InstituteAdminDashboardPage() {
           />
           <StatCard
             label="Pending Fees"
-            value={`$${dashboardStats.pendingFees.total.toLocaleString()}`}
+            value={`₹${dashboardStats.pendingFees.total.toLocaleString()}`}
             icon="payments"
             trend="Attention Required"
             trendUp={false}
@@ -77,13 +77,13 @@ export default function InstituteAdminDashboardPage() {
                 <div>
                   <p className="text-sm text-text-muted">Net Growth</p>
                   <p className="text-xl font-semibold text-text-heading">
-                    + ${dashboardStats.netGrowth.total.toLocaleString()}
+                    + ₹{dashboardStats.netGrowth.total.toLocaleString()}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-text-muted">Avg Tuition</p>
                   <p className="text-xl font-semibold text-text-heading">
-                    ${dashboardStats.avgTuition.total.toLocaleString()}/yr
+                    ₹{dashboardStats.avgTuition.total.toLocaleString()}/yr
                   </p>
                 </div>
               </div>

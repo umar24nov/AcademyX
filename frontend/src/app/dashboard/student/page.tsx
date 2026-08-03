@@ -10,15 +10,17 @@ import { Progress } from "@/components/ui/progress";
 import { Icon } from "@/components/shared/icon";
 import { useLive } from "@/lib/live";
 import { fetchStudentDashboard, mockStudentDashboardData } from "@/lib/live-data";
+import { getStoredUser } from "@/lib/api";
 
 export default function StudentDashboardPage() {
   const { attendanceRate, avgScore, courseCount, certificates, courses, nextClass, assignments } =
     useLive(fetchStudentDashboard, mockStudentDashboardData);
+  const firstName = getStoredUser()?.name?.split(" ")[0] ?? "Student";
   return (
     <DashboardShell>
       <div className="flex flex-col gap-8">
         <PageHeader
-          title="Welcome back, Alex."
+          title={`Welcome back, ${firstName}.`}
           description="You have 1 live class today and 2 assignments due this week."
           actions={
             <Button variant="outline">
