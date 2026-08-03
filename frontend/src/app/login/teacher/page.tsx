@@ -5,7 +5,7 @@ import { RoleLoginForm } from "@/components/auth/role-login-form";
 
 export default function TeacherLoginPage() {
   return (
-    <AuthShell backHref="/login" backLabel="Back to sign-in options">
+    <AuthShell>
       <RoleLoginForm
         heading="Teacher login"
         subheading="Sign in to manage your batches, lectures and grading."

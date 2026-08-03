@@ -5,7 +5,7 @@ import { RoleLoginForm } from "@/components/auth/role-login-form";
 
 export default function SuperAdminLoginPage() {
   return (
-    <AuthShell backHref="/" backLabel="Close and return to home">
+    <AuthShell>
       <RoleLoginForm
         heading="Platform admin login"
         subheading="Restricted access for AcademyX platform owners."
@@ -14,6 +14,7 @@ export default function SuperAdminLoginPage() {
         redirectPath="/dashboard/super-admin"
         buttonLabel="Sign in as Platform Admin"
         placeholder="owner@academyx.app"
+        closeHref="/"
       />
     </AuthShell>
   );

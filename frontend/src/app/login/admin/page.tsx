@@ -5,7 +5,7 @@ import { RoleLoginForm } from "@/components/auth/role-login-form";
 
 export default function InstituteAdminLoginPage() {
   return (
-    <AuthShell backHref="/login" backLabel="Back to sign-in options">
+    <AuthShell>
       <RoleLoginForm
         heading="Institute admin login"
         subheading="Sign in to manage your institute's operations and staff."

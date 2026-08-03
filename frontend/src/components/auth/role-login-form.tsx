@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,6 +34,7 @@ export function RoleLoginForm({
   redirectPath,
   buttonLabel,
   placeholder = "name@institute.com",
+  closeHref = "/login",
 }: {
   heading: string;
   subheading: string;
@@ -42,6 +43,7 @@ export function RoleLoginForm({
   redirectPath: string;
   buttonLabel: string;
   placeholder?: string;
+  closeHref?: string;
 }) {
   const router = useRouter();
   const { toast } = useToast();
@@ -82,7 +84,14 @@ export function RoleLoginForm({
   }
 
   return (
-    <div className="w-full max-w-[420px] p-6 rounded-xl flex flex-col gap-5 border border-border-subtle bg-surface hover:indigo-glow transition-shadow duration-150">
+    <div className="w-full max-w-[420px] p-6 rounded-xl flex flex-col gap-5 border border-border-subtle bg-surface hover:indigo-glow transition-shadow duration-150 relative">
+      <Link
+        href={closeHref}
+        aria-label="Close and go back"
+        className="absolute top-3 right-3 h-8 w-8 rounded-lg flex items-center justify-center text-text-muted hover:text-error hover:bg-surface-container-high transition-colors"
+      >
+        <X className="h-4 w-4" />
+      </Link>
       <div className="flex flex-col gap-1.5 text-center">
         <div className="flex justify-center mb-1">
           <BrandLogo

@@ -5,7 +5,7 @@ import { RoleLoginForm } from "@/components/auth/role-login-form";
 
 export default function StudentLoginPage() {
   return (
-    <AuthShell backHref="/login" backLabel="Back to sign-in options">
+    <AuthShell>
       <RoleLoginForm
         heading="Student login"
         subheading="Sign in to access your courses, live classes and exams."

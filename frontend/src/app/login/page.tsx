@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, GraduationCap, ShieldCheck, Users } from "lucide-react";
+import { ChevronRight, GraduationCap, ShieldCheck, Users, X } from "lucide-react";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { cn } from "@/lib/utils";
@@ -25,8 +25,15 @@ const portals = [
 
 export default function LoginPortalPage() {
   return (
-    <AuthShell backHref="/">
-      <div className="w-full max-w-[480px] flex flex-col gap-6">
+    <AuthShell>
+      <div className="w-full max-w-[480px] flex flex-col gap-6 p-6 rounded-xl border border-border-subtle bg-surface relative">
+        <Link
+          href="/"
+          aria-label="Close and go back"
+          className="absolute top-3 right-3 h-8 w-8 rounded-lg flex items-center justify-center text-text-muted hover:text-error hover:bg-surface-container-high transition-colors"
+        >
+          <X className="h-4 w-4" />
+        </Link>
         <div className="flex flex-col items-center gap-2 text-center">
           <BrandLogo
             boxClass="w-14 h-14 rounded-2xl"
