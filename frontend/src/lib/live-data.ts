@@ -1907,3 +1907,156 @@ export async function fetchBatchDetail(id?: string): Promise<BatchDetailData> {
     })),
   };
 }
+
+// ---------------------------------------------------------------------------
+// Onboarding
+// ---------------------------------------------------------------------------
+
+export interface OnboardingState {
+  instituteId: string;
+  instituteName: string;
+  profileDone: boolean;
+  teacherDone: boolean;
+  courseDone: boolean;
+  batchDone: boolean;
+  studentDone: boolean;
+  done: string[];
+  total: number;
+  complete: boolean;
+  stats: { students: number; teachers: number; courses: number; batches: number };
+}
+
+interface ApiInstituteInfo {
+  id: string;
+  name: string;
+  phone?: string | null;
+  address?: string | null;
+  contactEmail?: string | null;
+}
+
+interface ApiOnboardingStats {
+  institute: ApiInstituteInfo;
+  stats: { students: number; teachers: number; courses: number; batches: number };
+}
+
+const onboardingSteps = ["profile", "teacher", "course", "batch", "student"] as const;
+export type OnboardingStep = (typeof onboardingSteps)[number];
+
+export const onboardingStepLabels: Record<OnboardingStep, string> = {
+  profile: "Institute profile",
+  teacher: "Add a teacher",
+  course: "Create a course",
+  batch: "Create a batch",
+  student: "Add a student",
+};
+
+export async function fetchOnboardingState(instituteId?: string): Promise<OnboardingState | null> {
+  if (!instituteId) return null;
+  const live = await tryGet<ApiOnboardingStats>(`/institutes/${instituteId}/analytics`);
+  if (!live?.institute) return null;
+  const s = live.stats;
+  const profileDone = Boolean(live.institute.phone || live.institute.address);
+  const teacherDone = s.teachers >= 1;
+  const courseDone = s.courses >= 1;
+  const batchDone = s.batches >= 1;
+  const studentDone = s.students >= 1;
+  const done = onboardingSteps.filter((step) =>
+    step === "profile" ? profileDone
+      : step === "teacher" ? teacherDone
+        : step === "course" ? courseDone
+          : step === "batch" ? batchDone
+            : studentDone
+  );
+  return {
+    instituteId: live.institute.id,
+    instituteName: live.institute.name,
+    profileDone,
+    teacherDone,
+    courseDone,
+    batchDone,
+    studentDone,
+    done,
+    total: onboardingSteps.length,
+    complete: done.length === onboardingSteps.length,
+    stats: s,
+  };
+}
+
+export interface OnboardingTeacherPayload {
+  name: string;
+  email: string;
+  employeeId: string;
+  department?: string;
+  qualification?: string;
+}
+
+export interface OnboardingCoursePayload {
+  title: string;
+  code?: string;
+  description?: string;
+  category?: string;
+  level?: string;
+}
+
+export interface OnboardingBatchPayload {
+  name: string;
+  code: string;
+  courseId?: string | null;
+  capacity?: number;
+  startDate?: string;
+}
+
+export interface OnboardingStudentPayload {
+  name: string;
+  email: string;
+  rollNumber: string;
+  guardianName?: string;
+  guardianPhone?: string;
+  batchId?: string | null;
+}
+
+export async function createTeacherOnboarding(payload: OnboardingTeacherPayload): Promise<boolean> {
+  try {
+    await api.post("/teachers", { ...payload, password: "AcademyX@12345" });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function createCourseOnboarding(payload: OnboardingCoursePayload): Promise<boolean> {
+  try {
+    await api.post("/courses", { ...payload, status: "PUBLISHED" });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function createBatchOnboarding(payload: OnboardingBatchPayload): Promise<boolean> {
+  try {
+    await api.post("/batches", { ...payload, status: "ACTIVE" });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function createStudentOnboarding(payload: OnboardingStudentPayload): Promise<boolean> {
+  try {
+    await api.post("/students", { ...payload, password: "AcademyX@12345" });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function fetchOnboardingCourses(): Promise<{ id: string; title: string }[]> {
+  const live = await tryGet<{ courses: { id: string; title: string }[] }>("/courses");
+  return live?.courses ?? [];
+}
+
+export async function fetchOnboardingBatches(): Promise<{ id: string; name: string }[]> {
+  const live = await tryGet<{ batches: { id: string; name: string }[] }>("/batches");
+  return live?.batches ?? [];
+}

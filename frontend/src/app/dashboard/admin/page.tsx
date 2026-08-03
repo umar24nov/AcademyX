@@ -20,6 +20,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Icon } from "@/components/shared/icon";
 import { useLive } from "@/lib/live";
 import { fetchAdminOverview, mockAdminOverviewData } from "@/lib/live-data";
+import { OnboardingBanner } from "@/components/dashboard/onboarding-banner";
 
 export default function InstituteAdminDashboardPage() {
   const { dashboardStats, revenueSeries, announcements, recentAdmissions, activity } = useLive(
@@ -39,6 +40,8 @@ export default function InstituteAdminDashboardPage() {
             </>
           }
         />
+
+        <OnboardingBanner />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <StatCard

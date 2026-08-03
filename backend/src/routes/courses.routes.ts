@@ -84,11 +84,25 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", requireRole(Role.INSTITUTE_ADMIN, Role.TEACHER), validate(courseCreateSchema), async (req, res, next) => {
   try {
-    const teacherProfile = await prisma.teacherProfile.findFirst({
+    let teacherProfile = await prisma.teacherProfile.findFirst({
       where: { userId: req.user!.id, instituteId: req.user!.instituteId! },
       select: { id: true },
     });
-    if (!teacherProfile) throw ApiError.forbidden("Only teachers and admins can create courses");
+    if (!teacherProfile) {
+      // Institute admins can author courses even without a dedicated teacher
+      // profile — auto-create one so course ownership is always valid.
+      if (req.user!.role === Role.TEACHER) {
+        throw ApiError.forbidden("Only teachers and admins can create courses");
+      }
+      teacherProfile = await prisma.teacherProfile.create({
+        data: {
+          userId: req.user!.id,
+          instituteId: req.user!.instituteId!,
+          employeeId: `ADMIN-${req.user!.id.slice(0, 8).toUpperCase()}`,
+        },
+        select: { id: true },
+      });
+    }
 
     const course = await prisma.course.create({
       data: {
