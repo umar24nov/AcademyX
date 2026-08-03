@@ -616,7 +616,7 @@ export const notifications = [
   {
     id: "not_002",
     type: "Payment",
-    title: "Payment of $499 received from Rohan Sharma",
+    title: "Payment of ₹4,999 received from Rohan Sharma",
     time: "1h ago",
     read: false,
   },
