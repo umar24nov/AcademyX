@@ -878,7 +878,8 @@ export const mockSuperAdminOverviewData: SuperAdminOverviewData = {
     { id: "inst_002", name: "Sharma Classes", plan: "Starter", students: 540, mrr: 340, status: "Active", health: 82 },
     { id: "inst_003", name: "Al-Madina Coaching Centre", plan: "Enterprise", students: 12300, mrr: 8900, status: "Active", health: 99 },
     { id: "inst_004", name: "Navodaya Academy", plan: "Professional", students: 2100, mrr: 980, status: "Trial", health: 61 },
-    { id: "inst_005", name: "Crescent Institute", plan: "Starter", students: 320, mrr: 0, status: "Paused", health: 40 },
+    { id: "inst_005", name: "Crescent Institute", plan: "Starter", students: 320, mrr: 0, status: "Suspended", health: 40 },
+    { id: "inst_006", name: "Iqra Girls Academy", plan: "Professional", students: 720, mrr: 720, status: "Active", health: 91 },
   ],
 };
 
@@ -1491,7 +1492,7 @@ export const mockInstituteProfile: InstituteProfile = {
   id: "ins_001",
   name: "Sunrise Academy",
   slug: "sunrise",
-  contactEmail: "contact@sunriseacademy.edu",
+  contactEmail: "contact@sunriseacademy.in",
   phone: "+91 98765 43210",
   address: "221B, Tech Park, Bangalore",
   about: "Leading institute for engineering and computer science education.",
@@ -1713,11 +1714,14 @@ export const mockBatchDetailData: BatchDetailData = {
   exams: 4,
   assignments: 6,
   students: [
-    { id: "stu_001", name: "Ayesha Khan", rollNumber: "AX-2023-001", email: "ayesha@sunriseacademy.edu", attendanceRate: 95, status: "Active" },
-    { id: "stu_002", name: "Mohammed Imran", rollNumber: "AX-2023-002", email: "mohammed@sunriseacademy.edu", attendanceRate: 88, status: "Active" },
-    { id: "stu_003", name: "Aisha Siddiqui", rollNumber: "AX-2023-003", email: "aisha@sunriseacademy.edu", attendanceRate: 91, status: "Active" },
-    { id: "stu_004", name: "Rohan Sharma", rollNumber: "AX-2023-004", email: "rohan@sunriseacademy.edu", attendanceRate: 79, status: "Active" },
-    { id: "stu_005", name: "Priya Patel", rollNumber: "AX-2023-005", email: "priya@sunriseacademy.edu", attendanceRate: 97, status: "Active" },
+    { id: "stu_001", name: "Ayesha Khan", rollNumber: "AX-2026-001", email: "ayesha.khan@sunriseacademy.in", attendanceRate: 95, status: "Active" },
+    { id: "stu_002", name: "Mohammed Imran", rollNumber: "AX-2026-002", email: "mohammed.imran@sunriseacademy.in", attendanceRate: 88, status: "Active" },
+    { id: "stu_003", name: "Aisha Siddiqui", rollNumber: "AX-2026-003", email: "aisha.siddiqui@sunriseacademy.in", attendanceRate: 91, status: "Active" },
+    { id: "stu_004", name: "Rohan Sharma", rollNumber: "AX-2026-004", email: "rohan.sharma@sunriseacademy.in", attendanceRate: 79, status: "Active" },
+    { id: "stu_005", name: "Priya Patel", rollNumber: "AX-2026-005", email: "priya.patel@sunriseacademy.in", attendanceRate: 97, status: "Active" },
+    { id: "stu_006", name: "Rahul Verma", rollNumber: "AX-2026-006", email: "rahul.verma@sunriseacademy.in", attendanceRate: 85, status: "Active" },
+    { id: "stu_007", name: "Fatima Sheikh", rollNumber: "AX-2026-007", email: "fatima.sheikh@sunriseacademy.in", attendanceRate: 94, status: "Active" },
+    { id: "stu_008", name: "Aditya Gupta", rollNumber: "AX-2026-008", email: "aditya.gupta@sunriseacademy.in", attendanceRate: 81, status: "Active" },
   ],
   liveClasses: [
     { id: "live_003", title: "Backpropagation Deep Dive", startsAt: "2024-06-16T19:00:00Z", status: "Scheduled" },
