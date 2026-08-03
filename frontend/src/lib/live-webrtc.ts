@@ -196,7 +196,7 @@ export function useLiveWebRTC({ enabled, myUserId, participants, sendSignal, onS
           }
         }
       }
-      for (const [userId, remote] of Array.from(remoteVideosRef.current.entries())) {
+      for (const userId of Array.from(remoteVideosRef.current.keys())) {
         if (userId === me) continue;
         if (!seen.has(userId)) {
           remoteVideosRef.current.delete(userId);
@@ -229,18 +229,21 @@ export function useLiveWebRTC({ enabled, myUserId, participants, sendSignal, onS
   }, [enabled, myUserId, participants, syncPeers]);
 
   React.useEffect(() => {
+    const peers = peersRef.current;
+    const streamRef = localStreamRef;
+    const remotes = remoteVideosRef.current;
     return () => {
-      for (const pc of peersRef.current.values()) {
+      for (const pc of peers.values()) {
         try {
           pc.close();
         } catch {
           // ignore
         }
       }
-      peersRef.current.clear();
-      localStreamRef.current?.getTracks().forEach((t) => t.stop());
-      localStreamRef.current = null;
-      remoteVideosRef.current.clear();
+      peers.clear();
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+      remotes.clear();
     };
   }, []);
 

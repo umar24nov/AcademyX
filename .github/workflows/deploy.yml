@@ -1,0 +1,46 @@
+name: Deploy
+
+# CD is gated on CI: deploys only run after the CI workflow completes
+# successfully on `main`. Requires the following GitHub repo secrets
+# (optional — steps are skipped when the secret is not configured):
+#   RENDER_DEPLOY_HOOK_URL  -> Render "Deploy Hook" URL for the API service
+#   VERCEL_DEPLOY_HOOK_URL  -> Vercel "Deploy Hook" URL for the web app
+# Both Render and Vercel can also auto-deploy via their GitHub integrations;
+# these hooks are an explicit, CI-gated fallback for guaranteed deploys.
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy to Render + Vercel
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Trigger Render deploy hook
+        if: ${{ secrets.RENDER_DEPLOY_HOOK_URL != '' }}
+        run: curl -fsS -X POST "$RENDER_DEPLOY_HOOK_URL"
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+
+      - name: Trigger Vercel deploy hook
+        if: ${{ secrets.VERCEL_DEPLOY_HOOK_URL != '' }}
+        run: curl -fsS -X POST "$VERCEL_DEPLOY_HOOK_URL"
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+
+      - name: Wait for backend health (best effort)
+        if: ${{ secrets.RENDER_DEPLOY_HOOK_URL != '' }}
+        run: |
+          for i in $(seq 1 20); do
+            if curl -fsS "https://academyx-api.onrender.com/health" >/dev/null 2>&1; then
+              echo "Backend healthy"
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "Warning: backend not healthy within 5m (may still be starting)"
+          exit 0
