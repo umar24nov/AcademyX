@@ -9,6 +9,46 @@ AcademyX is a **multi-tenant EdTech SaaS platform** ("the operating system for c
 
 Each coaching institute is an isolated **tenant** with its own admin, teachers, students, courses, and batches. A platform-level super admin manages all institutes.
 
+```mermaid
+mindmap
+  root((AcademyX))
+    Platform
+      Multi-tenant institutes
+      Super admin
+      Analytics
+    Auth & RBAC
+      JWT access + rotating refresh
+      Forgot / reset password
+      Roles (4): SUPER_ADMIN / INSTITUTE_ADMIN / TEACHER / STUDENT
+      Role login portals
+    Academics
+      Courses, modules, lessons
+      Batches & enrollment
+      Attendance
+      Recorded lectures & materials
+    Assessment
+      Exams (MCQ, auto-graded)
+      Assignments + grading
+    Live classes
+      Scheduling & status
+      Socket.IO chat + presence
+      WebRTC mesh video/audio
+    Communication
+      Direct messages
+      Per-batch community groups
+      Notifications
+      Support tickets
+    Commerce
+      Payments (backend records)
+      Invoices
+      Razorpay checkout (planned)
+    UX
+      Landing page (mobile-first)
+      Onboarding wizard
+      Role dashboards & reports
+      Settings, billing, profile
+```
+
 ## 2. Problem Statement
 
 Coaching institutes typically juggle spreadsheets, WhatsApp groups, and disconnected tools for:
@@ -73,6 +113,18 @@ Accounts created through the onboarding wizard use the default password `Academy
 - Students attempt exams; answers are **auto-graded**; attempts tracked (`in_progress | submitted | graded`).
 - Verified live flow: create → publish → attempt → submit → auto-grade → score.
 
+```mermaid
+flowchart LR
+  T["Teacher/Admin"] --> E["create exam + MCQs"]
+  E --> P["publish"]
+  P --> S["Student takes attempt"]
+  S --> A["auto-graded answers"]
+  A --> D{"submitted?"}
+  D -- yes --> R["score returned"]
+  D -- no --> S
+  R --> V["Student sees score & review"]
+```
+
 ### 4.7 Assignments
 - Assignment CRUD with due dates.
 - Student submissions (with notes, late marking) and **teacher grading UI** (marks + feedback).
@@ -83,6 +135,24 @@ Accounts created through the onboarding wizard use the default password `Academy
 - **Real-time room** via Socket.IO: presence (join/leave), live chat, participant roster.
 - **Mesh WebRTC video/audio** with STUN (Google), offers/answers/ICE signaling over the socket, camera/mic toggles.
 - Host "Launch Session" transition; session page shows Live/Scheduled/Ended states and recording link placeholder.
+
+```mermaid
+flowchart TD
+  M["Staff creates live class<br/>(scheduled)"] --> J{"participant joins?"}
+  J -- student --> R["join room<br/>(presence + chat)"]
+  J -- staff --> L{"scheduled?"}
+  L -- yes --> LA["Launch Session<br/>(status -> LIVE)"]
+  L -- no --> R
+  LA --> R
+  R --> C["socket.io room<br/>chat + participant roster"]
+  R --> W["WebRTC mesh video/audio<br/>(STUN, offers/answers/ICE)"]
+  W --> T{"toggle?"}
+  T -- camera/mic --> W
+  C --> L2{"leave / end?"}
+  W --> L2
+  L2 -- leave --> OUT["participant removed"]
+  L2 -- ended --> REC["recording link placeholder"]
+```
 
 ### 4.9 Lectures & Study Material
 - Recorded lectures and study material library (teacher/admin upload).

@@ -5,6 +5,29 @@
 
 Legend: `DONE` = verified/committed/pushed. `IN PROGRESS` = actively being worked. `PLANNED` = not started.
 
+```mermaid
+flowchart LR
+  subgraph done["Completed"]
+    P1["1 Foundation"]
+    P2["2 API wiring"]
+    P3["3 Branding & data"]
+    P4["4 Chat & community"]
+    P5["5 Exams & assignments"]
+    P6["6 Mobile landing"]
+    P7["7 Onboarding"]
+    P8["8 Live classes (realtime)"]
+    P9["9 CI/CD"]
+  end
+  subgraph planned["Planned"]
+    P10["10 Payments (Razorpay)"]
+    P11["11 HMS / certs / email / uploads"]
+  end
+  P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> P9 --> P10 --> P11
+
+  style done fill:#123524,stroke:#37cd8f,color:#e5e1e4
+  style planned fill:#3a2a00,stroke:#ffb783,color:#e5e1e4
+```
+
 ## Phase 1 — Foundation & Multi-Tenant Scaffold — `DONE`
 - Initial AcademyX multi-tenant EdTech platform scaffold (`f488839`).
 - Super-admin through institute-scoped routes; init migration (`8808446`).

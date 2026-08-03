@@ -41,6 +41,25 @@
 - Frontend: `tryGet<T>` returns `null` on API failure — components render empty/mock states, they do not throw.
 - Surface user-facing failures with `useToast` (`toast({ title, description, variant })`).
 
+```mermaid
+flowchart TD
+  R["request"] --> V{"zod validate"}
+  V -- "invalid" --> A["ApiError.badRequest"]
+  V -- "valid" --> G{"role / institute guard"}
+  G -- "denied" --> F["ApiError.unauthorized / forbidden"]
+  G -- "allowed" --> C["controller (Prisma)"]
+  C -- "ok" --> S["{ success: true, data }"]
+  C -- "not found" --> N["ApiError.notFound"]
+  C -- "conflict" --> D["ApiError.conflict"]
+  C -- "unexpected" --> E["ApiError(500)"]
+  A --> H["central errorHandler"]
+  F --> H
+  N --> H
+  D --> H
+  E --> H
+  H --> O["{ success: false, error }"]
+```
+
 ## 5. Backend Conventions
 
 - Route files: `backend/src/routes/*.routes.ts`; mount in `app.ts` under `/api/v1/...`.
@@ -71,3 +90,19 @@
 2. `frontend`: `npm run typecheck` + `npm run lint` (0 errors) + `npm run build`.
 3. No new secrets, no `~$*.pptx`, no stray files staged.
 4. CI (GitHub Actions) green on the pushed commit.
+
+```mermaid
+flowchart LR
+  E["edit code"] --> B{"backend typecheck + build"}
+  E --> F{"frontend typecheck + lint + build"}
+  B -- "fail" --> E
+  F -- "fail" --> E
+  B -- "pass" --> S{"stage only intended files"}
+  F -- "pass" --> S
+  S -- "secrets / ~$ files" --> E
+  S -- "clean" --> C["commit (concise msg)"]
+  C --> P["push"]
+  P --> G{"CI green?"}
+  G -- "no" --> F
+  G -- "yes" --> D["done"]
+```

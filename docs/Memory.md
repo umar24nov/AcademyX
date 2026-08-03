@@ -42,7 +42,7 @@ Multi-tenant EdTech SaaS ("the operating system for coaching institutes"). Next.
 
 ## 5. Currently Being Worked On
 
-- **Documentation set** (this step): created `docs/PRD.md`, `docs/Architecture.md`, `docs/Rules.md`, `docs/Phases.md`, `docs/Design.md`, `docs/Memory.md`. Next: commit + push them, then confirm whether to start Phase 10 (Razorpay).
+- **Docs with diagrams** (this step): added Mermaid diagrams to `docs/` — system architecture, request lifecycle, ER data model, Socket.IO/WebRTC sequence, CI/CD pipeline (Architecture.md); feature mindmap + exam/live-class flows (PRD.md); error handling + commit checklist flows (Rules.md); phase timeline (Phases.md); color/token map + typography scale (Design.md). Next: commit + push, then confirm whether to start Phase 10 (Razorpay).
 
 ## 6. Watch Items / Gotchas
 

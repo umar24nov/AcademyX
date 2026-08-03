@@ -6,21 +6,23 @@
 
 AcademyX is a **client-server monorepo** with two deployable apps plus a hosted database:
 
-```
-            ┌─────────────────────────────┐
-            │  Frontend (Next.js, Vercel) │
-            │  https://academy-x-ivory.vercel.app
-            └──────────────┬──────────────┘
-                           │ HTTPS /api/v1
-                           │ + WebSocket /socket.io
-            ┌──────────────▼──────────────┐
-            │  Backend (Express, Render)  │
-            │  https://academyx-api.onrender.com
-            └──────────────┬──────────────┘
-                           │ Prisma
-            ┌──────────────▼──────────────┐
-            │  PostgreSQL (Neon)          │
-            └─────────────────────────────┘
+```mermaid
+flowchart LR
+  subgraph Client["Client (browser)"]
+    FE["Next.js Frontend<br/>Vercel - academy-x-ivory.vercel.app"]
+  end
+
+  subgraph Server["Server (Render - academyx-api.onrender.com)"]
+    API["Express API<br/>/api/v1/*"]
+    WS["Socket.IO server<br/>/socket.io"]
+  end
+
+  DB[("PostgreSQL<br/>Neon")]
+
+  FE -- "HTTPS /api/v1" --> API
+  FE -- "WebSocket" --> WS
+  API -- "Prisma (SQL)" --> DB
+  WS -- "shared rooms" --> API
 ```
 
 - **API base URL**: `https://academyx-api.onrender.com/api/v1` (health check at `/health`, socket at `/socket.io`).
@@ -107,12 +109,20 @@ New Project/
 ## 4. Backend Architecture
 
 ### 4.1 Request Lifecycle
-```
-Request → helmet/cors → express.json → route middleware chain →
-  authenticate (JWT) → requireRole / requireInstitute → zod validate →
-  controller (Prisma queries) → { success, data } JSON
-                                      ↓ error
-                      ApiError → errorHandler → { success: false, error }
+```mermaid
+flowchart TD
+  REQ["HTTP Request"] --> H["helmet + cors"]
+  H --> J["express.json"]
+  J --> M{"route middleware"}
+  M -- "next()" --> R{"role / institute<br/>guards"}
+  R -- "allowed" --> V["zod validate"]
+  V -- "valid" --> C["controller<br/>(Prisma queries)"]
+  C -- "ok" --> OK["{ success: true, data }"]
+  V -- "invalid" --> ERR
+  R -- "denied" --> ERR
+  M -- "error" --> ERR
+  ERR["ApiError factory"] --> EH["central errorHandler"]
+  EH --> FAIL["{ success: false, error }"]
 ```
 
 - Every response is `{ success: true, data }`; every error is `{ success: false, error }`.
@@ -133,6 +143,42 @@ Live/Media: `LiveClass`, `RecordedLecture`, `StudyMaterial`, `Announcement`, `Ce
 Commerce: `Payment`, `Invoice`.
 Comms: `Conversation → ConversationMember → Message`, `Notification`, `SupportTicket`, `ActivityLog`, `AuditLog`, `RefreshToken`.
 
+```mermaid
+erDiagram
+  Institute ||--o{ User : has
+  User ||--o| StudentProfile : has
+  User ||--o| TeacherProfile : has
+  User ||--o{ RefreshToken : owns
+  User ||--o{ Enrollment : enrolls
+  User ||--o{ ExamAttempt : takes
+  User ||--o{ AssignmentSubmission : submits
+  User ||--o{ Attendance : has
+  User ||--o{ ConversationMember : joins
+  User ||--o{ Payment : pays
+
+  Course ||--o{ Module : contains
+  Module ||--o{ Lesson : contains
+  Course ||--o{ Batch : offered_as
+  Course ||--o{ Exam : has
+  Course ||--o{ Assignment : has
+  Course ||--o{ LiveClass : schedules
+  Course ||--o{ RecordedLecture : has
+  Course ||--o{ StudyMaterial : has
+
+  Batch ||--o{ Enrollment : has
+  Batch ||--o{ Attendance : records
+  Batch ||--o{ LiveClass : hosts
+
+  Exam ||--o{ ExamQuestion : contains
+  Exam ||--o{ ExamAttempt : generates
+  Assignment ||--o{ AssignmentSubmission : receives
+
+  Conversation ||--o{ Message : contains
+  Conversation ||--o{ ConversationMember : includes
+
+  Payment ||--o| Invoice : generates
+```
+
 Notable quirks:
 - `ExamAttempt.status` is a **String** (`in_progress | submitted | graded`), not an enum.
 - `AssignmentSubmission.status` is an enum `SubmissionStatus` (`SUBMITTED | LATE | GRADED`), `marks Float?`, `feedback String?`.
@@ -144,6 +190,38 @@ Notable quirks:
 - Handshake auth via `auth.token` (JWT).
 - Events: `live:join` / `live:leave` / `live:disconnect` (rooms `live:{id}`, participant registry), `live:chat` (→ `live:chat:new` broadcast), `live:signal` (WebRTC signaling routed by target user id), `live:participants` broadcast on join/leave.
 - Wired in `server.ts` via `initLiveSocket(server)`.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor A as Student (browser A)
+  actor B as Teacher (browser B)
+  participant S as Socket.IO server (Render)
+
+  A->>S: connect (auth.token)
+  A->>S: live:join { liveClassId }
+  S-->>A: live:participants [A]
+  S-->>B: live:participants [A, B]
+  B->>S: live:join { liveClassId }
+  S-->>B: live:participants [A, B]
+  S-->>A: live:participants [A, B]
+
+  Note over A,B: WebRTC signaling (mesh)
+  A->>S: live:signal { target: B, type: offer }
+  S-->>B: live:signal (offer)
+  B->>S: live:signal { target: A, type: answer }
+  S-->>A: live:signal (answer)
+  A->>S: live:signal { target: B, type: ice }
+  S-->>B: live:signal (ice)
+  B->>A: media (RTCPeerConnection, direct)
+
+  A->>S: live:chat { text }
+  S-->>A: live:chat:new
+  S-->>B: live:chat:new
+
+  A->>S: live:leave { liveClassId }
+  S-->>B: live:participants [B]
+```
 
 ## 5. Frontend Architecture
 
@@ -178,3 +256,24 @@ Notable quirks:
 - **CI** (`.github/workflows/ci.yml`) on PR + push to `main`: frontend lint/typecheck/build; backend prisma generate/typecheck/build/smoke test (boot + `/health`); gitleaks secret scan.
 - **CD** (`.github/workflows/deploy.yml`) gated on CI success on `main`: fires optional Render/Vercel deploy hooks (secrets `RENDER_DEPLOY_HOOK_URL`, `VERCEL_DEPLOY_HOOK_URL`) and does a best-effort backend health wait.
 - Render and Vercel also auto-deploy from GitHub integrations; Neon holds the Postgres DB.
+
+```mermaid
+flowchart LR
+  PUSH["push to main / PR"] --> CI["GitHub Actions CI"]
+  subgraph CI["ci.yml"]
+    L["frontend: lint + typecheck + build"]
+    B["backend: prisma generate + typecheck + build + smoke test"]
+    G["gitleaks secret scan"]
+  end
+  L --> OK{"all green?"}
+  B --> OK
+  G --> OK
+  OK -- "no" --> X["blocked"]
+  OK -- "yes (main)" --> CD["deploy.yml (workflow_run)"]
+  CD --> RH["Render deploy hook<br/>(optional secret)"]
+  CD --> VH["Vercel deploy hook<br/>(optional secret)"]
+  RH --> HW["backend /health check<br/>(best effort)"]
+```
+
+> Rendered on GitHub. If you're viewing outside GitHub, open the raw `.md` or a Mermaid-aware viewer (VS Code + Mermaid Preview, Typora, Obsidian).
+

@@ -41,6 +41,36 @@
 - **Badges**: `default` (primary/10 bg), `secondary`, `success` (#37cd8f/10), `warning` (tertiary/10), `destructive` (error/10), `outline`.
 - **Glass effect**: `glass-card` = `rgba(24,24,27,0.8)` + `backdrop-filter: blur(8px)`.
 
+```mermaid
+flowchart TD
+  subgraph theme["Theme: dark-only"]
+    direction LR
+    BG["background #09090b"]
+    TXT["foreground #e5e1e4"]
+  end
+
+  subgraph surfaces["Surface scale (M3)"]
+    direction LR
+    S0["lowest #0e0e10"]
+    S1["low #1c1b1d"]
+    S2["card #18181b"]
+    S3["high #2a2a2c"]
+    S4["highest #353437"]
+  end
+
+  subgraph accents["Semantic accents"]
+    direction LR
+    PRI["primary #6366f1"]
+    OK["success #37cd8f"]
+    WAR["tertiary/warning #ffb783"]
+    ERR["error #ffb4ab"]
+  end
+
+  theme --> surfaces
+  surfaces --> accents
+  accents --> BADGES["badge variants:<br/>default | secondary | success | warning | destructive | outline"]
+```
+
 ## 3. Typography
 
 ### Fonts (Google Fonts, loaded via `next/font`)
@@ -50,6 +80,22 @@
 | Mono (data, badges, time) | **JetBrains Mono** | `--font-jetbrains`; used for `font-mono`, live/status badges, timestamps |
 
 CSS: `--font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;` and `--font-mono: var(--font-jetbrains), ui-monospace, monospace;`.
+
+```mermaid
+flowchart LR
+  subgraph sans["Inter (sans)"]
+    H1["headings<br/>font-bold text-3xl tracking-tight"]
+    C1["card titles<br/>text-base font-medium"]
+    B1["body / labels<br/>text-sm text-text-muted"]
+  end
+  subgraph mono["JetBrains Mono (mono)"]
+    S1["status badges<br/>text-[11px] font-mono uppercase"]
+    T1["timestamps / times"]
+    R1["currency / codes"]
+  end
+  sans --> UI["UI: Inter + 4/8 spacing scale, radius 0.5rem"]
+  mono --> UI
+```
 
 ### Typographic patterns in use
 - Page headings: `font-bold text-3xl tracking-tight text-text-heading` (e.g., dashboards, session title).
