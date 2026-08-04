@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AcademyX | Course Management Engine</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-high": "#2a2a2c",
+                "text-heading": "#fafafa",
+                "on-tertiary-fixed-variant": "#703700",
+                "text-muted": "#a1a1aa",
+                "secondary-fixed": "#e4e1e6",
+                "secondary": "#c8c5ca",
+                "background": "#131315",
+                "primary-fixed-dim": "#c0c1ff",
+                "on-primary-fixed-variant": "#2f2ebe",
+                "surface-container-lowest": "#0e0e10",
+                "secondary-container": "#47464a",
+                "on-primary": "#1000a9",
+                "inverse-primary": "#494bd6",
+                "outline": "#908fa0",
+                "surface-container-low": "#1c1b1d",
+                "error-container": "#93000a",
+                "tertiary-fixed": "#ffdcc5",
+                "surface-variant": "#353437",
+                "surface-container": "#201f22",
+                "on-secondary-fixed": "#1b1b1e",
+                "success-green": "#37cd8f",
+                "on-primary-container": "#0d0096",
+                "tertiary-fixed-dim": "#ffb783",
+                "surface-container-highest": "#353437",
+                "on-tertiary-fixed": "#301400",
+                "primary": "#c0c1ff",
+                "on-secondary-container": "#b6b4b8",
+                "surface-dim": "#131315",
+                "surface": "#131315",
+                "inverse-on-surface": "#313032",
+                "on-tertiary": "#4f2500",
+                "border-subtle": "#27272a",
+                "surface-bright": "#39393b",
+                "on-surface-variant": "#c7c4d7",
+                "primary-container": "#8083ff",
+                "on-secondary-fixed-variant": "#47464a",
+                "on-error-container": "#ffdad6",
+                "secondary-fixed-dim": "#c8c5ca",
+                "on-error": "#690005",
+                "surface-tint": "#c0c1ff",
+                "on-surface": "#e5e1e4",
+                "on-secondary": "#303033",
+                "on-primary-fixed": "#07006c",
+                "tertiary-container": "#d97721",
+                "on-tertiary-container": "#452000",
+                "on-background": "#e5e1e4",
+                "tertiary": "#ffb783",
+                "error": "#ffb4ab",
+                "inverse-surface": "#e5e1e4",
+                "primary-fixed": "#e1e0ff",
+                "outline-variant": "#464554"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "gutter": "16px",
+                "container-max": "1280px",
+                "base": "4px",
+                "margin-desktop": "32px",
+                "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                "button": ["Inter"],
+                "headline-xl": ["Inter"],
+                "body-sm": ["Inter"],
+                "label-mono": ["JetBrains Mono"],
+                "headline-lg": ["Inter"],
+                "body-md": ["Inter"]
+            },
+            "fontSize": {
+                "button": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                "label-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: #09090b;
+            color: #e5e1e4;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #18181b;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+            border-radius: 2px;
+        }
+        .glass-card {
+            background: rgba(24, 24, 27, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid #27272a;
+        }
+        .drag-handle {
+            cursor: grab;
+        }
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+        .glow-hover:hover {
+            box-shadow: 0px 0px 8px rgba(99, 102, 241, 0.15);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md selection:bg-primary selection:text-on-primary">
+<!-- Side Navigation Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest border-r border-border-subtle flex flex-col p-4 gap-2 z-50">
+<div class="mb-8 px-2 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-xl" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<div>
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary leading-none">AcademyX</h1>
+<span class="font-label-mono text-label-mono text-text-muted">Enterprise Tier</span>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-variant transition-colors duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-sm text-body-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-variant transition-colors duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-body-sm text-body-sm">Students</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-primary font-bold bg-surface-container-high rounded-lg transition-colors duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+<span class="font-body-sm text-body-sm">Curriculum</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-variant transition-colors duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-sm text-body-sm">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-variant transition-colors duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-body-sm text-body-sm">Messages</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-variant transition-colors duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-sm text-body-sm">Settings</span>
+</a>
+</nav>
+<button class="w-full mt-4 bg-primary text-on-primary font-button text-button py-2.5 rounded-lg flex items-center justify-center gap-2 active:scale-95 transition-transform" onclick="openModal()">
+<span class="material-symbols-outlined">add</span>
+            New Course
+        </button>
+<div class="mt-auto pt-4 border-t border-border-subtle space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-variant transition-colors duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-sm text-body-sm">Help</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-variant transition-colors duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined text-error">logout</span>
+<span class="font-body-sm text-body-sm">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Top Bar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-surface-container-low border-b border-border-subtle flex items-center justify-between px-margin-desktop z-40">
+<div class="flex items-center bg-surface-container-lowest border border-border-subtle rounded-lg px-3 py-1.5 w-96 focus-within:ring-1 focus-within:ring-primary transition-all">
+<span class="material-symbols-outlined text-text-muted mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-full placeholder:text-text-muted" placeholder="Search courses, modules, or teachers..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center text-text-muted hover:text-text-heading transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-text-muted hover:text-text-heading transition-colors">
+<span class="material-symbols-outlined">apps</span>
+</button>
+<div class="h-8 w-[1px] bg-border-subtle mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<span class="font-label-mono text-label-mono text-text-heading group-hover:text-primary transition-colors">ADMIN_X</span>
+<div class="w-8 h-8 rounded-full border border-border-subtle overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional profile portrait of a high-tech institute administrator in a dark, minimalist office. The person is wearing a sleek, dark charcoal blazer and has a confident expression. The lighting is sophisticated, with blue and purple rim lights reflecting off glass surfaces in the background, maintaining a premium SaaS dashboard aesthetic with deep blacks and sharp contrasts." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXsL4uQ7mKk1sm7KJZ0H_Xt6sXYrXhmpyz_JuO1zyWXnE9ugpF92_qYnidKGdCidTaW9zVDK_nn33-cVRQNZOb0m23oi0XG7ltYkSFGkO0-zEyWzL1In2ExGtxxe3qpJRr98FJLq4iYKgGEKtwd7lSzyjsqPZp0NmYSSNKSp2x9-KUzBAQ5skqumz_HhVYb9xnhl1Dx_E9LCRcBFMGLlnjyIZxM_2L_uuUH61YRaUASQ81J3ZwcONH"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen bg-background">
+<div class="p-margin-desktop max-w-container-max mx-auto">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="font-headline-xl text-headline-xl text-text-heading mb-2">Curriculum Builder</h2>
+<p class="text-text-muted">Manage your active courses and architectural framework.</p>
+</div>
+<div class="flex gap-3">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-background overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="Close up avatar of a professional educator, studio lighting, dark background, corporate profile style, high quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5PUlwj54jrsWjm6Yd-QV20twNxcCZmWdybQ485Dxi0VwWcI2zllGNG8G-xlPfoissl2MNoJR_tHS2dga5iGB_dBExUOHkYGv34afzBzsDtePnjs2l39FiC30RBcVu5t0zszr137WGH8raLNBQoYv5LWLA9E8QrsFxamVYEoly81DX7qr2I-Yx_d3xj7GoLmYLE3x4cwkR51IexNC0LmdDRVF0qxnjiwpeq_VxkZYsYdxsBYJ6LjoD"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-background overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="Close up avatar of a senior software engineer educator, studio lighting, tech-focused aesthetic, dark background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsIYgVUiN1Rx0r0bvQaQb7kNu-kcQD-jFWZ2DvVW1aOSlJuLz4wQVzQy0O0Mkds7CY6eIVTCp41JWvIA5VGDuH5YrVjnUQO71hvEyirmFvcq0460-7Ihwm87eVpKHOiAnNpfoDZbupY-xp0rmIBG_j73bI8xk44gVDatrEZU-kQlpud_zLtAZ3ttBoEY4qH7_33WtJ66CBGDN5QiJ21m1gyRKLzTUMCZCzIUk28_5H6rSLbo6xBn-r"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-background overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="Close up avatar of a female data scientist instructor, professional attire, modern minimalist background, moody lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbPkF6Z87vbjgWyWBU4XHnSsF7JcoJ4qc5Z6c0iqn-dDozUEkSYcPI5O8Tbuve6_h4R_9u_fDTKrsj_BREwX8HIdwh8MEDELAvBulBvqVRkUMQxFnbr6DlN3hRNMKW3RyrqOcjd6ek9YQB3PGNQ97kbL7pSrSeXc-vkEx45zdXLYolezYT3bCciHXlboGuOY1Xz-EYubXG0uqYJqMitzRy1NsiT2rnzxMqkHz9_efcp-bYYy3HQyGK"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-background flex items-center justify-center bg-surface-container-high text-[10px] font-bold text-text-muted">
+                            +12
+                        </div>
+</div>
+<button class="bg-surface-container-high border border-border-subtle px-4 py-2 rounded-lg text-button font-button flex items-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                        Filters
+                    </button>
+</div>
+</div>
+<!-- Dashboard Grid Layout -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Left Column: Course List -->
+<div class="col-span-12 lg:col-span-7 space-y-4">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-label-mono text-label-mono text-primary uppercase tracking-widest">Active Courses (24)</h3>
+<a class="text-body-sm text-primary hover:underline" href="#">View All</a>
+</div>
+<!-- Course Card 1 -->
+<div class="bg-surface-container-low border border-border-subtle p-4 rounded-xl flex gap-4 hover:border-primary transition-all group relative">
+<div class="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" data-alt="A stylized 3D render of abstract digital architecture, representing a cloud computing course. Glowing neon indigo lines form complex geometric structures against a deep black background. The image has a cinematic tech-noir atmosphere with soft lens flares and a high-end SaaS marketing feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0UjQDR6sd_hJzfS1BERJZ3lvMKd38L4PPmsKGZ8rY7ZtOjw73TnIlpqOaUiJfMM6B8k7-tWjfkc_fqVl4W8MKv_aOZ-9RpOmr9b3sz98kWuH3EOKf60vtsKoDsVFtrHCsS73mWiGUBiHnxDMpTdtwVy6Ca9hE892IRnOGg7lr0N_Hv5vVijK80zHtexQZ1hDVVDWmYaOhKaL7uFdM9Eo0Esfwfftx39zuuiCUl_40o7XqPOpI5Vp6"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-lg text-text-heading text-lg group-hover:text-primary transition-colors">Advanced Distributed Systems</h4>
+<p class="text-text-muted text-xs font-label-mono mt-1">CS-402 • Engineering Track</p>
+</div>
+<span class="bg-success-green/10 text-success-green text-[10px] px-2 py-0.5 rounded border border-success-green/20 font-bold uppercase">Published</span>
+</div>
+<div class="flex items-center gap-6 mt-2">
+<div class="flex items-center gap-1.5 text-text-muted">
+<span class="material-symbols-outlined text-sm">group</span>
+<span class="text-xs">1,240 Enrolled</span>
+</div>
+<div class="flex items-center gap-1.5 text-text-muted">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="text-xs">4.9 (210)</span>
+</div>
+</div>
+</div>
+<button class="self-center p-2 text-text-muted hover:text-text-heading transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<!-- Course Card 2 -->
+<div class="bg-surface-container-low border border-border-subtle p-4 rounded-xl flex gap-4 hover:border-primary transition-all group relative">
+<div class="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" data-alt="A vibrant, minimalist 3D composition of data visualization charts and neural network nodes, representing an AI and Data Science course. The primary colors are deep blacks and cool grays, highlighted by striking electric indigo accents. High-quality lighting creates soft shadows and a sense of depth in a digital space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf6yLqnGNIf0KmTGGs-7t2Lqp57PsUfKOfvXKtC3PUXd6k8xbieOhus2qorU07wtD9t3eAHNVx94-T1vtVZdSgSwImvCTkvnqbU-2_7ImJsr-EHHGp5KpJDHSk65Ab4FaL95rg13520mjn7wj4RPDAKOmclC8QVqufZwKDFwmjI6leFdup-XsjMNKF70rsaylPFzxSZlj7f8LDyPkJUK2_QCqM-JM8qOohGxVXVyx2qskGPRyl1W0y"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-lg text-text-heading text-lg group-hover:text-primary transition-colors">Foundations of Neural Networks</h4>
+<p class="text-text-muted text-xs font-label-mono mt-1">AI-101 • Intelligence Track</p>
+</div>
+<span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded border border-primary/20 font-bold uppercase">Draft</span>
+</div>
+<div class="flex items-center gap-6 mt-2">
+<div class="flex items-center gap-1.5 text-text-muted">
+<span class="material-symbols-outlined text-sm">group</span>
+<span class="text-xs">0 Enrolled</span>
+</div>
+<div class="flex items-center gap-1.5 text-text-muted">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="text-xs">Modified 2h ago</span>
+</div>
+</div>
+</div>
+<button class="self-center p-2 text-text-muted hover:text-text-heading transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<!-- Course Card 3 -->
+<div class="bg-surface-container-low border border-border-subtle p-4 rounded-xl flex gap-4 hover:border-primary transition-all group relative">
+<div class="w-32 h-20 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" data-alt="A macro photography shot of a sleek, dark-textured mechanical keyboard with custom artisan keycaps. The scene is illuminated by a singular indigo light source from the side, creating long shadows and emphasizing technical precision. This represents a developer productivity and tooling course, aesthetic and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVCF-hPEtK0PF-dXUPnuBRK9NnrtZPlcCOdSchuLFFY3N_T_ODQvfnAsgTZbOK4eF9_Xr9276l-RUIGx3gBKUEHceMSunoJPMJ_0S6wrzNsAGJ1aldHraI_FIgWbPipPPpe3sHO2ux08HaQapQvNiyyaquMPqEHvQYSyVMXSBd6ECGZgBD7O3pRd02Rkxn0NijVRc3TzGTJQ2n4lHyuQsHPks_2EcorTWLAplVP79d_MUozRTagIV2"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-lg text-text-heading text-lg group-hover:text-primary transition-colors">Mastering the Modern Toolchain</h4>
+<p class="text-text-muted text-xs font-label-mono mt-1">DEV-098 • Productivity Track</p>
+</div>
+<span class="bg-success-green/10 text-success-green text-[10px] px-2 py-0.5 rounded border border-success-green/20 font-bold uppercase">Published</span>
+</div>
+<div class="flex items-center gap-6 mt-2">
+<div class="flex items-center gap-1.5 text-text-muted">
+<span class="material-symbols-outlined text-sm">group</span>
+<span class="text-xs">8,450 Enrolled</span>
+</div>
+<div class="flex items-center gap-1.5 text-text-muted">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="text-xs">5.0 (1.2k)</span>
+</div>
+</div>
+</div>
+<button class="self-center p-2 text-text-muted hover:text-text-heading transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Right Column: Quick Stats & Trends -->
+<div class="col-span-12 lg:col-span-5 space-y-6">
+<div class="bg-surface-container-low border border-border-subtle rounded-xl p-6 relative overflow-hidden">
+
+<div class="relative z-10">
+<h3 class="font-label-mono text-label-mono text-text-muted mb-4 uppercase tracking-wider">Revenue Performance</h3>
+<div class="flex items-baseline gap-2 mb-2">
+<span class="font-headline-xl text-headline-xl text-text-heading">$124,500</span>
+<span class="text-success-green text-sm flex items-center">
+<span class="material-symbols-outlined text-sm">arrow_upward</span>
+                                    12%
+                                </span>
+</div>
+<p class="text-text-muted text-sm mb-6">Net enrollment revenue this quarter</p>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-xs">
+<span class="text-text-muted">Target: $150k</span>
+<span class="text-text-heading font-bold">83%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[83%] rounded-full shadow-[0_0_10px_rgba(192,193,255,0.4)]"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low border border-border-subtle rounded-xl p-6">
+<h3 class="font-label-mono text-label-mono text-text-muted mb-6 uppercase tracking-wider">Course Health</h3>
+<div class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high border border-border-subtle flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">play_circle</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="text-sm font-bold">Completion Rate</span>
+<span class="text-sm">76%</span>
+</div>
+<div class="w-full h-1 bg-surface-container-high rounded-full">
+<div class="h-full bg-primary w-[76%] rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high border border-border-subtle flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">chat_bubble</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="text-sm font-bold">Forum Activity</span>
+<span class="text-sm">42%</span>
+</div>
+<div class="w-full h-1 bg-surface-container-high rounded-full">
+<div class="h-full bg-primary w-[42%] rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high border border-border-subtle flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">assignment</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="text-sm font-bold">Grading Queue</span>
+<span class="text-sm text-error">94 pending</span>
+</div>
+<div class="w-full h-1 bg-surface-container-high rounded-full">
+<div class="h-full bg-error w-[90%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Create Course / Module Builder Modal (Overlay) -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center hidden" id="courseModal">
+<div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+<div class="relative w-[90vw] max-w-5xl h-[870px] glass-card rounded-2xl flex flex-col shadow-2xl overflow-hidden scale-95 transition-all duration-300">
+<!-- Modal Header -->
+<div class="px-8 py-6 border-b border-border-subtle flex justify-between items-center bg-surface-container-lowest">
+<div>
+<span class="font-label-mono text-label-mono text-primary mb-1 block uppercase">Module Builder</span>
+<h3 class="font-headline-lg text-headline-lg text-text-heading">Designing "Advanced Distributed Systems"</h3>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 text-text-muted hover:text-text-heading font-button text-button transition-colors">Discard</button>
+<button class="px-6 py-2 bg-primary text-on-primary rounded-lg font-button text-button active:scale-95 transition-transform">Save Blueprint</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors" onclick="closeModal()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</div>
+<!-- Modal Body (Two Column Flow) -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Sidebar: General Settings -->
+<aside class="w-80 border-r border-border-subtle p-6 overflow-y-auto bg-surface-container-low custom-scrollbar">
+<div class="space-y-6">
+<div>
+<label class="font-label-mono text-label-mono text-text-muted block mb-2 uppercase">Lead Instructor</label>
+<div class="relative">
+<select class="w-full bg-background border border-border-subtle rounded-lg px-4 py-2.5 text-body-sm focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
+<option>Dr. Elena Vance</option>
+<option>Prof. Marcus Thorne</option>
+<option>Sarah Chen, PhD</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 pointer-events-none text-text-muted">expand_more</span>
+</div>
+</div>
+<div>
+<label class="font-label-mono text-label-mono text-text-muted block mb-2 uppercase">Course Pricing</label>
+<div class="flex items-center bg-background border border-border-subtle rounded-lg overflow-hidden group focus-within:ring-1 focus-within:ring-primary transition-all">
+<span class="px-3 py-2.5 bg-surface-container-high border-r border-border-subtle text-text-muted font-label-mono">$</span>
+<input class="w-full bg-transparent border-none px-3 py-2.5 text-body-sm focus:ring-0" type="number" value="499"/>
+<span class="px-3 py-2.5 text-text-muted font-label-mono">USD</span>
+</div>
+</div>
+<div>
+<label class="font-label-mono text-label-mono text-text-muted block mb-2 uppercase">Visibility</label>
+<div class="space-y-3 mt-4">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="w-4 h-4 text-primary bg-background border-border-subtle focus:ring-primary focus:ring-offset-background" name="vis" type="radio"/>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-text-heading group-hover:text-primary transition-colors">Public</span>
+<span class="text-xs text-text-muted">Discoverable via search and marketplace</span>
+</div>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 text-primary bg-background border-border-subtle focus:ring-primary focus:ring-offset-background" name="vis" type="radio"/>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-text-heading group-hover:text-primary transition-colors">Private</span>
+<span class="text-xs text-text-muted">Invitation only, hidden from search</span>
+</div>
+</label>
+</div>
+</div>
+<div class="pt-6 border-t border-border-subtle">
+<div class="p-4 rounded-xl bg-primary-container/10 border border-primary-container/20">
+<h5 class="text-primary font-bold text-xs mb-1">Architecture Recommendation</h5>
+<p class="text-xs text-on-surface-variant leading-relaxed">System suggests 4 additional lab modules based on the 'Engineering' track difficulty.</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Drag and Drop Canvas -->
+<div class="flex-1 p-8 overflow-y-auto bg-background/50 custom-scrollbar">
+<div class="max-w-2xl mx-auto space-y-6">
+<div class="flex items-center justify-between">
+<h4 class="font-headline-lg text-text-heading">Curriculum Architecture</h4>
+<button class="flex items-center gap-2 text-primary font-button text-sm hover:underline">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+                                Add Section
+                            </button>
+</div>
+<!-- Module Item 1 -->
+<div class="bg-surface-container-low border border-border-subtle rounded-xl overflow-hidden shadow-sm hover:border-primary/50 transition-colors">
+<div class="flex items-center gap-3 p-4 bg-surface-container-high border-b border-border-subtle drag-handle">
+<span class="material-symbols-outlined text-text-muted">drag_indicator</span>
+<div class="font-bold text-sm flex-1">Module 1: Introduction to Latency</div>
+<div class="flex gap-2">
+<button class="w-7 h-7 flex items-center justify-center text-text-muted hover:text-text-heading"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="w-7 h-7 flex items-center justify-center text-text-muted hover:text-error"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<div class="p-4 space-y-2">
+<div class="flex items-center gap-3 p-3 bg-background border border-border-subtle rounded-lg text-sm hover:border-primary transition-all">
+<span class="material-symbols-outlined text-primary text-lg">play_circle</span>
+<span class="flex-1">Lecture: The History of Distributed Tech</span>
+<span class="text-text-muted text-xs font-label-mono">12:04</span>
+</div>
+<div class="flex items-center gap-3 p-3 bg-background border border-border-subtle rounded-lg text-sm hover:border-primary transition-all">
+<span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="flex-1">Reading: CAP Theorem Principles</span>
+<span class="text-text-muted text-xs font-label-mono">PDF</span>
+</div>
+<button class="w-full py-2 border border-dashed border-border-subtle rounded-lg text-text-muted text-xs hover:text-primary hover:border-primary transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span> Add content
+                                </button>
+</div>
+</div>
+<!-- Module Item 2 -->
+<div class="bg-surface-container-low border border-border-subtle rounded-xl overflow-hidden shadow-sm hover:border-primary/50 transition-colors">
+<div class="flex items-center gap-3 p-4 bg-surface-container-high border-b border-border-subtle drag-handle">
+<span class="material-symbols-outlined text-text-muted">drag_indicator</span>
+<div class="font-bold text-sm flex-1">Module 2: Consensus Algorithms</div>
+<div class="flex gap-2">
+<button class="w-7 h-7 flex items-center justify-center text-text-muted hover:text-text-heading"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="w-7 h-7 flex items-center justify-center text-text-muted hover:text-error"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<div class="p-4 space-y-2">
+<div class="flex items-center gap-3 p-3 bg-background border border-border-subtle rounded-lg text-sm hover:border-primary transition-all">
+<span class="material-symbols-outlined text-primary text-lg">play_circle</span>
+<span class="flex-1">Lecture: Deep Dive into Paxos</span>
+<span class="text-text-muted text-xs font-label-mono">24:45</span>
+</div>
+<div class="flex items-center gap-3 p-3 bg-background border border-border-subtle rounded-lg text-sm hover:border-primary transition-all border-l-2 border-l-success-green">
+<span class="material-symbols-outlined text-success-green text-lg">quiz</span>
+<span class="flex-1 font-bold">Quiz: Raft vs Paxos Performance</span>
+<span class="text-text-muted text-xs font-label-mono">10 Questions</span>
+</div>
+<button class="w-full py-2 border border-dashed border-border-subtle rounded-lg text-text-muted text-xs hover:text-primary hover:border-primary transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span> Add content
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        function openModal() {
+            const modal = document.getElementById('courseModal');
+            const content = modal.querySelector('.glass-card');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('courseModal');
+            const content = modal.querySelector('.glass-card');
+            content.classList.add('scale-95', 'opacity-0');
+            content.classList.remove('scale-100', 'opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Add hover effects for course cards
+        document.querySelectorAll('.group').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // Subtle lift or glow if needed
+            });
+        });
+
+        // Search Bar focus effect
+        const searchInput = document.querySelector('header input');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('border-primary');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('border-primary');
+        });
+    </script>
+</body></html>

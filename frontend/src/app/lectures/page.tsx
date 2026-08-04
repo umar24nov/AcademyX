@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Icon } from "@/components/shared/icon";
 import { useLive } from "@/lib/live";
+import { getStoredUser } from "@/lib/api";
 import { fetchLectures, mockLecturesData } from "@/lib/live-data";
 import { Search, Play } from "lucide-react";
 
@@ -23,6 +24,8 @@ export default function RecordedLecturesPage() {
   const [search, setSearch] = React.useState("");
   const [visibility, setVisibility] = React.useState("all");
   const recordedLectures = useLive(fetchLectures, mockLecturesData);
+  const user = React.useMemo(() => getStoredUser(), []);
+  const isStudent = user?.role === "STUDENT";
 
   const filtered = recordedLectures.filter((l) => {
     const q = search.toLowerCase();
@@ -36,12 +39,18 @@ export default function RecordedLecturesPage() {
       <div className="flex flex-col gap-6">
         <PageHeader
           title="Recorded Lectures"
-          description="Upload and manage lecture recordings for your courses."
+          description={
+            isStudent
+              ? "Browse and watch recorded lectures from your courses."
+              : "Upload and manage lecture recordings for your courses."
+          }
           actions={
-            <Button>
-              <Icon name="upload" className="h-4 w-4" />
-              Upload Lecture
-            </Button>
+            !isStudent ? (
+              <Button>
+                <Icon name="upload" className="h-4 w-4" />
+                Upload Lecture
+              </Button>
+            ) : undefined
           }
         />
 

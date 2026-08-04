@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AcademyX | Recorded Lectures</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .video-card-hover:hover .hover-action {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #131315;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 10px;
+        }
+        .glass-effect {
+            background: rgba(24, 24, 27, 0.8);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#131315",
+                        "secondary-fixed-dim": "#c8c5ca",
+                        "surface-tint": "#c0c1ff",
+                        "secondary-fixed": "#e4e1e6",
+                        "on-primary-container": "#0d0096",
+                        "on-surface": "#e5e1e4",
+                        "tertiary-fixed": "#ffdcc5",
+                        "on-primary": "#1000a9",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "on-secondary-container": "#b6b4b8",
+                        "surface-container": "#201f22",
+                        "on-error": "#690005",
+                        "surface-container-high": "#2a2a2c",
+                        "on-background": "#e5e1e4",
+                        "primary-fixed": "#e1e0ff",
+                        "text-muted": "#a1a1aa",
+                        "success-green": "#37cd8f",
+                        "secondary": "#c8c5ca",
+                        "background": "#131315",
+                        "on-tertiary-fixed": "#301400",
+                        "surface-variant": "#353437",
+                        "on-secondary-fixed-variant": "#47464a",
+                        "surface-bright": "#39393b",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-container": "#452000",
+                        "border-subtle": "#27272a",
+                        "tertiary": "#ffb783",
+                        "text-heading": "#fafafa",
+                        "on-surface-variant": "#c7c4d7",
+                        "primary-container": "#8083ff",
+                        "inverse-surface": "#e5e1e4",
+                        "on-secondary-fixed": "#1b1b1e",
+                        "error-container": "#93000a",
+                        "outline": "#908fa0",
+                        "surface-container-highest": "#353437",
+                        "on-tertiary": "#4f2500",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "tertiary-container": "#d97721",
+                        "inverse-primary": "#494bd6",
+                        "inverse-on-surface": "#313032",
+                        "secondary-container": "#47464a",
+                        "error": "#ffb4ab",
+                        "outline-variant": "#464554",
+                        "surface-container-lowest": "#0e0e10",
+                        "surface-container-low": "#1c1b1d",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "surface": "#131315",
+                        "on-primary-fixed": "#07006c",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "primary": "#c0c1ff",
+                        "on-secondary": "#303033"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "label-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface custom-scrollbar overflow-x-hidden">
+<!-- Shared SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low border-r border-border-subtle flex flex-col p-4 z-50">
+<div class="mb-8 px-2 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">AcademyX</span>
+<span class="font-body-sm text-body-sm text-text-muted">Admin Console</span>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">domain</span>
+<span class="font-body-md text-body-md">Institutes</span>
+</a>
+<!-- Active Tab: Courses -->
+<a class="flex items-center gap-3 px-3 py-2 text-primary font-bold bg-surface-variant rounded active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-body-md text-body-md">Courses</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">Students</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-md text-body-md">Financials</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+<div class="pt-8 pb-2">
+<span class="font-label-mono text-label-mono px-3 text-text-muted uppercase tracking-wider">Library</span>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-body-md text-body-md">Recent</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded" href="#">
+<span class="material-symbols-outlined">bookmark</span>
+<span class="font-body-md text-body-md">Bookmarks</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-body-md text-body-md">Popular</span>
+</a>
+</nav>
+<div class="mt-auto space-y-1">
+<button class="w-full bg-primary text-on-primary-container font-body-md text-body-md py-2.5 rounded-lg font-semibold hover:opacity-90 transition-opacity mb-4">
+                New Course
+            </button>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md text-body-md">Support</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-body-md text-body-md">Profile</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-64 min-h-screen">
+<!-- Shared TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-surface-dim border-b border-border-subtle flex justify-between items-center px-6 z-40">
+<div class="flex items-center gap-4 flex-1 max-w-xl">
+<div class="relative w-full group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted">search</span>
+<input class="w-full bg-surface-container-lowest border border-border-subtle rounded-lg py-2 pl-10 pr-4 text-body-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all" placeholder="Search lectures, topics, or mentors..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">terminal</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-border-subtle mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="font-body-sm text-body-sm font-semibold">Alex Rivera</p>
+<p class="text-label-mono text-label-mono text-primary">Senior Admin</p>
+</div>
+<img class="w-10 h-10 rounded-full border border-primary/20" data-alt="A professional headshot of a young tech professional with short dark hair and a modern black sweater, set against a clean, minimalist dark studio background with subtle indigo backlighting. The aesthetic is high-end, sharp, and authoritative, matching a premium technical SaaS platform's visual identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEMMiaOpQdXO-EtUMUogNd8VynEQk8rIAO6BPcJ-CFWQLIjkioQOnvm5f_rJV9duO6PSSZemdODLb_cJfksltn1y59ZNvmArRIb3XCVQIftoueYvCatO9bSkj5KVyRxwpEkNdh33o3SULwzSCZ03oWV_wC9CMNdFq_q4p9YwCem3TNCWqnKnU0eRQYYyjfOpAhitAKYg2LnB-t-kQcYmR8tx07CGLV8X5X2iZPxMQeovXTEaoujPor"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<section class="pt-24 pb-12 px-8 max-w-[1600px] mx-auto">
+<!-- Featured: Continue Watching -->
+<div class="mb-12">
+<h2 class="font-headline-lg text-headline-lg mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+                    Continue Watching
+                </h2>
+<div class="relative rounded-xl overflow-hidden aspect-[21/9] group cursor-pointer border border-border-subtle">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="A cinematic widescreen shot of a futuristic classroom setup with multiple holographic code displays and high-performance server racks in the background. The lighting is dominated by deep onyx shadows and sharp indigo neon accents. A large progress bar is subtly overlaid at the bottom, suggesting a high-production value educational video." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBnkqd3g051-LAtgAzFxAGrHosaiF_GNmNoVjwu0fbzi0ynKHDS3F0SDmYH1YOyhMSia4qPfxqxXLwFJ2v0kdEIEmH_Xn1KdlYoY9G7ewUhgePTF1tLtkaO-F9r3ljNlwdpQ5OnNIyifhr-45ZTxxFAlyO_af7sUwrbZP3hYTC8o5T9yPCwyTKuBraPMA1AVVP864q0qQcCLuJ3iCIg_VGRoUk2vo9imhrBOxcS8FyYoSlqB1QL9LUV')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-0 left-0 right-0 p-8">
+<div class="flex flex-col gap-2 max-w-2xl">
+<span class="font-label-mono text-label-mono text-primary bg-primary/10 px-3 py-1 rounded-full w-fit">UI DESIGN MASTERCLASS</span>
+<h1 class="font-headline-xl text-headline-xl text-heading mb-2">Advanced Component Architecture & Design Systems</h1>
+<p class="text-body-md text-on-surface-variant mb-6 line-clamp-2">Deep dive into atomic design principles, token management, and creating scalable UI libraries using Figma and React. Lesson 14 of 32.</p>
+<div class="flex items-center gap-6">
+<button class="bg-primary text-on-primary-container px-6 py-3 rounded-lg flex items-center gap-2 font-semibold hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                                    Resume Lesson
+                                </button>
+<button class="bg-surface-container-high/40 backdrop-blur-md border border-white/10 text-on-surface px-6 py-3 rounded-lg flex items-center gap-2 font-semibold hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">info</span>
+                                    Course Details
+                                </button>
+</div>
+</div>
+</div>
+<!-- Progress Bar Overlay -->
+<div class="absolute bottom-0 left-0 right-0 h-1.5 bg-white/10">
+<div class="h-full bg-primary w-[72%] shadow-[0_0_12px_rgba(99,102,241,0.5)]"></div>
+</div>
+</div>
+</div>
+<!-- Filter Categories -->
+<div class="flex items-center gap-3 mb-8 overflow-x-auto pb-2 custom-scrollbar">
+<button class="px-5 py-2 rounded-full bg-primary text-on-primary-container font-body-sm text-body-sm font-semibold whitespace-nowrap">All Lectures</button>
+<button class="px-5 py-2 rounded-full bg-surface-container border border-border-subtle text-on-surface-variant hover:border-primary/40 transition-colors font-body-sm text-body-sm whitespace-nowrap">UI Design</button>
+<button class="px-5 py-2 rounded-full bg-surface-container border border-border-subtle text-on-surface-variant hover:border-primary/40 transition-colors font-body-sm text-body-sm whitespace-nowrap">Physics</button>
+<button class="px-5 py-2 rounded-full bg-surface-container border border-border-subtle text-on-surface-variant hover:border-primary/40 transition-colors font-body-sm text-body-sm whitespace-nowrap">Maths</button>
+<button class="px-5 py-2 rounded-full bg-surface-container border border-border-subtle text-on-surface-variant hover:border-primary/40 transition-colors font-body-sm text-body-sm whitespace-nowrap">Cloud Computing</button>
+<button class="px-5 py-2 rounded-full bg-surface-container border border-border-subtle text-on-surface-variant hover:border-primary/40 transition-colors font-body-sm text-body-sm whitespace-nowrap">Cybersecurity</button>
+<button class="px-5 py-2 rounded-full bg-surface-container border border-border-subtle text-on-surface-variant hover:border-primary/40 transition-colors font-body-sm text-body-sm whitespace-nowrap">Marketing</button>
+</div>
+<!-- Video Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Video Card 1 -->
+<div class="group video-card-hover bg-surface-container-low border border-border-subtle rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(99,102,241,0.05)]">
+<div class="relative aspect-video">
+<img class="w-full h-full object-cover" data-alt="A close-up of a complex 3D particle physics simulation, featuring swirling vibrant colors of magenta and teal against a dark void. The image is crisp, with motion blur and depth of field, representing high-end educational scientific content for a premium video library." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-TSCfCc3p17j_AjWKjzzfxZEWmytHGiJr_7D-wBLtc6raXez7yMPwqjgZe6eL9Ksb-rByWjAFFMYzrdgvRzp89wwzKwleiWV_1vUdOC3FKwSF0RxZr87-ewNcEbsd2u41cFa9dMbIb3leGmJ4Px6xmAa6atPFoh7eWeScEtWjQavjdE-1uy79nUytDhqPUAWUZUsan-mMryCe6Cq9xUgW2hWVBLT0AVvloPqsX8gFLdmA6glTVevO"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-5xl opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100">play_circle</span>
+</div>
+<div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-label-mono text-[10px] text-white">45:12</div>
+<!-- Download on Hover Button -->
+<button class="hover-action opacity-0 translate-y-2 absolute top-2 right-2 p-2 bg-surface-dim/80 backdrop-blur rounded-full text-white border border-white/10 hover:bg-primary transition-all duration-200">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-body-md text-body-md font-bold text-heading line-clamp-1">Quantum Mechanics Basics</h3>
+<button class="text-text-muted hover:text-primary"><span class="material-symbols-outlined text-sm">more_vert</span></button>
+</div>
+<p class="text-body-sm text-text-muted mb-4 line-clamp-2">An introductory lecture covering the Heisenberg uncertainty principle and wave-particle duality.</p>
+<div class="flex items-center gap-3 text-label-mono text-text-muted">
+<img class="w-6 h-6 rounded-full grayscale group-hover:grayscale-0 transition-all" data-alt="Small round profile avatar of an older professor with white hair and glasses, wearing a professional lab coat, looking friendly and authoritative. Clean studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5P448iBteGyzJVSqZnyv9fKSRb6-9dT_OMDogPNJ4KaYvfGgYF9Z6zWF_q2dENBGozTj_cP3Z4acr7Q_48Ryg1silqShK6sIWs-ldakmXauvqKWG-g0fsy0tyPYrM4lKlZz5vjhpprC1njS6oy88Rb2Lelkj3TR94OV_8Bh1Yy-ledQIz7aZ_jMsHXCOe6qLbXcS0J1TD_G8IYfFNq8KVY0HtmJuRQnD-drRPxCeq8Wy_y2T9HOUD"/>
+<span>Dr. Sarah Jenkins</span>
+</div>
+<div class="mt-4 h-1 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary/40 w-[90%]"></div>
+</div>
+</div>
+</div>
+<!-- Video Card 2 -->
+<div class="group video-card-hover bg-surface-container-low border border-border-subtle rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(99,102,241,0.05)]">
+<div class="relative aspect-video">
+<img class="w-full h-full object-cover" data-alt="High-contrast code editor screen displaying a complex React function with syntax highlighting in indigo, gold, and teal. Dark mode theme, clear text, shallow depth of field, minimalist technical aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtGtFAxg8Ndk9DnACsxLp8cF_IFtfuYIzRCPo7nV6uZpM4aYwSMm4Emhg5eb19-iyNr1ph1z_zugPlweEYj4HA6GxAESGK6pkt4H-OHLAKp2BkC9OUSg98uElhlBT3qPgop3Z9-CzQnvWqVrNITPxAH9xLxG599F0hoDwyf5SG5SEH8FjIxrxov4c0NniwL0WRxpfstwyobci5y1pU8H-z_ZZ2Sb8gPRqqceeeNhBXa7Dd4QD87QR4"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+<div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-label-mono text-[10px] text-white">1:24:05</div>
+<button class="hover-action opacity-0 translate-y-2 absolute top-2 right-2 p-2 bg-surface-dim/80 backdrop-blur rounded-full text-white border border-white/10 hover:bg-primary transition-all duration-200">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+<div class="p-4">
+<h3 class="font-body-md text-body-md font-bold text-heading mb-2">Advanced React Patterns</h3>
+<p class="text-body-sm text-text-muted mb-4 line-clamp-2">Mastering HOCs, render props, and the latest hook architectures for scalable applications.</p>
+<div class="flex items-center gap-3 text-label-mono text-text-muted">
+<img class="w-6 h-6 rounded-full grayscale group-hover:grayscale-0 transition-all" data-alt="Profile avatar of a young energetic developer wearing a beanie and headphones, smiling towards the camera. Tech-focused office background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvgVT7k5CsWc4S7oiFK0NS35327_gcnpq2b8e7JfMKCSOGAHJ_RhgqeDkSfgHV6fXrWo-0aQiJwo7ofiRCKe14dwbuz2gqMGge_dgx5C-GxnG20zaSyFdEpA3sgVVZ5iP8koGVfZtbxFmxEuym0WxsVz4tHMmw_S-VDn3Ap2IFPpY-LiaMRVYtqTpcOVFDcYQTgt_ov-0jiXe62eTHyEGsRhPPH2LdPaVLDJJ4d0lhu8bsZOTgUxm6"/>
+<span>Marcus Thorne</span>
+</div>
+<div class="mt-4 h-1 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary/40 w-[20%]"></div>
+</div>
+</div>
+</div>
+<!-- Video Card 3 -->
+<div class="group video-card-hover bg-surface-container-low border border-border-subtle rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(99,102,241,0.05)]">
+<div class="relative aspect-video">
+<img class="w-full h-full object-cover" data-alt="An abstract visualization of a neural network with glowing nodes and interconnecting golden threads on a deep black background. Digital art style, crisp and detailed, sophisticated tech look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ_wKr6t9bJLFOkoCblFQmnvPYqvN-71PFtIkhEbBdQ8sV5-YT6jA9CPIrMtn78oRGO6j4LiWCNqO_U_PJpHHE0aO4P456q-gw0dr16OiLY4uICVlD4pRKMLLtZ8oTiDZUcm0vnkxulAfAFOh4uVpCANynr5SEPqhpzroFLCcjPqT9n4HzPOj2WzE8AFYN6SA2Y7C8M1ZTVfCOYrDs7zmcGvTpFbuR51HOrFMGWbzVfJ3_EpyG5mj7"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+<div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-label-mono text-[10px] text-white">58:30</div>
+<button class="hover-action opacity-0 translate-y-2 absolute top-2 right-2 p-2 bg-surface-dim/80 backdrop-blur rounded-full text-white border border-white/10 hover:bg-primary transition-all duration-200">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+<div class="p-4">
+<h3 class="font-body-md text-body-md font-bold text-heading mb-2">Introduction to AI Ethics</h3>
+<p class="text-body-sm text-text-muted mb-4 line-clamp-2">Discussing the moral implications and bias in large language models and computer vision.</p>
+<div class="flex items-center gap-3 text-label-mono text-text-muted">
+<img class="w-6 h-6 rounded-full grayscale group-hover:grayscale-0 transition-all" data-alt="Small round profile avatar of a female researcher with glasses and professional attire, focused and intelligent look. Minimalist grey background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm4Q5ZxOeFg5gybeXrPfOFz8sTsiNtqASMal8lwS9nk-LzDdw0VhUPp5B83OLuBl4SVRb79bO0O0y2yiHmiYvrsKZD0M-D9oAO6v4yAy6yiOBqHbIIv6Moi2YYDzwbte2vI9GSSuWV1-xz8Lb3F9DQGcLAq6vGfS1PQUygGLv8y9jHGPolJEzPZG6G83clu-q7fCxfdadYkFkghFk4h5qgGxOmi67_lZfFp62hnyb3pgkLha1lss-r"/>
+<span>Dr. Elena Kostic</span>
+</div>
+<div class="mt-4 h-1 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary/40 w-[0%]"></div>
+</div>
+</div>
+</div>
+<!-- Video Card 4 -->
+<div class="group video-card-hover bg-surface-container-low border border-border-subtle rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(99,102,241,0.05)]">
+<div class="relative aspect-video">
+<img class="w-full h-full object-cover" data-alt="A macro shot of architectural drafting tools, including a metallic compass and finely detailed blueprints with glowing blue grid lines. Precise, sharp, high-end engineering aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbJnSDSSNugJS--7y8M3Ty_UvPtQX93D8a6sxgkstp6-N7EIajeO9WjkJEF5cPgb5hiDO256-D8XE92z2fEPQwLbq2TpkyaVeh31Y7WAweOayTt6lyurK7SbfZNLyVXhxj1Aim9dqZGE73s2gwL7BaM8F44de9POG6B3XTZJYjVbV6zDXv6NAsYVxIal1fNPeWb4srMSv2nnNjKngA22Fm0l0F0GX3BNqbr3Hen6cHQOnc84oIZpTG"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+<div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-label-mono text-[10px] text-white">2:10:45</div>
+<button class="hover-action opacity-0 translate-y-2 absolute top-2 right-2 p-2 bg-surface-dim/80 backdrop-blur rounded-full text-white border border-white/10 hover:bg-primary transition-all duration-200">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+<div class="p-4">
+<h3 class="font-body-md text-body-md font-bold text-heading mb-2">Calculus III: Vectors</h3>
+<p class="text-body-sm text-text-muted mb-4 line-clamp-2">Vector-valued functions, curvature, and motion in space. Comprehensive workshop.</p>
+<div class="flex items-center gap-3 text-label-mono text-text-muted">
+<img class="w-6 h-6 rounded-full grayscale group-hover:grayscale-0 transition-all" data-alt="Profile avatar of a middle-aged male architect with grey beard, wearing a stylish turtleneck, looking directly into the camera with confidence. Minimalist loft studio background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuRmfhLsOsI9pCCgj3FB8X3_ngS0cGO7Yyyie304XbrB7FvWveh_aHnMjgXxhuWDZ0IE6nVCBb6aEyQOsoOPGQc2xEaroWiuihhFro6NPlHgJXhj4yIp1Ll-37zuzzzLiwqoX7IojLz4S0VBGqu2YeWHen6XxRg2hHW8VysptrYyT7NgJ9mFRSgqgHVFCQVIeDX4SLJtimwXBko9Z9jhc3QUAK7E3gAEawi1JB8A3FT6f3DtozEdPk"/>
+<span>Prof. James Miller</span>
+</div>
+<div class="mt-4 h-1 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary/40 w-[65%]"></div>
+</div>
+</div>
+</div>
+<!-- Repeated Video Card 5 (Different Category) -->
+<div class="group video-card-hover bg-surface-container-low border border-border-subtle rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(99,102,241,0.05)]">
+<div class="relative aspect-video">
+<img class="w-full h-full object-cover" data-alt="Sleek laptop sitting on a minimalist wooden desk with a single plant and warm ambient lighting. On the screen, a colorful landing page design with bold typography and vibrant orange accents. High-quality lifestyle photography for a creative design course." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2r_hb-o5uO1syrbe2StT-eGCSC1PQ0uMPGHahgPkXI0UpXlKbZyKIb1SkWjVygZK-hZX9rOFJQTW4S5LP2QeGcgwgb6W-vuMUEGjUpHt7jQutQ-3GMYcsTvD8S6vIGLAcs3fqFdwow8tfZOXFfKuXaDITp_5ogpPXqAwEhCdWa8gP8inAW8DjGHSKqPPdARo6jtNlTMD_yqqU8aDcqJWAa3lWKLkzq5m5Y9QhLshelzzR41tFtHQN"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+<div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-label-mono text-[10px] text-white">32:15</div>
+<button class="hover-action opacity-0 translate-y-2 absolute top-2 right-2 p-2 bg-surface-dim/80 backdrop-blur rounded-full text-white border border-white/10 hover:bg-primary transition-all duration-200">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+<div class="p-4">
+<h3 class="font-body-md text-body-md font-bold text-heading mb-2">Brand Identity Design</h3>
+<p class="text-body-sm text-text-muted mb-4 line-clamp-2">How to create cohesive visual identities that resonate with modern digital audiences.</p>
+<div class="flex items-center gap-3 text-label-mono text-text-muted">
+<img class="w-6 h-6 rounded-full grayscale group-hover:grayscale-0 transition-all" data-alt="Profile avatar of a creative young woman with colorful hair and artistic glasses, wearing a denim jacket. Bright and inspired studio setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjymfSPZ8LDr37G4hxbcYZiE6cbEh3MXx77nmAZbfc6Aa1wSF1Sm-XUY01-2VXtLGSyDdgq9-rFfH00L-tOHqXLlL3LNyl4UDuC9e8psu8DnDMALg8hyzyOfyu7nTW0gXWlh9QptysvxtEsf8acozTN3IWckhu3GrILfujffrfUBnXOpWw289uXvtW0w6RqwANnDNd2H9az0R0WNFxq3IxVkRLcF2tAoKBmazc36TkL-cpgqVtPdP8"/>
+<span>Sofia Chen</span>
+</div>
+<div class="mt-4 h-1 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary/40 w-[45%]"></div>
+</div>
+</div>
+</div>
+<!-- Video Card 6 -->
+<div class="group video-card-hover bg-surface-container-low border border-border-subtle rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(99,102,241,0.05)]">
+<div class="relative aspect-video">
+<img class="w-full h-full object-cover" data-alt="Stylized 3D render of data packets traveling through a translucent fiber optic cable. The scene is illuminated in electric blue and neon green, representing high-speed networking and cloud infrastructure. Cinematic and technical." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBo6hgggfihvKTAspbR2XZqXPUAYOG0n65U7iKg7ppHoXAxaRCKCxvSZsWyZplgmBiT5t_CSaA83ciDRZMD1nJrEKxPwp5Z0YEq94nigdEkmYHEsH2Hmmc_eJDiQm5IGF4lT6zBv-_XDjeXoiyvtln9uDtpXL7ryyQYgGlxUxCu79LdxTeABqLtG_J1akb2JJv0j_ThWnKVzM3YCQextOPArK1XFXUBfpi42ELiWCfIbLUl1fZuDokp"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+<div class="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-label-mono text-[10px] text-white">1:15:20</div>
+<button class="hover-action opacity-0 translate-y-2 absolute top-2 right-2 p-2 bg-surface-dim/80 backdrop-blur rounded-full text-white border border-white/10 hover:bg-primary transition-all duration-200">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+<div class="p-4">
+<h3 class="font-body-md text-body-md font-bold text-heading mb-2">Cloud Infrastructure 101</h3>
+<p class="text-body-sm text-text-muted mb-4 line-clamp-2">Setting up your first AWS environment and understanding serverless architecture.</p>
+<div class="flex items-center gap-3 text-label-mono text-text-muted">
+<img class="w-6 h-6 rounded-full grayscale group-hover:grayscale-0 transition-all" data-alt="Profile avatar of a tech lead with short cropped hair and a simple grey tee, appearing very focused and professional. Corporate office interior." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJKAEjEu9Uj6xgu3gmgBbaQ7fiwjA3Xwv9dNwOMrAcy-Bh4N1FVyBME3dnOPcJznLrKFAoX3gNp7FYVbRUY-wOAuXi3syuCYDMyU_Jz4mkH0UubuHganNaJHKwWs9DWfo8uCLqr16l0gMpzH2UmUidEqefQFkTPLN0fow0vYMQ_uxEGuM8gKf02sgKfsLQffSGhfGT5-4iKDpfTrJ3_apG6X2LGfVl-S3kpNNv-gFVlXyVHEmBoWIl"/>
+<span>David Vance</span>
+</div>
+<div class="mt-4 h-1 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary/40 w-[15%]"></div>
+</div>
+</div>
+</div>
+<!-- More cards can go here... -->
+</div>
+</section>
+<!-- Floating Feedback Action (The FAB Replacement) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary-container rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">question_answer</span>
+</button>
+</main>
+<script>
+        // Micro-interactions for the video library
+        document.querySelectorAll('.video-card-hover').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // Future expansion: preview video logic
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-1', 'ring-primary');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-1', 'ring-primary');
+        });
+    </script>
+</body></html>

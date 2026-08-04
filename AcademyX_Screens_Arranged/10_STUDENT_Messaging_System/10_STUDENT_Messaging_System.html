@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AcademyX | Messages</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #353437;
+        }
+        .glass-effect {
+            backdrop-filter: blur(8px);
+            background: rgba(19, 19, 21, 0.8);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#c0c1ff",
+                        "tertiary-container": "#d97721",
+                        "background": "#131315",
+                        "on-tertiary": "#4f2500",
+                        "primary": "#c0c1ff",
+                        "inverse-surface": "#e5e1e4",
+                        "on-surface-variant": "#c7c4d7",
+                        "border-subtle": "#27272a",
+                        "on-surface": "#e5e1e4",
+                        "surface-container-high": "#2a2a2c",
+                        "on-primary": "#1000a9",
+                        "on-primary-fixed": "#07006c",
+                        "surface-container-lowest": "#0e0e10",
+                        "surface-variant": "#353437",
+                        "on-error": "#690005",
+                        "inverse-on-surface": "#313032",
+                        "text-heading": "#fafafa",
+                        "surface-container-highest": "#353437",
+                        "outline": "#908fa0",
+                        "secondary": "#c8c5ca",
+                        "error-container": "#93000a",
+                        "secondary-container": "#47464a",
+                        "outline-variant": "#464554",
+                        "on-tertiary-container": "#452000",
+                        "surface-container": "#201f22",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "surface-bright": "#39393b",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-primary-container": "#0d0096",
+                        "surface": "#131315",
+                        "on-tertiary-fixed": "#301400",
+                        "inverse-primary": "#494bd6",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#c8c5ca",
+                        "on-secondary-fixed-variant": "#47464a",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "surface-dim": "#131315",
+                        "tertiary": "#ffb783",
+                        "on-secondary-container": "#b6b4b8",
+                        "on-background": "#e5e1e4",
+                        "tertiary-fixed": "#ffdcc5",
+                        "text-muted": "#a1a1aa",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "primary-fixed": "#e1e0ff",
+                        "success-green": "#37cd8f",
+                        "on-secondary": "#303033",
+                        "surface-container-low": "#1c1b1d",
+                        "primary-container": "#8083ff",
+                        "on-secondary-fixed": "#1b1b1e",
+                        "on-error-container": "#ffdad6",
+                        "secondary-fixed": "#e4e1e6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px",
+                        "gutter": "16px",
+                        "container-max": "1280px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-mono": ["JetBrains Mono"],
+                        "headline-xl": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "button": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden h-screen flex">
+<!-- SideNavBar Anchor -->
+<aside class="bg-surface-container-lowest dark:bg-surface-container-lowest font-body-md text-body-md h-screen w-64 fixed left-0 top-0 border-r border-border-subtle flex flex-col py-6 z-50">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-xl">school</span>
+</div>
+<div>
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary leading-none">AcademyX</h1>
+<p class="text-[10px] text-text-muted tracking-widest uppercase mt-1">Enterprise Coaching OS</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-150 active:scale-95 transition-transform rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<!-- Institutes -->
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-150 active:scale-95 transition-transform rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">domain</span>
+<span class="font-medium">Institutes</span>
+</a>
+<!-- Courses -->
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-150 active:scale-95 transition-transform rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">menu_book</span>
+<span class="font-medium">Courses</span>
+</a>
+<!-- Students -->
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-150 active:scale-95 transition-transform rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">group</span>
+<span class="font-medium">Students</span>
+</a>
+<!-- Financials -->
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-150 active:scale-95 transition-transform rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">payments</span>
+<span class="font-medium">Financials</span>
+</a>
+<!-- Messages (Active) -->
+<a class="flex items-center gap-3 px-3 py-2 bg-secondary-container text-primary font-bold border-r-2 border-primary transition-colors duration-150 active:scale-95 transition-transform rounded-lg group" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat</span>
+<span class="font-bold">Messages</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-150 active:scale-95 transition-transform rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-6 pt-6 border-t border-border-subtle">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full border border-border-subtle" data-alt="A professional headshot of a senior software engineer with a minimalist background, high-contrast lighting, wearing dark tech-wear, centered in a circular frame, representing a high-level system administrator for AcademyX." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjdQTOYF7NhvnPA-7K-aW9XcCpYHK2lqqYK91OSSF49ua_Azqxma_CTsRLa79QF_Q4dWuiS95gBYYgb2IRoZeQplwXYiS_eRYz9M5xDzLrtPxPPeM_Tnv0kQwnGDan5UQ2SgjPysFeOFhiMLphoMtELxiIswOq1J9cDPIohw-r-4AON3-CrXYVUEIaOE9chx-TMm0L525g_3w43fQJYZ-P-SwD8VUOM3XhesaGfQ1Mk1mv-6YJVMzm"/>
+<div class="overflow-hidden">
+<p class="font-bold text-sm truncate">Alex Chen</p>
+<p class="text-xs text-text-muted truncate">Admin Lead</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 flex flex-col relative h-full">
+<!-- TopAppBar Anchor -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-surface dark:bg-surface flex items-center justify-between px-margin-desktop w-full border-b border-border-subtle z-40">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-lg text-headline-lg font-bold text-primary tracking-tight">Inbox</h2>
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container-low rounded-full border border-border-subtle">
+<span class="w-2 h-2 rounded-full bg-success-green animate-pulse"></span>
+<span class="text-xs font-label-mono text-text-muted uppercase">Server: Active</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group hidden md:block">
+<input class="bg-surface-container-lowest border border-border-subtle rounded-lg px-10 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary w-64 transition-all" placeholder="Search threads..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-text-muted">search</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Two-Pane Messaging Interface -->
+<div class="flex-1 mt-16 flex overflow-hidden">
+<!-- Sidebar: Conversations -->
+<section class="w-80 flex flex-col border-r border-border-subtle bg-surface-container-lowest">
+<div class="p-4 border-b border-border-subtle flex justify-between items-center">
+<span class="text-xs font-bold text-text-muted uppercase tracking-widest">Recent Chats</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary text-xl">edit_square</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar">
+<!-- Pinned Section -->
+<div class="px-2 pt-4">
+<p class="px-2 text-[10px] font-label-mono text-text-muted mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">push_pin</span> PINNED
+                        </p>
+<!-- Active Conversation -->
+<div class="p-3 bg-secondary-container/30 border border-primary/20 rounded-xl mb-1 cursor-pointer transition-all">
+<div class="flex gap-3">
+<div class="relative">
+<img class="w-12 h-12 rounded-full border border-primary/40 object-cover" data-alt="A portrait of a young female student with glasses and dark hair, wearing a neutral grey hoodie, in a clean minimalist architectural setting with soft blue ambient lighting. High detail and modern dark mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCNm0dB5nGCG-jqbrWd3j5S_tIyzec2i6AbojkOGCOFWWgFgcHRO5g7-L2KrCHrBKNEzEUgNvjZ68917MPHtIZXgeaGnsLe_5PzKqkpHTeTycokT2upWlEyBUo47ytWGYVI1X0SBq-oz_tAutaIQ6jxywoP3_dAf_MroQRtx_C_NM3mDBFFqb9I1RepV0qxF7w0wj06RR7xkTpc5eUONXf0LmYXj5ekcLR-4fECv0X-9jWhRK8eyyQ"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-success-green border-2 border-surface-container-lowest rounded-full"></span>
+</div>
+<div class="flex-1 overflow-hidden">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-sm truncate text-primary">Sarah Jenkins</h3>
+<span class="text-[10px] text-text-muted font-label-mono">14:20</span>
+</div>
+<p class="text-xs text-on-surface truncate mt-1">The PR for the React module is ready for review.</p>
+</div>
+</div>
+</div>
+<div class="p-3 hover:bg-surface-container-high rounded-xl mb-1 cursor-pointer transition-all group">
+<div class="flex gap-3">
+<div class="relative">
+<div class="w-12 h-12 rounded-full bg-tertiary-container/20 flex items-center justify-center border border-border-subtle">
+<span class="material-symbols-outlined text-tertiary">groups</span>
+</div>
+</div>
+<div class="flex-1 overflow-hidden">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-sm truncate">Advanced UI Cohort</h3>
+<span class="text-[10px] text-text-muted font-label-mono">12:05</span>
+</div>
+<p class="text-xs text-text-muted truncate mt-1"><span class="text-primary font-medium">Marc:</span> Did anyone see the shader lecture?</p>
+</div>
+</div>
+</div>
+</div>
+<!-- All Messages -->
+<div class="px-2 mt-4 pb-8">
+<p class="px-2 text-[10px] font-label-mono text-text-muted mb-2 uppercase">Direct Messages</p>
+<!-- List Item -->
+<div class="p-3 hover:bg-surface-container-high rounded-xl mb-1 cursor-pointer transition-all group">
+<div class="flex gap-3">
+<div class="relative">
+<img class="w-12 h-12 rounded-full border border-border-subtle grayscale group-hover:grayscale-0 transition-all object-cover" data-alt="A professional male teacher with a neatly groomed beard and modern spectacles, wearing a black turtleneck. Cinematic high-contrast lighting, indigo background glow, ultra-detailed textures, conveying expertise and mentorship." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_qhGaE0rpuYk48sz8w8LQHejpD9DOSy9e0qKxbRFzKLVIojDUSoil-XkgCfnEIL6j_NykWp9fBHBtwbc3_TSyweV0Mh4Mv5R0ICwTFTSbT6iF7j38B2JVfSrACLLwSzXG0exsAK-Ks6CxT8ftzB2jo7-7X_zYZakJh-IP-h1g5w0-uOzmASbV1czfpDK7UJLZNwdsNgTPlx6VjFA-PjlPI_45m7HBHDy886BRjERCNH11mDquZX_0"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-surface-variant border-2 border-surface-container-lowest rounded-full"></span>
+</div>
+<div class="flex-1 overflow-hidden">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-sm truncate">Prof. Aris Thorne</h3>
+<span class="text-[10px] text-text-muted font-label-mono">Yesterday</span>
+</div>
+<p class="text-xs text-text-muted truncate mt-1 italic">Sent a file: syllabus_v2.pdf</p>
+</div>
+</div>
+</div>
+<!-- List Item -->
+<div class="p-3 hover:bg-surface-container-high rounded-xl mb-1 cursor-pointer transition-all group">
+<div class="flex gap-3">
+<div class="relative">
+<img class="w-12 h-12 rounded-full border border-border-subtle object-cover" data-alt="A portrait of a student from South Asia, bright energetic expression, wearing a minimalist white tech jacket. Background is a blur of futuristic server room lights in deep indigo and violet hues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAw0hescj6wBM1jHCJmny-JkV8wvx3iKykQSNO8edsc27kB7uosw2gE2U-4J-aE6aGX63w2dzcvdkelUqFNJGvsEXFRgkQtdgk2GCBeB1KhkWzQ7s6Wm1VLcA_hz6VXNZ3S_9riRbUo6ogGKOO4t8VeaH5TtEpbj98tuf2oJLxbs1_Q2MJS82IO3bIwHYowaprjr1AM27a2raaD1tLeduw_rTBlzimH1FcAliB79iUP7LpJuLPmxOHv"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-success-green border-2 border-surface-container-lowest rounded-full"></span>
+</div>
+<div class="flex-1 overflow-hidden">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-sm truncate">Rohan Gupta</h3>
+<span class="text-[10px] text-text-muted font-label-mono">Tue</span>
+</div>
+<p class="text-xs text-text-muted truncate mt-1">Can we hop on a quick call for the deployment?</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Chat Area -->
+<section class="flex-1 flex flex-col bg-surface relative">
+<!-- Chat Header -->
+<div class="h-16 flex items-center justify-between px-6 border-b border-border-subtle glass-effect z-10">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="A portrait of a young female student with glasses and dark hair, wearing a neutral grey hoodie, in a clean minimalist architectural setting with soft blue ambient lighting. High detail and modern dark mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfs94ePZfLUNtB2TD56V1Aja3Jxrgc7vG1xSnk1QRrro0SekTfBGWdlDNVvzZVPr8TuGdXG5Z2rhzk7waIv0ucFnq0O02XtIXXwc1Ng5TWC_X9DF2IsnDIrZGwf80AG01zo8M0ntoEuDhfk1xnQ6hWBDsZfigX8pi2Nt7QLJIAKcBWECO0AF5eK39_jClS71aPz2zEQ6uk0Tl4Y_3vyv4PE0S8cLZB8frwh1v7mseLi_VI1YFibuff"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success-green border-2 border-surface rounded-full"></span>
+</div>
+<div>
+<h2 class="font-bold text-sm">Sarah Jenkins</h2>
+<p class="text-[10px] text-success-green font-label-mono flex items-center gap-1">
+                                ACTIVE NOW <span class="block w-1 h-1 rounded-full bg-success-green"></span>
+<span class="text-text-muted ml-2">Product Design Student</span>
+</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-text-muted hover:text-primary transition-colors">
+<span class="material-symbols-outlined">call</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-text-muted hover:text-primary transition-colors">
+<span class="material-symbols-outlined">videocam</span>
+</button>
+<div class="w-px h-6 bg-border-subtle mx-2"></div>
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-text-muted hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Messages Stream -->
+<div class="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
+<!-- Date Divider -->
+<div class="flex items-center justify-center">
+<span class="px-4 py-1 bg-surface-container-high rounded-full text-[10px] font-label-mono text-text-muted">AUGUST 24, 2024</span>
+</div>
+<!-- Incoming Message -->
+<div class="flex gap-4 max-w-2xl">
+<img class="w-8 h-8 rounded-full self-end mb-2 object-cover" data-alt="A portrait of a young female student with glasses and dark hair, wearing a neutral grey hoodie, in a clean minimalist architectural setting with soft blue ambient lighting. High detail and modern dark mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDodL8PAn0j21VaU0zkFldHrbhucsRPe2Nocgf_at05x_WMDrVFRD8u9U2s7Z87QBet47ezmWi0fEKrJO6BZAA5R6wcDkpqoGzSO5StI5vn2iSzsCN7Ad0xyvG-1mf2zJPckWlksC6QST31G4alnhRjsTMyNA-xbJVuucvsCjwYmcqANpZS4_YkCb8sTXPRLdTuWY5dxx2Wbj4IbhFDNhKZau2ldgeOM8oX9qrL9ZDR00K2qEe_FBGv"/>
+<div class="space-y-1">
+<div class="bg-surface-container-high p-4 rounded-2xl rounded-bl-none border border-border-subtle">
+<p class="text-sm leading-relaxed">Hey Alex! I just pushed the final version of the navigation components to the repo. Can you take a look at the transitions?</p>
+</div>
+<span class="text-[10px] text-text-muted font-label-mono block ml-1">14:02</span>
+</div>
+</div>
+<!-- Outgoing Message -->
+<div class="flex gap-4 max-w-2xl ml-auto flex-row-reverse">
+<div class="space-y-1">
+<div class="bg-primary text-on-primary-container p-4 rounded-2xl rounded-br-none border border-primary/20 shadow-[0px_0px_15px_rgba(192,193,255,0.1)]">
+<p class="text-sm leading-relaxed font-medium">Checking it right now. The preview looks solid so far. Did you use the new easing tokens?</p>
+</div>
+<span class="text-[10px] text-text-muted font-label-mono block text-right mr-1">14:05 <span class="material-symbols-outlined text-[14px] text-primary">done_all</span></span>
+</div>
+</div>
+<!-- Incoming Message with Thread / Reference -->
+<div class="flex gap-4 max-w-2xl">
+<img class="w-8 h-8 rounded-full self-end mb-2 object-cover" data-alt="A portrait of a young female student with glasses and dark hair, wearing a neutral grey hoodie, in a clean minimalist architectural setting with soft blue ambient lighting. High detail and modern dark mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7k2u80_x5feKQHpGDV4EpnpwgmIdLrli7FqAmi5JqAIYwO7-iknYXnz_8_9Ri9DjHU5ZzV28_LaR1ldW0mYZf4B2wg8zd_g1J3-rV2gtuMYJRrt9c4KqGj0LI3uHCmDZU2brCTZcIovQwuM_eQqc2nZgiQWzuI9Nf9RGGLiDXigrtPbqF8ECYX06bnGx7SIFC65x-nIUxEBTX8uWLPXWlCpbGUzWjc_MwxnNbeIzdbuuo_eeZM1nN"/>
+<div class="space-y-1">
+<!-- Reference -->
+<div class="bg-surface-container-low border-l-2 border-primary p-3 mb-[-12px] opacity-60 text-xs rounded-t-xl mx-2">
+                                Checking it right now. The preview looks solid so far...
+                            </div>
+<div class="bg-surface-container-high p-4 rounded-2xl rounded-bl-none border border-border-subtle">
+<p class="text-sm leading-relaxed">Yes! I used `cubic-bezier(0.4, 0, 0.2, 1)`. Also, I've attached the updated style documentation for the team.</p>
+<!-- Attachment Card -->
+<div class="mt-4 p-3 bg-surface-container-lowest rounded-xl border border-border-subtle flex items-center gap-3 group hover:border-primary transition-colors cursor-pointer">
+<div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">description</span>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-xs font-bold truncate">Style_Guide_v2.4.pdf</p>
+<p class="text-[10px] text-text-muted font-label-mono">2.4 MB • PDF Document</p>
+</div>
+<button class="material-symbols-outlined text-text-muted group-hover:text-primary transition-colors">download</button>
+</div>
+</div>
+<span class="text-[10px] text-text-muted font-label-mono block ml-1">14:20</span>
+</div>
+</div>
+</div>
+<!-- Message Composer -->
+<div class="p-6 pt-0">
+<div class="bg-surface-container-low border border-border-subtle rounded-2xl p-2 focus-within:ring-1 focus-within:ring-primary transition-all">
+<div class="flex items-center gap-2 px-2 pb-2">
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-text-muted transition-colors">
+<span class="material-symbols-outlined text-xl">format_bold</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-text-muted transition-colors">
+<span class="material-symbols-outlined text-xl">format_italic</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-text-muted transition-colors">
+<span class="material-symbols-outlined text-xl">code</span>
+</button>
+<div class="w-px h-4 bg-border-subtle mx-1"></div>
+<button class="p-1.5 hover:bg-surface-container-high rounded-lg text-text-muted transition-colors">
+<span class="material-symbols-outlined text-xl">link</span>
+</button>
+</div>
+<div class="relative">
+<textarea class="w-full bg-transparent border-none focus:ring-0 text-sm py-2 px-3 resize-none h-24 font-body-md" id="message-input" placeholder="Write a message to Sarah..."></textarea>
+</div>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-border-subtle">
+<div class="flex items-center gap-1">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-text-muted transition-colors">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-text-muted transition-colors">
+<span class="material-symbols-outlined">mood</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-text-muted transition-colors">
+<span class="material-symbols-outlined">alternate_email</span>
+</button>
+</div>
+<button class="bg-primary text-on-primary-container px-6 py-2 rounded-lg font-button flex items-center gap-2 hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/10">
+<span class="font-bold">Send</span>
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+<p class="text-[10px] text-text-muted font-label-mono mt-3 text-center opacity-50">PRESS CMD + ENTER TO SEND • SHIFT + ENTER FOR NEW LINE</p>
+</div>
+</section>
+<!-- Optional Right Sidebar: Profile Info -->
+<section class="w-72 border-l border-border-subtle bg-surface-container-lowest hidden xl:flex flex-col">
+<div class="p-8 flex flex-col items-center text-center">
+<img class="w-24 h-24 rounded-2xl border-2 border-primary/20 mb-4 object-cover" data-alt="A portrait of a young female student with glasses and dark hair, wearing a neutral grey hoodie, in a clean minimalist architectural setting with soft blue ambient lighting. High detail and modern dark mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg32f12mHbEvJ9FfXbD8Gxb8ehXl-7fF0OAhkcbqKO7CO2G1jV8PXZG51v1GsP5IRRN8TnPjkt1aQ96iHgVqBxx5Bzzikm39IuwIzkg-AknBBOGp08-NrMAIUNcZX4MnygSj5P3oVkbhL_4CEQO_vRayrsaZdD4H7ypSsKM6L6oLzR05voxUIBMMuVJGIzGzOrSpUU-h7UcU6W-RGpX7sVVdDoSJK7evgJgC-fuRtyuz6j-vOn5nfg"/>
+<h2 class="font-bold text-lg">Sarah Jenkins</h2>
+<p class="text-text-muted text-sm">Product Design • Year 3</p>
+<div class="mt-4 flex gap-2">
+<span class="px-2 py-1 bg-surface-container-high rounded text-[10px] font-label-mono text-primary border border-primary/20">STUDENT</span>
+<span class="px-2 py-1 bg-surface-container-high rounded text-[10px] font-label-mono text-tertiary border border-tertiary/20">TOP PERFORMER</span>
+</div>
+</div>
+<div class="px-6 space-y-6">
+<div>
+<h4 class="text-[10px] font-label-mono text-text-muted uppercase tracking-widest mb-3">Enrolled Courses</h4>
+<div class="space-y-2">
+<div class="p-3 bg-surface-container rounded-xl border border-border-subtle flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">draw</span>
+<span class="text-xs font-medium">Advanced UI Systems</span>
+</div>
+<div class="p-3 bg-surface-container rounded-xl border border-border-subtle flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">terminal</span>
+<span class="text-xs font-medium">React for Designers</span>
+</div>
+</div>
+</div>
+<div>
+<h4 class="text-[10px] font-label-mono text-text-muted uppercase tracking-widest mb-3">Recent Shared Media</h4>
+<div class="grid grid-cols-3 gap-2">
+<div class="aspect-square rounded-lg bg-cover bg-center border border-border-subtle" data-alt="A minimalist architectural detail of a concrete building with sharp shadows and neon violet lighting. 8k resolution, cinematic atmosphere, modern aesthetics." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAwZasOi9MA9yrkR-yIqKlmPKV0Z4vhejDZTGJBYloLFWCUdx_YELrJf6ID6OzRpZHGsHVO0a2N0LWuRbd_vx6WFvuODY8uQMpRzpyHFnZk-NhuehdSB1NWwKUHtE8G2iMHJGWEaJ6LuD531lfJPyJNt2JGlwECJhWiJCeIzZEWwtXhGJPxznvhTuatrfPWxALBxAlAXIGa1HR6-xgdMiCapbz37HKe8jvFP4kvFIUjyZ5eWkiqVi2n')"></div>
+<div class="aspect-square rounded-lg bg-cover bg-center border border-border-subtle" data-alt="Close up of a high-end keyboard with glowing indigo backlighting in a dark room. Precision and developer-focused photography style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBfXXx1C8N8xbgRW-z-OpIHSPf8CM_ha6lVIf5HeiSfbWSUsTMnq9hjEL5AhNCYih4VKcyzWswCAdUnPAhg4FhcJ73cD9wsJ160RziWuGuUXmJSduWManQxF0UzC4UwyMsoMMQCjgdPTLLo9VCnBYMwDXiqQFmI0Tr1Lc-SUw0XAjZ8WAEZeDHYvTdXXC-MSjklh_S1jYKnzYe6fqg3X3TCyEcqFNLde2U0Ld0x7iObr2L2GPM3dyUg')"></div>
+<div class="aspect-square rounded-lg bg-cover bg-center border border-border-subtle" data-alt="A digital wireframe of a complex user interface layout, glowing in primary blue on a dark background. Technical and minimalist design." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC7NZRvOf3lVZvn3W7YOtF4FWagpMpxCxLPevdgpr34ZdkPNEXhYKgUjp7dMIEZCfDcr2FmbESPB_mGuiA0mWODp9CP7FxnaPj_oCruq_ImOi-wgb7KjFWMigR24aZ1UkqvhvuWsrDy2LF-MLnuxsv8_E6fJB_KWvwNHTRldZBsloeafmDtyN131ZVKaD1-TBZGm0Dn55LB-Mmg-EThxqCz0r2cnbVK3hbKfdQ63uGS4yGZPN4If99x')"></div>
+<div class="aspect-square rounded-lg bg-surface-container border border-border-subtle flex items-center justify-center text-text-muted">
+<span class="text-[10px] font-bold">+12</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-auto p-6 space-y-2">
+<button class="w-full py-2 border border-border-subtle rounded-lg text-xs font-bold hover:bg-surface-container-high transition-colors">View Profile</button>
+<button class="w-full py-2 text-error text-xs font-bold hover:bg-error-container/10 transition-colors">Block Sarah</button>
+</div>
+</section>
+</div>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const msgInput = document.getElementById('message-input');
+            msgInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.metaKey) {
+                    e.preventDefault();
+                    if (msgInput.value.trim()) {
+                        console.log('Sending message:', msgInput.value);
+                        msgInput.value = '';
+                        // Simple visual feedback could go here
+                    }
+                }
+            });
+        });
+    </script>
+</body></html>

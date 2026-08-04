@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AcademyX Student Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --surface-container-low: #1c1b1d;
+            --primary: #c0c1ff;
+            --background: #131315;
+        }
+        body {
+            background-color: var(--background);
+            color: #e5e1e4;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(24, 24, 27, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid #27272a;
+        }
+        .indigo-glow {
+            box-shadow: 0px 0px 12px rgba(99, 102, 241, 0.2);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #131315;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#2a2a2c",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "surface-container-highest": "#353437",
+                        "surface-container-low": "#1c1b1d",
+                        "on-error": "#690005",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "text-muted": "#a1a1aa",
+                        "inverse-primary": "#494bd6",
+                        "on-secondary-container": "#b6b4b8",
+                        "secondary-fixed": "#e4e1e6",
+                        "on-surface": "#e5e1e4",
+                        "on-primary-fixed": "#07006c",
+                        "on-primary-container": "#0d0096",
+                        "on-surface-variant": "#c7c4d7",
+                        "surface-tint": "#c0c1ff",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "on-secondary-fixed": "#1b1b1e",
+                        "surface-bright": "#39393b",
+                        "error-container": "#93000a",
+                        "success-green": "#37cd8f",
+                        "outline-variant": "#464554",
+                        "surface-container": "#201f22",
+                        "on-tertiary-container": "#452000",
+                        "tertiary-fixed": "#ffdcc5",
+                        "on-tertiary-fixed": "#301400",
+                        "inverse-on-surface": "#313032",
+                        "inverse-surface": "#e5e1e4",
+                        "surface": "#131315",
+                        "on-secondary": "#303033",
+                        "primary-container": "#8083ff",
+                        "surface-dim": "#131315",
+                        "surface-variant": "#353437",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#c8c5ca",
+                        "on-secondary-fixed-variant": "#47464a",
+                        "background": "#131315",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-error-container": "#ffdad6",
+                        "border-subtle": "#27272a",
+                        "tertiary-container": "#d97721",
+                        "surface-container-lowest": "#0e0e10",
+                        "text-heading": "#fafafa",
+                        "primary": "#c0c1ff",
+                        "primary-fixed": "#e1e0ff",
+                        "on-background": "#e5e1e4",
+                        "tertiary": "#ffb783",
+                        "secondary": "#c8c5ca",
+                        "on-tertiary": "#4f2500",
+                        "on-primary": "#1000a9",
+                        "secondary-container": "#47464a",
+                        "outline": "#908fa0"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-mono": ["JetBrains Mono"],
+                        "button": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                        "label-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "button": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface overflow-x-hidden pb-24">
+<!-- Top AppBar (Mobile Viewport Context) -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface-dim/80 backdrop-blur-md h-16 flex justify-between items-center px-4 border-b border-border-subtle">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-xl">school</span>
+</div>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold">AcademyX</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-border-subtle">
+<img class="w-full h-full object-cover" data-alt="Close-up professional portrait of a modern student with short dark hair, wearing a clean minimalist charcoal hoodie, set against a blurred high-tech classroom background with soft indigo and dark grey lighting, emphasizing a sleek SaaS aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDg9_UtRFoB3ewludUl5vO98y70FAUPM-1VyrVPZzO5mJel2xXBS7T_q54wdG2EMSbeEnp6pB219MRWvCqkc7p2hWc20yZ8syvpeYs92D4hFdHPnfd5QMK4MFv-qlY3JgjTK5RBOEgPAQGdYnI9vbVvl2jxEgELtsv_WYGrE05DyDp3zSxUMHyvoCHYRN0-bL87Acn2B-i-cGKOdwC_R2gDr3asSpb9gnJNSHSpMc5x9h9sEK13PDmK"/>
+</div>
+</div>
+</header>
+<main class="pt-20 px-4 space-y-6">
+<!-- Hero Section -->
+<section class="relative overflow-hidden rounded-xl p-6 bg-surface-container-low border border-border-subtle">
+<div class="relative z-10 flex justify-between items-start">
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-text-heading">Welcome back, Alex</h1>
+<p class="font-body-sm text-body-sm text-text-muted mt-1">You're on top of your game today!</p>
+</div>
+<div class="flex flex-col items-center bg-surface-container-high/50 px-3 py-2 rounded-lg border border-border-subtle">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-label-mono text-label-mono text-tertiary mt-1">12 STREAK</span>
+</div>
+</div>
+<!-- Atmospheric micro-interaction element -->
+<div class="absolute -right-8 -bottom-8 w-32 h-32 bg-primary/10 blur-3xl rounded-full"></div>
+</section>
+<!-- Next Class (Live Now) -->
+<section>
+<div class="flex items-center justify-between mb-3">
+<h2 class="font-button text-button text-on-surface-variant uppercase tracking-wider">Next Class</h2>
+<span class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-error/10 border border-error/20 text-[10px] font-bold text-error uppercase animate-pulse">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                    Live Now
+                </span>
+</div>
+<div class="glass-card rounded-xl p-4 flex gap-4 items-center indigo-glow">
+<div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A stylized 3D render of a glowing laptop with floating code snippets in vibrant indigo and violet, high-density digital art style, dark background with subtle grid lines, matching a sophisticated developer-centric UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmblTkMxcmWgrS-2jRVK-5F3mjc3fioE1UzLUnd6CDz5KtKUhAryIw92UeQTByRIO7C-U9BxY36HV2tBtY2PUsN5ZnxHtSfE42dpBY1byKNDWLtiDstLo5rsjrUNtom3e_0E0Qol5FbQ71iE2FtimzDDkxoUAv9IZ0foHr6TbAaqaR7qAzdCtUkL7ilkOdi7QqCamrcHc3bjgcrqA7QovKU8XaCFVeU880cBH9UdLD8O-JLRhAMr97"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-body-md text-body-md text-text-heading font-semibold truncate">Advanced React Patterns</h3>
+<p class="font-body-sm text-body-sm text-text-muted">Prof. Sarah Jenkins</p>
+<div class="flex items-center gap-2 mt-2">
+<span class="font-label-mono text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">CS-402</span>
+<span class="font-label-mono text-[10px] text-on-surface-variant">10:30 AM - 12:00 PM</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-symbols-outlined">play_arrow</span>
+</button>
+</div>
+</section>
+<!-- Learning Progress Chart -->
+<section>
+<h2 class="font-button text-button text-on-surface-variant uppercase tracking-wider mb-3">Learning Progress</h2>
+<div class="bg-surface-container-low border border-border-subtle rounded-xl p-5 h-48 flex flex-col justify-between">
+<div class="flex justify-between items-end h-24 gap-2">
+<!-- Simple CSS Bar Chart -->
+<div class="flex-1 bg-surface-container-highest rounded-t-sm relative group">
+<div class="absolute bottom-0 left-0 right-0 bg-primary/20 h-[40%] rounded-t-sm transition-all duration-500"></div>
+<div class="absolute bottom-0 left-0 right-0 bg-primary h-[20%] rounded-t-sm"></div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-sm relative group">
+<div class="absolute bottom-0 left-0 right-0 bg-primary/20 h-[60%] rounded-t-sm"></div>
+<div class="absolute bottom-0 left-0 right-0 bg-primary h-[45%] rounded-t-sm"></div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-sm relative group">
+<div class="absolute bottom-0 left-0 right-0 bg-primary/20 h-[80%] rounded-t-sm"></div>
+<div class="absolute bottom-0 left-0 right-0 bg-primary h-[70%] rounded-t-sm"></div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-sm relative group">
+<div class="absolute bottom-0 left-0 right-0 bg-primary/20 h-[50%] rounded-t-sm"></div>
+<div class="absolute bottom-0 left-0 right-0 bg-primary h-[35%] rounded-t-sm"></div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-sm relative group">
+<div class="absolute bottom-0 left-0 right-0 bg-primary/20 h-[95%] rounded-t-sm"></div>
+<div class="absolute bottom-0 left-0 right-0 bg-primary h-[85%] rounded-t-sm"></div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-sm relative group">
+<div class="absolute bottom-0 left-0 right-0 bg-primary/20 h-[70%] rounded-t-sm"></div>
+<div class="absolute bottom-0 left-0 right-0 bg-primary h-[55%] rounded-t-sm"></div>
+</div>
+</div>
+<div class="flex justify-between font-label-mono text-[10px] text-text-muted mt-2 border-t border-border-subtle pt-2">
+<span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<span class="font-body-sm text-body-sm text-on-surface">Weekly Goal</span>
+<span class="font-label-mono text-label-mono text-primary">85% Complete</span>
+</div>
+</div>
+</section>
+<!-- Recent Assignments -->
+<section class="pb-8">
+<div class="flex items-center justify-between mb-3">
+<h2 class="font-button text-button text-on-surface-variant uppercase tracking-wider">Recent Assignments</h2>
+<button class="text-primary font-button text-button">View All</button>
+</div>
+<div class="space-y-3">
+<!-- Assignment Card 1 -->
+<div class="bg-surface-container-low border border-border-subtle rounded-xl p-4 flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high border border-border-subtle flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<h4 class="font-body-sm text-body-sm text-text-heading font-medium">UIUX Case Study</h4>
+<p class="font-label-mono text-[11px] text-text-muted mt-0.5">Due in 2 days</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-tertiary/10 border border-tertiary/20 text-[10px] font-bold text-tertiary uppercase">Pending</span>
+</div>
+<!-- Assignment Card 2 -->
+<div class="bg-surface-container-low border border-border-subtle rounded-xl p-4 flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high border border-border-subtle flex items-center justify-center text-success-green">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div>
+<h4 class="font-body-sm text-body-sm text-text-heading font-medium">Database Normalization</h4>
+<p class="font-label-mono text-[11px] text-text-muted mt-0.5">Submitted yesterday</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-success-green/10 border border-success-green/20 text-[10px] font-bold text-success-green uppercase">Graded</span>
+</div>
+<!-- Assignment Card 3 -->
+<div class="bg-surface-container-low border border-border-subtle rounded-xl p-4 flex items-center justify-between hover:bg-surface-container transition-colors opacity-70">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high border border-border-subtle flex items-center justify-center text-primary-fixed-dim">
+<span class="material-symbols-outlined">functions</span>
+</div>
+<div>
+<h4 class="font-body-sm text-body-sm text-text-heading font-medium">Linear Algebra Quiz</h4>
+<p class="font-label-mono text-[11px] text-text-muted mt-0.5">Completed</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary uppercase">88/100</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Mandatory Shared Component Logic) -->
+<nav class="fixed bottom-0 left-0 right-0 z-[100] bg-surface-container-low/95 backdrop-blur-lg border-t border-border-subtle px-2 pt-2 pb-6 flex justify-around items-center">
+<!-- Home (Active) -->
+<button class="flex flex-col items-center justify-center w-16 py-1 gap-1 text-primary font-bold bg-surface-variant rounded-xl transition-all duration-150 active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-mono text-[10px]">Home</span>
+</button>
+<!-- Courses -->
+<button class="flex flex-col items-center justify-center w-16 py-1 gap-1 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-150 active:scale-95">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-mono text-[10px]">Courses</span>
+</button>
+<!-- Schedule -->
+<button class="flex flex-col items-center justify-center w-16 py-1 gap-1 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-150 active:scale-95">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-mono text-[10px]">Schedule</span>
+</button>
+<!-- Progress -->
+<button class="flex flex-col items-center justify-center w-16 py-1 gap-1 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-150 active:scale-95">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-label-mono text-[10px]">Progress</span>
+</button>
+<!-- Profile -->
+<button class="flex flex-col items-center justify-center w-16 py-1 gap-1 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all duration-150 active:scale-95">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-mono text-[10px]">Profile</span>
+</button>
+</nav>
+<!-- Contextual FAB (Mandatory Suppression Logic - Primary Action: Join Class) -->
+<div class="fixed bottom-24 right-6 z-[110]">
+<button class="w-14 h-14 bg-primary text-on-primary rounded-2xl flex items-center justify-center shadow-lg active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+<script>
+        // Micro-interaction: Update progress bars with a slight animation delay on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const bars = document.querySelectorAll('.group > div:nth-child(2)');
+            bars.forEach((bar, index) => {
+                const finalHeight = bar.style.height;
+                bar.style.height = '0%';
+                setTimeout(() => {
+                    bar.style.transition = 'height 1s cubic-bezier(0.16, 1, 0.3, 1)';
+                    bar.style.height = finalHeight || '60%'; // fallback for demonstration
+                }, 200 + (index * 100));
+            });
+        });
+    </script>
+</body></html>

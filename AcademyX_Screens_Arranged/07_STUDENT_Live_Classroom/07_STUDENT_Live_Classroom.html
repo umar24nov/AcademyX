@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AcademyX - Live Classroom</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        .glass-panel {
+            background: rgba(24, 24, 27, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(39, 39, 42, 0.5);
+        }
+        .glow-indigo {
+            box-shadow: 0px 0px 12px rgba(99, 102, 241, 0.2);
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 10px;
+        }
+        .video-container:hover .video-controls {
+            opacity: 1;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#2a2a2c",
+                        "text-heading": "#fafafa",
+                        "text-muted": "#a1a1aa",
+                        "background": "#09090b",
+                        "surface-container-lowest": "#0e0e10",
+                        "surface-container-low": "#1c1b1d",
+                        "primary": "#c0c1ff",
+                        "border-subtle": "#27272a",
+                        "on-surface": "#e5e1e4",
+                        "error": "#ffb4ab",
+                        "success-green": "#37cd8f"
+                    },
+                    "fontFamily": {
+                        "button": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-mono": ["JetBrains Mono"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-sm overflow-hidden h-screen flex">
+<!-- Sidebar Navigation (Shared Component Shell) -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-border-subtle bg-surface-container-lowest flex flex-col p-4 gap-2 z-50">
+<div class="mb-8 px-2">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">AcademyX</h1>
+<p class="text-[10px] uppercase tracking-widest text-text-muted font-label-mono">Enterprise Tier</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-variant transition-colors duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-sm">Dashboard</span>
+</a>
+<!-- Active State: Learning/Classroom matches closest to Curriculum in JSON -->
+<a class="flex items-center gap-3 px-3 py-2 text-primary font-bold bg-surface-container-high rounded-lg transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined active-icon">auto_stories</span>
+<span class="font-body-sm">Curriculum</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-variant transition-colors duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-body-sm">Students</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-variant transition-colors duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-sm">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-variant transition-colors duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-body-sm">Messages</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-variant transition-colors duration-150 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-sm">Settings</span>
+</a>
+</nav>
+<div class="pt-4 border-t border-border-subtle space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-variant rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-sm">Help</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-error hover:bg-error/10 rounded-lg" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-sm">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex flex-col w-full h-screen relative bg-background">
+<!-- Top Bar (Shared Component Shell) -->
+<header class="h-16 flex items-center justify-between px-8 border-b border-border-subtle bg-surface-container-low z-40">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 bg-background px-3 py-1.5 rounded-full border border-border-subtle">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+<span class="font-label-mono text-[11px] text-text-heading">LIVE: ADVANCED NEURAL ARCHITECTURES</span>
+</div>
+<div class="text-text-muted text-xs font-label-mono">01:42:05</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-text-muted hover:text-text-heading cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-text-muted hover:text-text-heading cursor-pointer">apps</span>
+</div>
+<div class="flex items-center gap-2 pl-4 border-l border-border-subtle">
+<img class="w-8 h-8 rounded-full border border-primary" data-alt="A professional studio portrait of a senior AI research instructor with a minimalist aesthetic. The lighting is dramatic and moody, with deep shadows and soft rim lighting. The background is a clean, dark charcoal gray. The instructor wears modern, dark professional attire, reflecting a high-end tech-focused educational environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQoSl-O0kdd-1K6WzKz9ZVDAtL2A2bTWf0b5T0TYxD0qWgbgAQ3DR0CVXeqUlFW8Z1C8Op6V1YY5KrzAWwsB3CKt3lRdlnIv068gRJNPWnAbkIkpCWwRvvYJ1GGQpPu_pBFrQzfxM0WPyMIpQOKTGK8jfeFIG5bZv76IDJkzAA1Oiy7rTVMPaQvz749OcULCqNO-1MkuurMVkqvtIKSZWQUWwKnz2AGtCCWljCPc-5i60tctHTCHLx"/>
+<span class="font-label-mono text-text-heading text-xs">DR. ARIS T.</span>
+</div>
+</div>
+</header>
+<!-- Classroom Layout -->
+<div class="flex-1 flex overflow-hidden p-4 gap-4">
+<!-- Left: Main Screen Share & Teacher Overlay -->
+<div class="flex-1 relative rounded-xl overflow-hidden bg-[#121214] border border-border-subtle group">
+<!-- Main Screen Share Content (Placeholder for content) -->
+<div class="absolute inset-0 flex flex-col items-center justify-center p-12 bg-surface-container-lowest">
+<div class="w-full h-full rounded-lg border border-dashed border-border-subtle flex flex-col items-center justify-center relative overflow-hidden">
+
+<div class="z-10 text-center">
+<span class="material-symbols-outlined text-6xl text-primary mb-4">screen_share</span>
+<h2 class="font-headline-lg text-text-heading">Instructor is sharing screen</h2>
+<p class="text-text-muted mt-2">Deep Learning Fundamentals - Module 04</p>
+</div>
+</div>
+</div>
+<!-- Floating Teacher Camera -->
+<div class="absolute top-4 right-4 w-48 h-32 rounded-lg overflow-hidden border-2 border-primary glow-indigo shadow-2xl z-20 transition-transform hover:scale-105 cursor-move">
+<img class="w-full h-full object-cover" data-alt="A high-definition webcam feed of an instructor speaking in a dark, professional home office setup. Behind him, subtle LED accent lights in indigo glow against a dark shelf. He is wearing a professional headset. The image has a cinematic, high-contrast quality typical of a premium masterclass production." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8laCpdgugpIGKv-Ef-_lc5Fgf5npui62_6Y-2jg8ozKWZqc2jKGLY-NruDuhn7kbyQ5YELVhFkGGsjws2lmXY9L-X-Lc2u63G_RXdvVOKctD_MCDrC9VOqdkQd5vmipo07movmXTe1JlpMm9SOOQWCRbW-C03ieNg9e2TSHNnKaNlISnt6AXBqNAF_fR6YvaLe-a2adDqICF5df5pXAo_UCfoHCs6F8nQBPz6rIzAN706GYE1M_rL"/>
+<div class="absolute bottom-2 left-2 px-2 py-0.5 bg-black/60 backdrop-blur-sm rounded text-[10px] font-label-mono text-white">Instructor (Live)</div>
+</div>
+<!-- Whiteboard Overlay Toggle (Hidden by default) -->
+<div class="absolute inset-0 bg-white/5 backdrop-blur-md z-30 hidden flex items-center justify-center" id="whiteboard">
+<div class="w-[90%] h-[85%] bg-white rounded-xl shadow-2xl relative">
+<div class="absolute top-4 right-4 text-black flex gap-2">
+<button class="p-2 hover:bg-gray-100 rounded-full transition-colors" onclick="toggleWhiteboard()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="w-full h-full flex items-center justify-center text-gray-400 font-label-mono">
+                            [ Interactive Whiteboard Canvas ]
+                        </div>
+</div>
+</div>
+</div>
+<!-- Right: Participants & Chat -->
+<div class="w-80 flex flex-col gap-4">
+<!-- Participants Grid (High Density) -->
+<div class="glass-panel rounded-xl flex-1 flex flex-col overflow-hidden">
+<div class="p-3 border-b border-border-subtle flex justify-between items-center bg-surface-container-high/30">
+<span class="font-label-mono text-xs font-bold text-text-heading uppercase tracking-widest">Participants (24)</span>
+<span class="material-symbols-outlined text-sm text-text-muted">expand_more</span>
+</div>
+<div class="flex-1 overflow-y-auto p-3 grid grid-cols-2 gap-2 content-start">
+<!-- Student Avatars -->
+<div class="relative group">
+<img class="w-full aspect-square rounded-lg object-cover border border-border-subtle group-hover:border-primary transition-colors" data-alt="A close-up studio headshot of a young female student with a focused expression, wearing a minimalist black hoodie. The background is a dark, neutral gray with subtle blue backlighting. The lighting is clean and professional, matching a high-end tech educational platform aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg51tVbMxhRY9W-5akP3HohA7H39OHY-g1JM8KgGbkfyk-au874zRgIVCuy__Uedocf4DOnlbTVhI2izWtyy4lVqYkEaQPDWKDUkor-y_NAJThScwnx7D6jYIp9zGZ8LtbnwcpEfIAtzCgtu2MbysI375GXTnlki8mqcy3SzavVI2-KvrEplMpZzhrONucxwfpP2unLkNsEnyXeOHC3m5DDTJdLgPYRJM5AqDRNum-X8Yd-hxtL-nP"/>
+<div class="absolute bottom-1 left-1 right-1 px-1.5 py-0.5 bg-black/70 backdrop-blur-md rounded text-[9px] font-label-mono text-white truncate">Sarah Jenkins</div>
+</div>
+<div class="relative group">
+<img class="w-full aspect-square rounded-lg object-cover border border-border-subtle group-hover:border-primary transition-colors" data-alt="A close-up studio headshot of a young male student in a modern dark-themed home office. He has a thoughtful expression. Minimalist dark aesthetic with soft indigo rim lighting. High-end digital learning environment style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAOh-ZJX1CHRNfA55QUVXDjrqoH9YRfPp8DEjz96tZcCfB4YVR0AZrOWQkNKi6jdSuVWOra8gpdA_qnXW1sF-U60jLKBqQfnHmnqT3_ffqMQxjJDAa60rQ4uIheeBtZN_wtehECCIixRM1hNzEgDL9K7TeZyQsztRuZjmoF9PhTq4xppTF2wRyNMncP0uOM4kcs6XldXtKZ3LfjfJT2-CR7okRKA6PfoO6OHnOFrQlbof3loRtXZvD"/>
+<div class="absolute bottom-1 left-1 right-1 px-1.5 py-0.5 bg-black/70 backdrop-blur-md rounded text-[9px] font-label-mono text-white truncate">Marcus V.</div>
+</div>
+<div class="relative group">
+<img class="w-full aspect-square rounded-lg object-cover border border-border-subtle group-hover:border-primary transition-colors" data-alt="A professional headshot of a middle-aged woman in a sleek tech-forward home office. Soft, warm key lighting against a dark background with blue accents. Sophisticated and high-quality digital education aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqcwTCX9C6exDMdwuK0AiLH2LqAzJP1gzHsWw8bE7fxDqV-adTF6s5vcX835bsNBdpWyclClK5APKYKxleQT2VqQigXZKwK5ezo_jD5d_QLHUiGtjCbhLiuSE0YbQtKQ5txNhG2ZHA3CZTa4q9BOfsh_92BzjV8yqxl_CYiZ98CLrpjvN7GulvBMcIC3SL9WyNJFO__JXPw_PmYqtyNAyOS7_o4bPrrvUVNZwIEhgd-rJzmiCRcc5z"/>
+<div class="absolute bottom-1 left-1 right-1 px-1.5 py-0.5 bg-black/70 backdrop-blur-md rounded text-[9px] font-label-mono text-white truncate">Elena Rossi</div>
+</div>
+<div class="relative group">
+<div class="w-full aspect-square rounded-lg bg-surface-container-high border border-border-subtle flex items-center justify-center group-hover:border-primary transition-colors">
+<span class="text-primary font-bold">JD</span>
+<div class="absolute top-1 right-1 w-2 h-2 rounded-full bg-success-green"></div>
+</div>
+<div class="absolute bottom-1 left-1 right-1 px-1.5 py-0.5 bg-black/70 backdrop-blur-md rounded text-[9px] font-label-mono text-white truncate">John Doe</div>
+</div>
+<!-- More students placeholder -->
+<div class="col-span-2 py-4 text-center">
+<button class="text-[10px] font-label-mono text-text-muted hover:text-primary underline uppercase tracking-tighter">View all participants</button>
+</div>
+</div>
+</div>
+<!-- Real-time Chat -->
+<div class="glass-panel rounded-xl h-80 flex flex-col overflow-hidden border-primary/20">
+<div class="p-3 border-b border-border-subtle flex justify-between items-center bg-surface-container-high/30">
+<span class="font-label-mono text-xs font-bold text-text-heading uppercase tracking-widest">Class Chat</span>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-sm text-text-muted cursor-pointer">settings</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<div class="flex flex-col">
+<div class="flex items-center gap-2 mb-1">
+<span class="text-[10px] font-bold text-primary">Marcus V.</span>
+<span class="text-[9px] text-text-muted">10:42 AM</span>
+</div>
+<p class="text-xs bg-surface-container rounded-r-lg rounded-bl-lg p-2 text-on-surface">Could you re-explain the backpropagation through time logic?</p>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-2 mb-1">
+<span class="text-[9px] text-text-muted">10:43 AM</span>
+<span class="text-[10px] font-bold text-success-green">Dr. Aris T. (Host)</span>
+</div>
+<p class="text-xs bg-primary/10 border border-primary/20 rounded-l-lg rounded-br-lg p-2 text-on-surface">Sure Marcus, let's look at the gradient flow in the next slide.</p>
+</div>
+</div>
+<div class="p-3 bg-surface-container-lowest border-t border-border-subtle">
+<div class="relative">
+<input class="w-full bg-background border border-border-subtle rounded-lg py-2 pl-3 pr-10 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Type a message..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-sm text-text-muted cursor-pointer hover:text-primary">send</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Control Bar -->
+<footer class="h-20 flex items-center justify-between px-8 bg-surface-container-low/80 backdrop-blur-xl border-t border-border-subtle z-50">
+<div class="flex-1 flex justify-start">
+<button class="flex flex-col items-center gap-1 group text-text-muted hover:text-primary transition-all" onclick="toggleWhiteboard()">
+<div class="p-2.5 rounded-xl border border-border-subtle group-hover:bg-primary/10 group-hover:border-primary/40">
+<span class="material-symbols-outlined">draw</span>
+</div>
+<span class="text-[10px] font-label-mono uppercase">Whiteboard</span>
+</button>
+</div>
+<!-- Central Controls -->
+<div class="flex items-center gap-3">
+<button class="control-btn p-3 rounded-full bg-surface-container-high border border-border-subtle hover:bg-surface-variant transition-all" title="Mute Mic">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button class="control-btn p-3 rounded-full bg-surface-container-high border border-border-subtle hover:bg-surface-variant transition-all" title="Stop Video">
+<span class="material-symbols-outlined">videocam</span>
+</button>
+<div class="w-px h-8 bg-border-subtle mx-2"></div>
+<button class="control-btn p-3 rounded-full bg-primary text-background hover:scale-105 transition-all shadow-lg shadow-primary/20" title="Sharing Screen">
+<span class="material-symbols-outlined active-icon">screen_share</span>
+</button>
+<button class="control-btn p-3 rounded-full bg-surface-container-high border border-border-subtle hover:bg-surface-variant transition-all" title="Raise Hand">
+<span class="material-symbols-outlined">front_hand</span>
+</button>
+<button class="control-btn p-3 rounded-full bg-surface-container-high border border-border-subtle hover:bg-surface-variant transition-all" title="Polls">
+<span class="material-symbols-outlined">poll</span>
+</button>
+<div class="w-px h-8 bg-border-subtle mx-2"></div>
+<button class="px-6 py-3 rounded-full bg-error/10 border border-error/40 text-error font-button text-button hover:bg-error hover:text-white transition-all">
+                    End Class
+                </button>
+</div>
+<div class="flex-1 flex justify-end gap-6 items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-text-muted">group</span>
+<span class="text-xs font-label-mono text-text-muted">24 Online</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-success-green text-sm">network_check</span>
+<span class="text-[10px] font-label-mono text-text-muted">EXCELLENT</span>
+</div>
+</div>
+</footer>
+</main>
+<!-- Floating Action Button (Shared Component Contextual Rule: Suppressed on Details/Classroom as per instruction) -->
+<script>
+        // Micro-interactions
+        function toggleWhiteboard() {
+            const wb = document.getElementById('whiteboard');
+            wb.classList.toggle('hidden');
+        }
+
+        // Toggle button active states for demo
+        document.querySelectorAll('.control-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const icon = this.querySelector('.material-symbols-outlined');
+                if (icon) {
+                    const isFilled = icon.style.fontVariationSettings.includes("'FILL' 1");
+                    icon.style.fontVariationSettings = `'FILL' ${isFilled ? 0 : 1}`;
+                    
+                    if (!isFilled && !this.classList.contains('bg-primary')) {
+                        this.classList.add('text-primary', 'border-primary/40', 'bg-primary/10');
+                    } else if (isFilled && !this.classList.contains('bg-primary')) {
+                        this.classList.remove('text-primary', 'border-primary/40', 'bg-primary/10');
+                    }
+                }
+            });
+        });
+
+        // Keybindings
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'w') toggleWhiteboard();
+        });
+    </script>
+</body></html>

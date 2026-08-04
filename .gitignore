@@ -6,6 +6,9 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
+# Office lock/temp files
+~$*
+
 # Editor
 .idea/
 .vscode/

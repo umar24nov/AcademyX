@@ -34,13 +34,15 @@ export default function StudentDashboardPage() {
   const firstName = getStoredUser()?.name?.split(" ")[0] ?? "Student";
 
   const focus = courses[0];
-  const upcoming = liveClasses.slice(0, 3);
+  const upcoming = liveClasses.filter((c) => c.status !== "Ended").slice(0, 3);
   const nextUpcoming = upcoming[0];
-  const chipLabel = nextUpcoming
-    ? nextUpcoming.status === "Live"
+  const chipLabel = !nextUpcoming
+    ? liveClasses.some((c) => c.status === "Ended")
+      ? "All today's classes are completed"
+      : "No classes scheduled today"
+    : nextUpcoming.status === "Live"
       ? "Live class is happening now"
-      : `Next Class Starts in ${nextUpcoming.startsIn}`
-    : "No classes scheduled today";
+      : `Next Class Starts in ${nextUpcoming.startsIn}`;
 
   return (
     <DashboardShell>
@@ -178,6 +180,7 @@ export default function StudentDashboardPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {upcoming.map((c) => {
                   const isLive = c.status === "Live";
+                  const isEnded = c.status === "Ended";
                   return (
                     <div
                       key={c.id}
@@ -194,6 +197,10 @@ export default function StudentDashboardPage() {
                           <span className="px-2 py-1 rounded text-[10px] font-mono bg-success-green/20 text-success-green border border-success-green/20">
                             LIVE NOW
                           </span>
+                        ) : isEnded ? (
+                          <span className="px-2 py-1 rounded text-[10px] font-mono bg-surface-container-high text-text-muted">
+                            ENDED
+                          </span>
                         ) : (
                           <span className="px-2 py-1 rounded text-[10px] font-mono bg-surface-container-high text-text-muted">
                             {formatTime(c.startTime)}
@@ -208,6 +215,20 @@ export default function StudentDashboardPage() {
                         <Link href={`/live-classes/session?id=${c.id}`}>
                           <Button className="w-full">Join Now</Button>
                         </Link>
+                      ) : isEnded ? (
+                        c.recordingUrl ? (
+                          <a href={c.recordingUrl} target="_blank" rel="noreferrer">
+                            <Button variant="outline" className="w-full">
+                              Watch Recording
+                            </Button>
+                          </a>
+                        ) : (
+                          <Link href={`/live-classes/session?id=${c.id}`}>
+                            <Button variant="outline" className="w-full">
+                              View Details
+                            </Button>
+                          </Link>
+                        )
                       ) : (
                         <button
                           disabled

@@ -16,11 +16,14 @@ import {
 import { Icon } from "@/components/shared/icon";
 import { useToast } from "@/components/ui/use-toast";
 import { useLive } from "@/lib/live";
+import { getStoredUser } from "@/lib/api";
 import { fetchLiveClasses, mockLiveClassesData } from "@/lib/live-data";
 
 export default function LiveClassesPage() {
   const { toast } = useToast();
   const liveClasses = useLive(fetchLiveClasses, mockLiveClassesData);
+  const user = React.useMemo(() => getStoredUser(), []);
+  const isStudent = user?.role === "STUDENT";
 
   const startClass = (title: string) => {
     toast({
@@ -34,12 +37,18 @@ export default function LiveClassesPage() {
       <div className="flex flex-col gap-6">
         <PageHeader
           title="Live Classes"
-          description="Schedule and manage real-time classroom sessions."
+          description={
+            isStudent
+              ? "Join your scheduled live classroom sessions."
+              : "Schedule and manage real-time classroom sessions."
+          }
           actions={
-            <Button onClick={() => startClass("New session")}>
-              <Icon name="video" className="h-4 w-4" />
-              Schedule Live Class
-            </Button>
+            !isStudent ? (
+              <Button onClick={() => startClass("New session")}>
+                <Icon name="video" className="h-4 w-4" />
+                Schedule Live Class
+              </Button>
+            ) : undefined
           }
         />
 
@@ -85,25 +94,63 @@ export default function LiveClassesPage() {
                     </p>
                   </div>
                   <div className="flex gap-2 shrink-0">
-                    {l.status !== "Ended" && (
-                      <Button asChild>
-                        <Link href={`/live-classes/session?id=${l.id}`}>
-                          <Icon name="video" className="h-4 w-4" />
-                          {l.status === "Live" ? "Join Now" : "Start Class"}
-                        </Link>
-                      </Button>
+                    {isStudent ? (
+                      <>
+                        {l.status === "Live" ? (
+                          <Button asChild>
+                            <Link href={`/live-classes/session?id=${l.id}`}>
+                              <Icon name="video" className="h-4 w-4" />
+                              Join Now
+                            </Link>
+                          </Button>
+                        ) : l.status === "Ended" ? (
+                          l.recordingUrl ? (
+                            <Button variant="outline" asChild>
+                              <a href={l.recordingUrl} target="_blank" rel="noreferrer">
+                                <Icon name="play_circle" className="h-4 w-4" />
+                                Watch Recording
+                              </a>
+                            </Button>
+                          ) : (
+                            <Button variant="outline" asChild>
+                              <Link href={`/live-classes/session?id=${l.id}`}>
+                                <Icon name="play_circle" className="h-4 w-4" />
+                                Details
+                              </Link>
+                            </Button>
+                          )
+                        ) : (
+                          <button
+                            disabled
+                            className="h-9 px-4 border border-border-subtle text-sm rounded-lg text-text-muted cursor-not-allowed"
+                          >
+                            Starts in {l.startsIn}
+                          </button>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {l.status !== "Ended" && (
+                          <Button asChild>
+                            <Link href={`/live-classes/session?id=${l.id}`}>
+                              <Icon name="video" className="h-4 w-4" />
+                              {l.status === "Live" ? "Join Now" : "Start Class"}
+                            </Link>
+                          </Button>
+                        )}
+                        {l.recordingUrl && (
+                          <Button variant="outline" asChild>
+                            <a href={l.recordingUrl} target="_blank" rel="noreferrer">
+                              <Icon name="play_circle" className="h-4 w-4" />
+                              Recording
+                            </a>
+                          </Button>
+                        )}
+                        <Button variant="ghost" size="icon" className="text-text-muted">
+                          <Icon name="more_vert" className="h-5 w-5" />
+                        </Button>
+                      </>
                     )}
-                    {l.recordingUrl && (
-                      <Button variant="outline" asChild>
-                        <a href={l.recordingUrl} target="_blank" rel="noreferrer">
-                          <Icon name="play_circle" className="h-4 w-4" />
-                          Recording
-                        </a>
-                      </Button>
-                    )}
-                    <Button variant="ghost" size="icon" className="text-text-muted">
-                      <Icon name="more_vert" className="h-5 w-5" />
-                    </Button>
                   </div>
                 </CardContent>
               </Card>

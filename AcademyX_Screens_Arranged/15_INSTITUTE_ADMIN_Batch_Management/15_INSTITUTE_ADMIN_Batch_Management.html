@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AcademyX - Batch Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0e0e10;
+            color: #e5e1e4;
+            font-family: 'Inter', sans-serif;
+        }
+        .terminal-glow {
+            box-shadow: 0px 0px 8px rgba(99, 102, 241, 0.15);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #131315;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 2px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#131315",
+                        "secondary-fixed-dim": "#c8c5ca",
+                        "surface-tint": "#c0c1ff",
+                        "secondary-fixed": "#e4e1e6",
+                        "on-primary-container": "#0d0096",
+                        "on-surface": "#e5e1e4",
+                        "tertiary-fixed": "#ffdcc5",
+                        "on-primary": "#1000a9",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "on-secondary-container": "#b6b4b8",
+                        "surface-container": "#201f22",
+                        "on-error": "#690005",
+                        "surface-container-high": "#2a2a2c",
+                        "on-background": "#e5e1e4",
+                        "primary-fixed": "#e1e0ff",
+                        "text-muted": "#a1a1aa",
+                        "success-green": "#37cd8f",
+                        "secondary": "#c8c5ca",
+                        "background": "#131315",
+                        "on-tertiary-fixed": "#301400",
+                        "surface-variant": "#353437",
+                        "on-secondary-fixed-variant": "#47464a",
+                        "surface-bright": "#39393b",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-container": "#452000",
+                        "border-subtle": "#27272a",
+                        "tertiary": "#ffb783",
+                        "text-heading": "#fafafa",
+                        "on-surface-variant": "#c7c4d7",
+                        "primary-container": "#8083ff",
+                        "inverse-surface": "#e5e1e4",
+                        "on-secondary-fixed": "#1b1b1e",
+                        "error-container": "#93000a",
+                        "outline": "#908fa0",
+                        "surface-container-highest": "#353437",
+                        "on-tertiary": "#4f2500",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "tertiary-container": "#d97721",
+                        "inverse-primary": "#494bd6",
+                        "inverse-on-surface": "#313032",
+                        "secondary-container": "#47464a",
+                        "error": "#ffb4ab",
+                        "outline-variant": "#464554",
+                        "surface-container-lowest": "#0e0e10",
+                        "surface-container-low": "#1c1b1d",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "surface": "#131315",
+                        "on-primary-fixed": "#07006c",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "primary": "#c0c1ff",
+                        "on-secondary": "#303033"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-mono": ["JetBrains Mono"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface-container-lowest overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low border-r border-border-subtle flex flex-col p-4 z-50">
+<div class="mb-8 px-2 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container text-[20px]" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div>
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary tracking-tight">AcademyX</h1>
+<p class="text-[10px] text-text-muted font-label-mono tracking-widest uppercase">Admin Console</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active Tab: Institutes/Batches -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 group" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-primary font-bold bg-surface-variant transition-colors duration-150" href="#">
+<span class="material-symbols-outlined">domain</span>
+<span class="font-body-md">Institutes</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 group" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-body-md">Courses</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 group" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md">Students</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 group" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-md">Financials</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 group" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md">Settings</span>
+</a>
+</nav>
+<button class="mt-4 flex items-center justify-center gap-2 w-full py-2.5 bg-primary text-on-primary-fixed font-bold rounded-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span class="font-body-md">New Course</span>
+</button>
+<div class="mt-auto pt-4 border-t border-border-subtle space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md">Support</span>
+</a>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container-high mt-2 border border-border-subtle">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a technology administrator in a sleek dark environment, high-end commercial photography style with moody indigo rim lighting on a sharp jawline and short-cropped dark hair. The aesthetic is clean, minimal, and authoritative, matching a high-density SaaS dashboard theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDoRrpUH_ga1pNDQU_bdEjDsh9CUhF50r-iEzYYgWrj4Uno_xvMvyvVmcdkJHdSWRhC8r51iOOcA96lTF9fRNscf_OjiuR9MkjEgGsvh0lLy-NwpxNbzWctAanREqPnIk102FQ6NU3y5HwvYO7HDbhFEBvJT5LQOQ9OczKzDrBO8NIatNhim2p1ZpSURsipshU6HQ34Rc-KeR62F7MSxX4m7ShFU7NjCFuuIyEmXjSthLzZnjIqPjY"/>
+</div>
+<div class="overflow-hidden">
+<p class="text-on-surface font-bold text-xs truncate">Admin_User</p>
+<p class="text-text-muted text-[10px] truncate">Academy Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-surface-dim border-b border-border-subtle flex justify-between items-center px-6 z-40">
+<div class="flex items-center gap-4 flex-1">
+<div class="flex items-center gap-2 text-text-muted font-body-sm">
+<span>Institutes</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span>AI Department</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-primary font-medium">Batch B-2024-08</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-muted text-[18px]">search</span>
+</div>
+<input class="bg-surface-container-lowest border border-border-subtle rounded-lg pl-10 pr-4 py-1.5 text-body-sm focus:outline-none focus:ring-1 focus:ring-primary w-64 transition-all duration-150" placeholder="Search batch data..." type="text"/>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">terminal</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 mt-16 p-8 h-[calc(100vh-4rem)] overflow-y-auto custom-scrollbar">
+<!-- Batch Header Section -->
+<section class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="px-2 py-0.5 rounded bg-surface-variant border border-border-subtle text-primary font-label-mono text-[10px] uppercase">Active Batch</span>
+<span class="text-text-muted font-label-mono text-[12px]">#B-2024-08</span>
+</div>
+<h2 class="text-headline-xl font-bold text-text-heading tracking-tight">Advanced AI - Night Shift</h2>
+<div class="flex items-center gap-4 mt-3 text-text-muted">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">person</span>
+<span class="text-body-sm">Mentor: <span class="text-on-surface font-medium">Dr. Aris</span></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span class="text-body-sm">Started: <span class="text-on-surface font-medium">Aug 12, 2024</span></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="text-body-sm">Timing: <span class="text-on-surface font-medium">19:00 - 22:00</span></span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-border-subtle rounded-lg bg-surface-container-low text-on-surface font-medium text-body-sm hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">edit_calendar</span>
+                    Reschedule
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 border border-border-subtle rounded-lg bg-surface-container-low text-on-surface font-medium text-body-sm hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+                    Message Batch
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary-fixed font-bold rounded-lg text-body-sm active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                    Export Attendance
+                </button>
+</div>
+</section>
+<!-- Stats Grid (Bento Style) -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+<div class="bg-surface-dim border border-border-subtle rounded-xl p-5 flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="text-text-muted text-[12px] font-medium uppercase tracking-wider">Capacity</span>
+<span class="material-symbols-outlined text-primary text-[20px]">group</span>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-text-heading">45/50</h3>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full mt-2">
+<div class="bg-primary h-full rounded-full" style="width: 90%;"></div>
+</div>
+<p class="text-[10px] text-text-muted mt-2">90% Utilization Rate</p>
+</div>
+</div>
+<div class="bg-surface-dim border border-border-subtle rounded-xl p-5 flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="text-text-muted text-[12px] font-medium uppercase tracking-wider">Attendance</span>
+<span class="material-symbols-outlined text-success-green text-[20px]">check_circle</span>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-text-heading">94%</h3>
+<p class="text-[10px] text-success-green mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">trending_up</span>
+                        +2% from last week
+                    </p>
+</div>
+</div>
+<div class="bg-surface-dim border border-border-subtle rounded-xl p-5 flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="text-text-muted text-[12px] font-medium uppercase tracking-wider">Avg Progress</span>
+<span class="material-symbols-outlined text-tertiary text-[20px]">bolt</span>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-text-heading">68%</h3>
+<p class="text-[10px] text-text-muted mt-2">On track for Week 8</p>
+</div>
+</div>
+<div class="bg-surface-dim border border-border-subtle rounded-xl p-5 flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="text-text-muted text-[12px] font-medium uppercase tracking-wider">Next Session</span>
+<span class="material-symbols-outlined text-primary text-[20px]">timer</span>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-text-heading">Today, 19:00</h3>
+<p class="text-[10px] text-primary mt-2">Neural Architectures Part II</p>
+</div>
+</div>
+</section>
+<!-- Main Workspace Grid -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Student List Table (2/3 Width) -->
+<div class="lg:col-span-2 bg-surface-dim border border-border-subtle rounded-xl overflow-hidden flex flex-col">
+<div class="px-6 py-5 border-b border-border-subtle flex justify-between items-center">
+<h3 class="font-bold text-text-heading">Student Progress Registry</h3>
+<div class="flex gap-2">
+<button class="p-1.5 rounded bg-surface-container text-text-muted hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+</button>
+<button class="p-1.5 rounded bg-surface-container text-text-muted hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]">sort</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-6 py-3 font-label-mono text-[10px] uppercase text-text-muted">Student</th>
+<th class="px-6 py-3 font-label-mono text-[10px] uppercase text-text-muted">Status</th>
+<th class="px-6 py-3 font-label-mono text-[10px] uppercase text-text-muted">Progress</th>
+<th class="px-6 py-3 font-label-mono text-[10px] uppercase text-text-muted text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-subtle">
+<!-- Student Row 1 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="A futuristic headshot of a young student with minimalist eyewear, sharp shadows, and soft indigo backlighting. The aesthetic is tech-focused and modern, consistent with a high-end AI academy branding." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKi4uwq00XfyErfmLpNfPXqI-uXCGuAHoBq3-tXyPMvV3dgZeaJAVNBkAqbiXDWZxhEiRbYFVvlv6zxFU4MOHqNalHRbC-qDCghF-_B0gVg9EguilzvXzipakhL6CthpO-s5q3nABH0zb2fDfvDk915QQbT30gSSw9yLfEafrG6rMX0Wkm9JLGXyEa7IQkCXl2KuhHInPdTT0n2_lC-G6MdD5rCRPdy01y_s6BvyD7YkmjN9iXjwr2"/>
+</div>
+<div>
+<p class="text-on-surface font-medium text-body-sm">Alex Rivera</p>
+<p class="text-text-muted text-[11px] font-label-mono">alex.r@academx.edu</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded-full bg-success-green/10 text-success-green border border-success-green/20 text-[10px] font-bold uppercase tracking-wider">Top Performer</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-1.5 bg-surface-container-highest rounded-full max-w-[100px]">
+<div class="bg-primary h-full rounded-full" style="width: 88%;"></div>
+</div>
+<span class="text-text-muted text-[11px] font-label-mono">88%</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Student Row 2 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="A portrait of a diverse female software engineer with a neutral expression, crisp focus, and dark aesthetic lighting with subtle blue highlights. High-density tech dashboard visual style, cinematic studio quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvZgO2EVGysIxV7RDBB8ciZY_ZAwMJ-IEA28rxSoHsRExz1UJ1evNtgQOesGw0x5mr-JtbRz8jCYwA7aWrrJpmHdDuD3g6DDK9OO2oVW1Q5eKMAHwC8Aq9oP0hVba0oNuTmL9MJmITfMw4hNfIAioVQ4wplF3sEGieHSxA7x0y5rFnkV5Im58qUl9-PC3JRZefISLg9lNvEFH9SucDerjjUQcDOmT7aAKFJZFVaLUPKPxZDCyBb71X"/>
+</div>
+<div>
+<p class="text-on-surface font-medium text-body-sm">Jordan Smith</p>
+<p class="text-text-muted text-[11px] font-label-mono">j.smith@academx.edu</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-[10px] font-bold uppercase tracking-wider">On Track</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-1.5 bg-surface-container-highest rounded-full max-w-[100px]">
+<div class="bg-primary h-full rounded-full" style="width: 62%;"></div>
+</div>
+<span class="text-text-muted text-[11px] font-label-mono">62%</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Student Row 3 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg overflow-hidden bg-surface-variant">
+<img class="w-full h-full object-cover" data-alt="A modern portrait of a senior student developer in a dark room with the glow of multiple monitors reflecting off their skin. Cinematic lighting, deep blacks, high detail, and professional SaaS portal aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9-tCXbEwgaNxXtJYWQ09lOSn8FPrUNSb7aq7Spqu2nWRdnKupKXGP4pR9j6Pep_CTA2s9AYGWLUQpmY9tovmOGOri-YRbXH7n2288rebXWZRlCyS0FG5zBceBD8VLqg6d1S5BqQl4bIpWlkNp2lJGSiQtflCxshh8IlOWvus-0_J35ZjRE38p-MWkZeu_3hJAotRcT_M-6Bi-0EhvBdQT1ny1hmAc9P8-mrdBD_buvRjS1n1e0FR4"/>
+</div>
+<div>
+<p class="text-on-surface font-medium text-body-sm">Morgan Chen</p>
+<p class="text-text-muted text-[11px] font-label-mono">m.chen@academx.edu</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded-full bg-tertiary/10 text-tertiary border border-tertiary/20 text-[10px] font-bold uppercase tracking-wider">Needs Sync</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-1.5 bg-surface-container-highest rounded-full max-w-[100px]">
+<div class="bg-tertiary h-full rounded-full" style="width: 45%;"></div>
+</div>
+<span class="text-text-muted text-[11px] font-label-mono">45%</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 border-t border-border-subtle bg-surface-container-low flex justify-between items-center">
+<p class="text-[11px] text-text-muted">Showing 3 of 45 students</p>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-border-subtle text-text-muted hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-border-subtle text-text-muted hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Calendar & Schedule (1/3 Width) -->
+<div class="space-y-6">
+<!-- Mini Calendar -->
+<div class="bg-surface-dim border border-border-subtle rounded-xl p-6">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-bold text-text-heading">August 2024</h3>
+<div class="flex gap-1">
+<button class="material-symbols-outlined text-text-muted hover:text-primary transition-colors text-[20px]">arrow_left</button>
+<button class="material-symbols-outlined text-text-muted hover:text-primary transition-colors text-[20px]">arrow_right</button>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-y-4 text-center">
+<!-- Days Header -->
+<div class="text-[10px] font-label-mono text-text-muted uppercase">Su</div>
+<div class="text-[10px] font-label-mono text-text-muted uppercase">Mo</div>
+<div class="text-[10px] font-label-mono text-text-muted uppercase">Tu</div>
+<div class="text-[10px] font-label-mono text-text-muted uppercase">We</div>
+<div class="text-[10px] font-label-mono text-text-muted uppercase">Th</div>
+<div class="text-[10px] font-label-mono text-text-muted uppercase">Fr</div>
+<div class="text-[10px] font-label-mono text-text-muted uppercase">Sa</div>
+<!-- Dates Placeholder -->
+<div class="text-text-muted/30 text-body-sm">28</div>
+<div class="text-text-muted/30 text-body-sm">29</div>
+<div class="text-text-muted/30 text-body-sm">30</div>
+<div class="text-text-muted/30 text-body-sm">31</div>
+<div class="text-on-surface text-body-sm relative">1</div>
+<div class="text-on-surface text-body-sm">2</div>
+<div class="text-on-surface text-body-sm">3</div>
+<!-- Current Row -->
+<div class="text-on-surface text-body-sm">4</div>
+<div class="text-on-surface text-body-sm">5</div>
+<div class="text-on-surface text-body-sm">6</div>
+<div class="text-on-surface text-body-sm">7</div>
+<div class="text-on-surface text-body-sm">8</div>
+<div class="text-on-surface text-body-sm">9</div>
+<div class="text-on-surface text-body-sm">10</div>
+<!-- Today Highlighting -->
+<div class="text-on-surface text-body-sm">11</div>
+<div class="w-8 h-8 mx-auto flex items-center justify-center bg-primary text-on-primary-fixed rounded-full font-bold text-body-sm terminal-glow">12</div>
+<div class="text-on-surface text-body-sm">13</div>
+<div class="text-on-surface text-body-sm">14</div>
+<div class="text-on-surface text-body-sm">15</div>
+<div class="text-on-surface text-body-sm">16</div>
+<div class="text-on-surface text-body-sm">17</div>
+</div>
+</div>
+<!-- Upcoming Sessions -->
+<div class="bg-surface-dim border border-border-subtle rounded-xl p-6">
+<h3 class="font-bold text-text-heading mb-4">Batch Schedule</h3>
+<div class="space-y-4">
+<div class="flex gap-4 p-3 rounded-lg bg-surface-container border-l-4 border-primary">
+<div class="text-center min-w-[40px]">
+<p class="font-label-mono text-primary font-bold text-[14px]">12</p>
+<p class="text-[10px] text-text-muted uppercase">Aug</p>
+</div>
+<div>
+<p class="text-on-surface text-body-sm font-medium">Neural Networks II</p>
+<p class="text-text-muted text-[11px]">19:00 - 22:00 • Hall A</p>
+</div>
+</div>
+<div class="flex gap-4 p-3 rounded-lg border border-border-subtle hover:bg-surface-container transition-colors">
+<div class="text-center min-w-[40px]">
+<p class="font-label-mono text-on-surface font-bold text-[14px]">14</p>
+<p class="text-[10px] text-text-muted uppercase">Aug</p>
+</div>
+<div>
+<p class="text-on-surface text-body-sm font-medium">Model Deployment</p>
+<p class="text-text-muted text-[11px]">19:00 - 22:00 • Online</p>
+</div>
+</div>
+<div class="flex gap-4 p-3 rounded-lg border border-border-subtle hover:bg-surface-container transition-colors">
+<div class="text-center min-w-[40px]">
+<p class="font-label-mono text-on-surface font-bold text-[14px]">16</p>
+<p class="text-[10px] text-text-muted uppercase">Aug</p>
+</div>
+<div>
+<p class="text-on-surface text-body-sm font-medium">Project Review #1</p>
+<p class="text-text-muted text-[11px]">19:00 - 22:00 • Lab 04</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Dynamic Visualization (Simulated Activity Chart) -->
+<section class="mt-8">
+<div class="bg-surface-dim border border-border-subtle rounded-xl p-6 relative overflow-hidden h-48">
+<div class="z-10 relative">
+<h3 class="font-bold text-text-heading mb-1">Batch Activity Trend</h3>
+<p class="text-text-muted text-body-sm mb-4">Daily engagement across learning modules</p>
+</div>
+<!-- Simple SVG Data Visualization -->
+<div class="absolute inset-x-0 bottom-0 px-6 h-24 flex items-end justify-between gap-2">
+<div class="w-full bg-primary/20 h-[60%] rounded-t transition-all hover:bg-primary/40"></div>
+<div class="w-full bg-primary/20 h-[45%] rounded-t transition-all hover:bg-primary/40"></div>
+<div class="w-full bg-primary/20 h-[80%] rounded-t transition-all hover:bg-primary/40"></div>
+<div class="w-full bg-primary/20 h-[55%] rounded-t transition-all hover:bg-primary/40"></div>
+<div class="w-full bg-primary/20 h-[70%] rounded-t transition-all hover:bg-primary/40"></div>
+<div class="w-full bg-primary/20 h-[90%] rounded-t transition-all hover:bg-primary/40"></div>
+<div class="w-full bg-primary/20 h-[85%] rounded-t transition-all hover:bg-primary/40"></div>
+<div class="w-full bg-primary/20 h-[65%] rounded-t transition-all hover:bg-primary/40"></div>
+<div class="w-full bg-primary/20 h-[50%] rounded-t transition-all hover:bg-primary/40"></div>
+<div class="w-full bg-primary/20 h-[75%] rounded-t transition-all hover:bg-primary/40"></div>
+<div class="w-full bg-primary h-[95%] rounded-t terminal-glow"></div>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB (Suppressed as per rules for detailed/sub-pages) -->
+<script>
+        // Micro-interactions
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.cursor = 'pointer';
+            });
+        });
+
+        // Search Bar Focus Effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('terminal-glow');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('terminal-glow');
+        });
+    </script>
+</body></html>

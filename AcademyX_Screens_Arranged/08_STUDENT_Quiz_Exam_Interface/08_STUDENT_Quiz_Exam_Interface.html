@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AcademyX - Advanced Algorithms Midterm</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .option-card:hover .radio-indicator {
+            border-color: #6366f1;
+        }
+        .option-selected {
+            border-color: #6366f1 !important;
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+        .option-selected .radio-indicator {
+            background-color: #6366f1;
+            border-color: #6366f1;
+            box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #09090b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#2a2a2c",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "surface-container-highest": "#353437",
+                        "surface-container-low": "#1c1b1d",
+                        "on-error": "#690005",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "text-muted": "#a1a1aa",
+                        "inverse-primary": "#494bd6",
+                        "on-secondary-container": "#b6b4b8",
+                        "secondary-fixed": "#e4e1e6",
+                        "on-surface": "#e5e1e4",
+                        "on-primary-fixed": "#07006c",
+                        "on-primary-container": "#0d0096",
+                        "on-surface-variant": "#c7c4d7",
+                        "surface-tint": "#c0c1ff",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "on-secondary-fixed": "#1b1b1e",
+                        "surface-bright": "#39393b",
+                        "error-container": "#93000a",
+                        "success-green": "#37cd8f",
+                        "outline-variant": "#464554",
+                        "surface-container": "#201f22",
+                        "on-tertiary-container": "#452000",
+                        "tertiary-fixed": "#ffdcc5",
+                        "on-tertiary-fixed": "#301400",
+                        "inverse-on-surface": "#313032",
+                        "inverse-surface": "#e5e1e4",
+                        "surface": "#131315",
+                        "on-secondary": "#303033",
+                        "primary-container": "#8083ff",
+                        "surface-dim": "#131315",
+                        "surface-variant": "#353437",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#c8c5ca",
+                        "on-secondary-fixed-variant": "#47464a",
+                        "background": "#09090b",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-error-container": "#ffdad6",
+                        "border-subtle": "#27272a",
+                        "tertiary-container": "#d97721",
+                        "surface-container-lowest": "#0e0e10",
+                        "text-heading": "#fafafa",
+                        "primary": "#6366f1",
+                        "primary-fixed": "#e1e0ff",
+                        "on-background": "#e5e1e4",
+                        "tertiary": "#ffb783",
+                        "secondary": "#c8c5ca",
+                        "on-tertiary": "#4f2500",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#47464a",
+                        "outline": "#908fa0"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-mono": ["JetBrains Mono"],
+                        "button": ["Inter"],
+                        "body-sm": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary/30">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 left-0 right-0 h-16 bg-surface-dim border-b border-border-subtle z-50 flex justify-between items-center px-6">
+<div class="flex items-center gap-4">
+<span class="text-primary font-headline-lg font-bold tracking-tight">AcademyX</span>
+<div class="h-6 w-px bg-border-subtle"></div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-text-heading">Advanced Algorithms - Midterm</h1>
+</div>
+<div class="flex items-center gap-6">
+<!-- Timer Widget -->
+<div class="flex items-center gap-3 bg-surface-container-low border border-border-subtle px-4 py-1.5 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'opsz' 20">timer</span>
+<span class="font-label-mono text-headline-lg text-tertiary" id="exam-timer">45:12</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="hidden md:flex flex-col items-end">
+<span class="text-body-sm font-semibold text-text-heading">Alex Rivest</span>
+<span class="text-[10px] uppercase tracking-wider text-text-muted font-label-mono">ID: AX-99210</span>
+</div>
+<div class="w-10 h-10 rounded-full border border-border-subtle bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional studio headshot of a young male software engineer with a focused expression, wearing a dark navy crew neck shirt. The background is a clean, neutral dark grey, lit with soft three-point lighting to emphasize a modern, tech-focused professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDChMjQly4dDPhUhaTQo1xRALxrraiem3Ie59Fv_SDU6jUTVnGxEJVDX378_1YwFBYxMjdzwyUpA7eJH_p0vmN5QuV-_ptfX98ulNZpXBvgwDnY3oRjIQ1QLcJfvYFDs32W7JVNHU-Gaq3jQYYDzjl4hYx-QSwq2nhzGR0vEpsHiEzvsL_PmED4v-1DpOVeSb7pnptplt8y33KEYxw0wxaTJnuzjdU7sxn4bVWsWgJqiD-XF0MxCexW"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-24 px-6 max-w-[1440px] mx-auto grid grid-cols-12 gap-8 h-screen overflow-hidden">
+<!-- Left: Question Area -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-6 overflow-y-auto pr-2">
+<!-- Progress Bar -->
+<div class="bg-surface-container-low border border-border-subtle p-4 rounded-xl">
+<div class="flex justify-between items-end mb-2">
+<span class="text-body-sm font-label-mono text-text-muted">QUESTION 14 OF 40</span>
+<span class="text-body-sm font-label-mono text-primary">35% COMPLETE</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[35%] transition-all duration-500 ease-out shadow-[0_0_10px_rgba(99,102,241,0.3)]"></div>
+</div>
+</div>
+<!-- Question Card -->
+<div class="bg-surface-container border border-border-subtle p-8 rounded-xl shadow-lg">
+<div class="flex items-start justify-between mb-8">
+<div class="bg-primary/10 text-primary px-3 py-1 rounded text-xs font-label-mono border border-primary/20">
+                        DIFFICULTY: HARD
+                    </div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border-subtle hover:bg-surface-container-high transition-colors text-body-sm">
+<span class="material-symbols-outlined text-sm">flag</span>
+                            Flag
+                        </button>
+</div>
+</div>
+<div class="mb-10">
+<h2 class="font-headline-lg text-text-heading mb-6 leading-relaxed">
+                        What is the average-case time complexity of the Randomized Quicksort algorithm for an array of size <span class="font-label-mono text-tertiary">n</span>?
+                    </h2>
+<div class="bg-surface-container-lowest p-4 rounded-lg border border-border-subtle mb-6">
+<p class="text-body-sm text-text-muted italic leading-relaxed">
+                            Consider the probability of any two elements being compared during the execution of the algorithm and the recurrence relation derived from the randomized partition strategy.
+                        </p>
+</div>
+</div>
+<!-- Options List -->
+<div class="flex flex-col gap-4">
+<label class="option-card group relative flex items-center p-5 rounded-xl border border-border-subtle bg-surface-container-low cursor-pointer transition-all hover:bg-surface-container-high active:scale-[0.99]">
+<input class="hidden" name="mcq-option" type="radio"/>
+<div class="radio-indicator w-5 h-5 rounded-full border-2 border-border-subtle mr-4 flex items-center justify-center transition-all">
+<div class="w-2 h-2 rounded-full bg-white scale-0 transition-transform"></div>
+</div>
+<span class="text-body-md text-on-surface-variant group-hover:text-text-heading">O(n)</span>
+</label>
+<label class="option-card group relative flex items-center p-5 rounded-xl border border-border-subtle bg-surface-container-low cursor-pointer transition-all hover:bg-surface-container-high active:scale-[0.99] option-selected">
+<input checked="" class="hidden" name="mcq-option" type="radio"/>
+<div class="radio-indicator w-5 h-5 rounded-full border-2 border-border-subtle mr-4 flex items-center justify-center transition-all">
+<div class="w-2 h-2 rounded-full bg-white scale-100 transition-transform"></div>
+</div>
+<span class="text-body-md text-text-heading">O(n log n)</span>
+</label>
+<label class="option-card group relative flex items-center p-5 rounded-xl border border-border-subtle bg-surface-container-low cursor-pointer transition-all hover:bg-surface-container-high active:scale-[0.99]">
+<input class="hidden" name="mcq-option" type="radio"/>
+<div class="radio-indicator w-5 h-5 rounded-full border-2 border-border-subtle mr-4 flex items-center justify-center transition-all">
+<div class="w-2 h-2 rounded-full bg-white scale-0 transition-transform"></div>
+</div>
+<span class="text-body-md text-on-surface-variant group-hover:text-text-heading">O(n²)</span>
+</label>
+<label class="option-card group relative flex items-center p-5 rounded-xl border border-border-subtle bg-surface-container-low cursor-pointer transition-all hover:bg-surface-container-high active:scale-[0.99]">
+<input class="hidden" name="mcq-option" type="radio"/>
+<div class="radio-indicator w-5 h-5 rounded-full border-2 border-border-subtle mr-4 flex items-center justify-center transition-all">
+<div class="w-2 h-2 rounded-full bg-white scale-0 transition-transform"></div>
+</div>
+<span class="text-body-md text-on-surface-variant group-hover:text-text-heading">O(log n)</span>
+</label>
+</div>
+</div>
+</div>
+<!-- Right: Question Navigator -->
+<aside class="hidden lg:flex col-span-4 flex-col gap-6 h-full overflow-hidden">
+<div class="bg-surface-container border border-border-subtle rounded-xl flex flex-col h-full overflow-hidden">
+<div class="p-5 border-b border-border-subtle">
+<h3 class="font-headline-lg text-text-heading">Question Navigator</h3>
+</div>
+<!-- Status Legend -->
+<div class="px-5 py-4 flex flex-wrap gap-4 bg-surface-container-low border-b border-border-subtle">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded bg-primary"></div>
+<span class="text-[11px] font-label-mono text-text-muted">ANSWERED</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded bg-tertiary"></div>
+<span class="text-[11px] font-label-mono text-text-muted">FLAGGED</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded border border-border-subtle"></div>
+<span class="text-[11px] font-label-mono text-text-muted">UNVISITED</span>
+</div>
+</div>
+<!-- Scrollable Grid -->
+<div class="flex-1 overflow-y-auto p-5">
+<div class="grid grid-cols-5 gap-3">
+<!-- Generator Loop simulated -->
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-primary text-on-primary font-label-mono text-xs cursor-pointer shadow-[0_0_8px_rgba(99,102,241,0.2)]">01</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-primary text-on-primary font-label-mono text-xs cursor-pointer shadow-[0_0_8px_rgba(99,102,241,0.2)]">02</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-primary text-on-primary font-label-mono text-xs cursor-pointer">03</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-tertiary text-on-tertiary font-label-mono text-xs cursor-pointer">04</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-primary text-on-primary font-label-mono text-xs cursor-pointer">05</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-primary text-on-primary font-label-mono text-xs cursor-pointer">06</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-primary text-on-primary font-label-mono text-xs cursor-pointer">07</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-surface-container-high text-on-surface-variant font-label-mono text-xs cursor-pointer">08</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-primary text-on-primary font-label-mono text-xs cursor-pointer">09</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-primary text-on-primary font-label-mono text-xs cursor-pointer">10</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-primary text-on-primary font-label-mono text-xs cursor-pointer">11</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-surface-container-high text-on-surface-variant font-label-mono text-xs cursor-pointer">12</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-surface-container-high text-on-surface-variant font-label-mono text-xs cursor-pointer">13</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg ring-2 ring-primary bg-surface-container-highest text-primary font-label-mono text-xs cursor-pointer">14</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-surface-container-lowest text-text-muted font-label-mono text-xs cursor-pointer">15</div>
+<!-- ... more -->
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-surface-container-lowest text-text-muted font-label-mono text-xs cursor-pointer">16</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-surface-container-lowest text-text-muted font-label-mono text-xs cursor-pointer">17</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-surface-container-lowest text-text-muted font-label-mono text-xs cursor-pointer">18</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-surface-container-lowest text-text-muted font-label-mono text-xs cursor-pointer">19</div>
+<div class="w-full aspect-square flex items-center justify-center rounded-lg border border-border-subtle bg-surface-container-lowest text-text-muted font-label-mono text-xs cursor-pointer">20</div>
+</div>
+</div>
+<div class="p-5 bg-surface-container-low border-t border-border-subtle flex flex-col gap-3">
+<button class="w-full py-3 bg-primary text-on-primary font-button rounded-lg hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20">
+                        Submit Exam
+                    </button>
+<p class="text-[10px] text-center text-text-muted uppercase tracking-tighter">Confirm all 40 answers before final submission</p>
+</div>
+</div>
+</aside>
+</main>
+<!-- Bottom Action Bar -->
+<footer class="fixed bottom-0 left-0 right-0 h-20 bg-surface-dim border-t border-border-subtle z-50 flex justify-center px-6">
+<div class="max-w-[1440px] w-full flex justify-between items-center">
+<div class="flex gap-4">
+<button class="flex items-center gap-2 px-6 py-2.5 rounded-lg border border-border-subtle text-on-surface-variant hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">chevron_left</span>
+                    Previous
+                </button>
+<button class="flex lg:hidden items-center gap-2 px-6 py-2.5 rounded-lg border border-border-subtle text-on-surface-variant hover:bg-surface-container-high transition-all">
+                    Navigator
+                </button>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 px-6 py-2.5 rounded-lg border border-tertiary/40 text-tertiary hover:bg-tertiary/5 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">flag</span>
+                    Flag for Review
+                </button>
+<button class="flex items-center gap-2 px-8 py-2.5 rounded-lg bg-surface-container-highest border border-primary/30 text-primary font-semibold hover:bg-surface-container-high transition-all group">
+                    Save &amp; Next
+                    <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">chevron_right</span>
+</button>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions for Radio Buttons
+        const options = document.querySelectorAll('.option-card');
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                options.forEach(o => {
+                    o.classList.remove('option-selected');
+                    o.querySelector('.radio-indicator div').classList.remove('scale-100');
+                    o.querySelector('.radio-indicator div').classList.add('scale-0');
+                });
+                option.classList.add('option-selected');
+                option.querySelector('.radio-indicator div').classList.remove('scale-0');
+                option.querySelector('.radio-indicator div').classList.add('scale-100');
+            });
+        });
+
+        // Simple Countdown Timer
+        let timeInSeconds = 45 * 60 + 12;
+        const timerElement = document.getElementById('exam-timer');
+        
+        const updateTimer = () => {
+            const minutes = Math.floor(timeInSeconds / 60);
+            const seconds = timeInSeconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            if (timeInSeconds > 0) {
+                timeInSeconds--;
+            } else {
+                clearInterval(timerInterval);
+                alert('Time is up!');
+            }
+            
+            // Visual alert for low time
+            if (timeInSeconds < 300) {
+                timerElement.classList.remove('text-tertiary');
+                timerElement.classList.add('text-error', 'animate-pulse');
+            }
+        };
+
+        const timerInterval = setInterval(updateTimer, 1000);
+    </script>
+</body></html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AcademyX | Settings &amp; Branding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#c0c1ff",
+                        "tertiary-container": "#d97721",
+                        "background": "#131315",
+                        "on-tertiary": "#4f2500",
+                        "primary": "#c0c1ff",
+                        "inverse-surface": "#e5e1e4",
+                        "on-surface-variant": "#c7c4d7",
+                        "border-subtle": "#27272a",
+                        "on-surface": "#e5e1e4",
+                        "surface-container-high": "#2a2a2c",
+                        "on-primary": "#1000a9",
+                        "on-primary-fixed": "#07006c",
+                        "surface-container-lowest": "#0e0e10",
+                        "surface-variant": "#353437",
+                        "on-error": "#690005",
+                        "inverse-on-surface": "#313032",
+                        "text-heading": "#fafafa",
+                        "surface-container-highest": "#353437",
+                        "outline": "#908fa0",
+                        "secondary": "#c8c5ca",
+                        "error-container": "#93000a",
+                        "secondary-container": "#47464a",
+                        "outline-variant": "#464554",
+                        "on-tertiary-container": "#452000",
+                        "surface-container": "#201f22",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "surface-bright": "#39393b",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-primary-container": "#0d0096",
+                        "surface": "#131315",
+                        "on-tertiary-fixed": "#301400",
+                        "inverse-primary": "#494bd6",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#c8c5ca",
+                        "on-secondary-fixed-variant": "#47464a",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "surface-dim": "#131315",
+                        "tertiary": "#ffb783",
+                        "on-secondary-container": "#b6b4b8",
+                        "on-background": "#e5e1e4",
+                        "tertiary-fixed": "#ffdcc5",
+                        "text-muted": "#a1a1aa",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "primary-fixed": "#e1e0ff",
+                        "success-green": "#37cd8f",
+                        "on-secondary": "#303033",
+                        "surface-container-low": "#1c1b1d",
+                        "primary-container": "#8083ff",
+                        "on-secondary-fixed": "#1b1b1e",
+                        "on-error-container": "#ffdad6",
+                        "secondary-fixed": "#e4e1e6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px",
+                        "gutter": "16px",
+                        "container-max": "1280px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-mono": ["JetBrains Mono"],
+                        "headline-xl": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "button": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #09090b;
+            color: #e5e1e4;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: #18181b;
+            border: 1px solid #27272a;
+        }
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 48px;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+        }
+    </style>
+</head>
+<body class="dark overflow-x-hidden">
+<!-- SideNavBar -->
+<aside class="bg-surface-container-lowest dark:bg-surface-container-lowest border-r border-border-subtle h-screen w-64 fixed left-0 top-0 flex flex-col py-6">
+<div class="px-6 mb-10 flex flex-col gap-1">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">AcademyX</h1>
+<p class="text-on-surface-variant font-body-sm text-body-sm opacity-70">Enterprise Coaching OS</p>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded-lg font-body-md text-body-md active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded-lg font-body-md text-body-md active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">domain</span>
+<span>Institutes</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded-lg font-body-md text-body-md active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span>Courses</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded-lg font-body-md text-body-md active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Students</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded-lg font-body-md text-body-md active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span>Financials</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-150 rounded-lg font-body-md text-body-md active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">chat</span>
+<span>Messages</span>
+</a>
+<!-- Active Navigation State for Settings -->
+<a class="flex items-center gap-3 px-3 py-2 bg-secondary-container text-primary font-bold border-r-2 border-primary transition-colors duration-150 rounded-lg font-body-md text-body-md active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="px-6 py-4 mt-auto border-t border-border-subtle flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-primary font-bold">A</div>
+<div class="overflow-hidden">
+<p class="text-on-surface font-body-sm text-body-sm truncate">Admin User</p>
+<p class="text-on-surface-variant text-[10px] truncate">AcademyX Logo</p>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-surface dark:bg-surface border-b border-border-subtle flex items-center justify-between px-margin-desktop w-full z-40">
+<div class="flex items-center gap-4">
+<span class="font-body-md text-body-md font-semibold text-primary">Settings</span>
+<span class="text-on-surface-variant">/</span>
+<span class="text-on-surface font-body-sm text-body-sm">Branding &amp; Portal</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative w-64 group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-low border border-border-subtle rounded-lg pl-10 pr-4 py-1.5 font-body-sm text-body-sm transition-all" placeholder="Search settings..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-border-subtle">
+<img class="w-full h-full object-cover" data-alt="A professional user profile avatar in a minimalist dark interface, featuring a soft studio light portrait with neutral background tones and a clean, high-end tech aesthetic for a SaaS administrator dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB876ZqmRZ351Dmkzo8S7dfT0QBZafIthSLaujfg-1ErNuKi4FvPvedlWE8h1Z6HdNHvXNTGpLMdqFidJr9cBZt0mtiptsd0RIcCItggnM0lJx7033FxzyApbzPZy9Ce1pRBBmqmp_b7G6D9oFj2nOhOnPh_mxlOvxbbDxP_wwv1rNjvqkU1eAlHfF9Cnah48UTO2_clPfsCS7ZCR9jw8TKG9JECuSs3ief0UCKl65eXjfNbwv30CZg"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="max-w-[1000px] mx-auto px-margin-desktop py-12">
+<!-- Header Section -->
+<div class="mb-12">
+<h2 class="font-headline-xl text-headline-xl text-text-heading mb-2">Portal Customization</h2>
+<p class="text-on-surface-variant font-body-md text-body-md">Manage your institute's public appearance, branding assets, and domain configuration.</p>
+</div>
+<!-- Content Tabs Placeholder -->
+<div class="flex border-b border-border-subtle mb-10 gap-8">
+<button class="pb-4 border-b-2 border-primary text-primary font-medium text-body-sm">Branding</button>
+<button class="pb-4 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface transition-colors text-body-sm">General</button>
+<button class="pb-4 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface transition-colors text-body-sm">Domain</button>
+<button class="pb-4 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface transition-colors text-body-sm">Integrations</button>
+</div>
+<div class="space-y-12">
+<!-- General Settings Section -->
+<section class="settings-grid">
+<div>
+<h3 class="font-headline-lg text-headline-lg text-text-heading mb-1">General</h3>
+<p class="text-on-surface-variant font-body-sm text-body-sm">Basic information about your coaching institute.</p>
+</div>
+<div class="glass-panel p-6 rounded-xl space-y-6">
+<div class="space-y-2">
+<label class="block font-label-mono text-label-mono text-text-muted uppercase">Institute Name</label>
+<input class="w-full bg-surface-container-lowest border border-border-subtle rounded px-4 py-2 font-body-md text-body-md" type="text" value="AcademyX Enterprise"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="block font-label-mono text-label-mono text-text-muted uppercase">Support Email</label>
+<input class="w-full bg-surface-container-lowest border border-border-subtle rounded px-4 py-2 font-body-md text-body-md" type="email" value="support@academyx.io"/>
+</div>
+<div class="space-y-2">
+<label class="block font-label-mono text-label-mono text-text-muted uppercase">Contact Phone</label>
+<input class="w-full bg-surface-container-lowest border border-border-subtle rounded px-4 py-2 font-body-md text-body-md" type="text" value="+1 (555) 000-1234"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Branding Section -->
+<section class="settings-grid">
+<div>
+<h3 class="font-headline-lg text-headline-lg text-text-heading mb-1">Branding</h3>
+<p class="text-on-surface-variant font-body-sm text-body-sm">Customize visual identity and theme.</p>
+</div>
+<div class="glass-panel p-6 rounded-xl space-y-8">
+<!-- Logo Upload -->
+<div class="flex items-start gap-8">
+<div class="w-24 h-24 bg-surface-container-lowest border-2 border-dashed border-border-subtle rounded-xl flex flex-col items-center justify-center group hover:border-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">upload</span>
+<span class="text-[10px] mt-1 text-on-surface-variant">SVG/PNG</span>
+</div>
+<div class="flex-1 pt-1">
+<h4 class="font-body-md text-body-md font-semibold text-text-heading">Institute Logo</h4>
+<p class="text-on-surface-variant text-body-sm mt-1 mb-4">Recommended size 512x512px. Max size 2MB.</p>
+<div class="flex gap-2">
+<button class="bg-primary text-on-primary px-4 py-1.5 rounded-lg font-button text-button hover:opacity-90 transition-opacity">Upload Logo</button>
+<button class="bg-surface-container-high border border-border-subtle px-4 py-1.5 rounded-lg font-button text-button hover:bg-surface-variant transition-colors">Remove</button>
+</div>
+</div>
+</div>
+<!-- Theme Selection -->
+<div class="space-y-4">
+<label class="block font-label-mono text-label-mono text-text-muted uppercase">Portal Theme</label>
+<div class="grid grid-cols-3 gap-4">
+<div class="border-2 border-primary bg-surface-container-lowest p-3 rounded-lg cursor-pointer">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs font-semibold">Dark Mode</span>
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+</div>
+<div class="space-y-1.5">
+<div class="h-1.5 w-full bg-border-subtle rounded"></div>
+<div class="h-1.5 w-2/3 bg-border-subtle rounded"></div>
+</div>
+</div>
+<div class="border border-border-subtle bg-on-surface p-3 rounded-lg cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs font-semibold text-background">Light Mode</span>
+</div>
+<div class="space-y-1.5">
+<div class="h-1.5 w-full bg-background/20 rounded"></div>
+<div class="h-1.5 w-2/3 bg-background/20 rounded"></div>
+</div>
+</div>
+<div class="border border-border-subtle bg-surface-container-high p-3 rounded-lg cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs font-semibold">Auto</span>
+</div>
+<div class="flex gap-1 mt-4">
+<div class="w-full h-1.5 bg-primary rounded"></div>
+<div class="w-full h-1.5 bg-border-subtle rounded"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Primary Color -->
+<div class="space-y-4 pt-4 border-t border-border-subtle">
+<label class="block font-label-mono text-label-mono text-text-muted uppercase">Accent Color</label>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-primary border border-white/10 shadow-[0_0_15px_rgba(192,193,255,0.2)]"></div>
+<div class="flex-1">
+<input class="w-32 bg-surface-container-lowest border border-border-subtle rounded px-3 py-1.5 font-label-mono text-label-mono" type="text" value="#C0C1FF"/>
+</div>
+<div class="flex gap-2">
+<button class="w-6 h-6 rounded-full bg-[#6366f1] border border-white/10"></button>
+<button class="w-6 h-6 rounded-full bg-[#ec4899] border border-white/10"></button>
+<button class="w-6 h-6 rounded-full bg-[#10b981] border border-white/10"></button>
+<button class="w-6 h-6 rounded-full bg-[#f59e0b] border border-white/10"></button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Domain Settings Section -->
+<section class="settings-grid">
+<div>
+<h3 class="font-headline-lg text-headline-lg text-text-heading mb-1">Domain</h3>
+<p class="text-on-surface-variant font-body-sm text-body-sm">Configure how users access your portal.</p>
+</div>
+<div class="glass-panel p-6 rounded-xl space-y-6">
+<div class="space-y-2">
+<label class="block font-label-mono text-label-mono text-text-muted uppercase">Subdomain</label>
+<div class="flex items-center">
+<input class="flex-1 bg-surface-container-lowest border border-border-subtle rounded-l px-4 py-2 font-body-md text-body-md" type="text" value="enterprise"/>
+<div class="bg-surface-container-high border-y border-r border-border-subtle px-4 py-2 rounded-r text-on-surface-variant font-body-md">.academyx.app</div>
+</div>
+</div>
+<div class="pt-6 border-t border-border-subtle space-y-4">
+<div class="flex items-center justify-between">
+<h4 class="font-body-md text-body-md font-semibold text-text-heading">Custom Domain</h4>
+<span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Enterprise Only</span>
+</div>
+<p class="text-on-surface-variant text-body-sm">Point your own domain to our servers using a CNAME record.</p>
+<div class="flex gap-3">
+<input class="flex-1 bg-surface-container-lowest border border-border-subtle rounded px-4 py-2 font-body-md text-body-md opacity-50 cursor-not-allowed" disabled="" placeholder="learn.yourdomain.com" type="text"/>
+<button class="bg-secondary-container text-on-secondary-container px-6 py-2 rounded-lg font-button text-button opacity-50 cursor-not-allowed">Add Domain</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Action Footer -->
+<div class="flex items-center justify-end gap-4 pt-12 border-t border-border-subtle">
+<button class="text-on-surface-variant hover:text-on-surface px-6 py-2 rounded-lg font-button text-button transition-colors">Discard Changes</button>
+<button class="bg-primary text-on-primary px-8 py-2 rounded-lg font-button text-button font-bold hover:shadow-[0_0_20px_rgba(192,193,255,0.3)] transition-all">Save Changes</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        document.querySelectorAll('.cursor-pointer').forEach(el => {
+            el.addEventListener('click', () => {
+                el.style.transform = 'scale(0.98)';
+                setTimeout(() => el.style.transform = 'scale(1)', 100);
+            });
+        });
+
+        // Simple mock for tab switching
+        document.querySelectorAll('button.pb-4').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('button.pb-4').forEach(b => {
+                    b.classList.remove('border-primary', 'text-primary');
+                    b.classList.add('border-transparent', 'text-on-surface-variant');
+                });
+                button.classList.add('border-primary', 'text-primary');
+                button.classList.remove('border-transparent', 'text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AcademyX | The Operating System for Coaching</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#703700",
+                    "outline": "#908fa0",
+                    "on-surface": "#e5e1e4",
+                    "background": "#131315",
+                    "primary": "#c0c1ff",
+                    "surface-container-low": "#1c1b1d",
+                    "surface-container-highest": "#353437",
+                    "secondary-container": "#47464a",
+                    "error-container": "#93000a",
+                    "tertiary-fixed": "#ffdcc5",
+                    "surface-container-lowest": "#0e0e10",
+                    "on-tertiary": "#4f2500",
+                    "on-error": "#690005",
+                    "on-surface-variant": "#c7c4d7",
+                    "text-heading": "#fafafa",
+                    "on-secondary": "#303033",
+                    "tertiary-container": "#d97721",
+                    "border-subtle": "#27272a",
+                    "surface": "#131315",
+                    "on-secondary-fixed": "#1b1b1e",
+                    "secondary-fixed-dim": "#c8c5ca",
+                    "on-tertiary-fixed": "#301400",
+                    "text-muted": "#a1a1aa",
+                    "tertiary": "#ffb783",
+                    "outline-variant": "#464554",
+                    "secondary": "#c8c5ca",
+                    "surface-container-high": "#2a2a2c",
+                    "on-primary-fixed": "#07006c",
+                    "success-green": "#37cd8f",
+                    "primary-fixed": "#e1e0ff",
+                    "surface-dim": "#131315",
+                    "on-primary": "#1000a9",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "on-error-container": "#ffdad6",
+                    "inverse-on-surface": "#313032",
+                    "primary-container": "#8083ff",
+                    "secondary-fixed": "#e4e1e6",
+                    "surface-variant": "#353437",
+                    "surface-tint": "#c0c1ff",
+                    "error": "#ffb4ab",
+                    "on-tertiary-container": "#452000",
+                    "on-primary-container": "#0d0096",
+                    "on-secondary-fixed-variant": "#47464a",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "surface-bright": "#39393b",
+                    "surface-container": "#201f22",
+                    "inverse-surface": "#e5e1e4",
+                    "on-secondary-container": "#b6b4b8",
+                    "tertiary-fixed-dim": "#ffb783",
+                    "inverse-primary": "#494bd6",
+                    "on-background": "#e5e1e4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "margin-desktop": "32px",
+                    "container-max": "1280px",
+                    "base": "4px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "label-mono": ["JetBrains Mono"],
+                    "body-sm": ["Inter"],
+                    "button": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-xl": ["Inter"],
+                    "headline-lg-mobile": ["Inter"]
+            },
+            "fontSize": {
+                    "label-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "button": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                    "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #09090b;
+            color: #e5e1e4;
+        }
+        .indigo-glow {
+            box-shadow: 0px 0px 8px rgba(99, 102, 241, 0.15);
+        }
+        .indigo-glow-border:hover {
+            border-color: #6366f1;
+            box-shadow: 0px 0px 12px rgba(99, 102, 241, 0.2);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="bg-background dark:bg-background w-full sticky top-0 z-50 border-b border-border-subtle">
+<div class="flex justify-between items-center h-16 px-gutter max-w-container-max mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-headline-lg font-headline-lg text-primary">AcademyX</span>
+<div class="hidden md:flex gap-6">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md" href="#">Home</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-150 font-body-md text-body-md" href="#">Features</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-150 font-body-md text-body-md" href="#">Pricing</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-150 font-body-md text-body-md" href="#">Documentation</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary p-2 active:scale-95 transition-transform" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-primary p-2 active:scale-95 transition-transform" data-icon="settings">settings</button>
+<button class="bg-primary-container text-on-primary-container px-4 py-2 rounded-lg font-button text-button hover:opacity-90 active:scale-95 transition-all">Get Started</button>
+</div>
+</div>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex items-center justify-center overflow-hidden px-gutter">
+<!-- STITCH_SHADER_START:ANIMATION_13 class="absolute inset-0 w-full h-full opacity-40" -->
+<div class="absolute inset-0 w-full h-full opacity-40" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_13" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_13');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+uniform float u_time;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+varying vec2 v_texCoord;
+
+// Simple 2D Noise
+float noise(vec2 p) {
+    return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Create a flowing, dark gradient field
+    float motion = u_time * 0.1;
+    
+    // Background base (Render-style deep black)
+    vec3 color = vec3(0.035, 0.035, 0.043); 
+    
+    // Add glowing indigo flows
+    float flow1 = sin(uv.x * 2.0 + motion) * 0.5 + 0.5;
+    float flow2 = cos(uv.y * 3.0 - motion * 0.8) * 0.5 + 0.5;
+    
+    vec3 accent = vec3(0.388, 0.4, 0.945); // Indigo #6366f1
+    
+    // Subtle glow concentration
+    float glow = pow(flow1 * flow2, 4.0) * 0.3;
+    color += accent * glow;
+    
+    // Vignette
+    float dist = distance(uv, vec2(0.5));
+    color *= 1.0 - smoothstep(0.5, 1.2, dist);
+    
+    gl_FragColor = vec4(color, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_13 -->
+<div class="relative z-10 text-center max-w-4xl mx-auto">
+<span class="font-label-mono text-label-mono text-primary uppercase tracking-widest mb-4 block">Beta Access Available</span>
+<h1 class="font-headline-xl text-headline-xl md:text-[64px] md:leading-[1.1] text-text-heading mb-6 tracking-tight">
+                    The Operating System for <span class="text-primary">Coaching.</span>
+</h1>
+<p class="font-body-md text-body-md text-text-muted mb-10 max-w-2xl mx-auto leading-relaxed">
+                    Everything you need to manage students, teachers, and payments in one sophisticated platform. Built for elite academies demanding precision and scale.
+                </p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<button class="bg-[#6366f1] text-[#fafafa] px-8 py-4 rounded-lg font-button text-button flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95 indigo-glow">
+                        Start Free Trial
+                        <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="bg-[#18181b] text-on-surface border border-[#27272a] px-8 py-4 rounded-lg font-button text-button transition-all hover:bg-[#27272a] active:scale-95">
+                        Book a Demo
+                    </button>
+</div>
+</div>
+</section>
+<!-- Trusted By Section -->
+<section class="py-16 border-y border-border-subtle bg-surface-container-lowest">
+<div class="max-w-container-max mx-auto px-gutter">
+<p class="text-center font-label-mono text-label-mono text-text-muted mb-10 uppercase tracking-widest">Powering global leaders in education</p>
+<div class="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="flex items-center gap-2 font-headline-lg text-text-heading">
+<span class="material-symbols-outlined" data-icon="polymer">polymer</span> QUANTUM
+                    </div>
+<div class="flex items-center gap-2 font-headline-lg text-text-heading">
+<span class="material-symbols-outlined" data-icon="token">token</span> NEXUS
+                    </div>
+<div class="flex items-center gap-2 font-headline-lg text-text-heading">
+<span class="material-symbols-outlined" data-icon="deployed_code">deployed_code</span> COHERENT
+                    </div>
+<div class="flex items-center gap-2 font-headline-lg text-text-heading">
+<span class="material-symbols-outlined" data-icon="hub">hub</span> SYNAPSE
+                    </div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Features -->
+<section class="py-24 max-w-container-max mx-auto px-gutter">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[240px]">
+<!-- Multi-tenant isolation -->
+<div class="md:col-span-8 bg-surface-container-low border border-border-subtle rounded-xl p-8 flex flex-col justify-between indigo-glow-border transition-all duration-300">
+<div class="flex justify-between items-start">
+<div>
+<span class="material-symbols-outlined text-primary mb-4 block text-4xl" data-icon="security">security</span>
+<h3 class="font-headline-lg text-headline-lg text-text-heading mb-2">Multi-tenant Isolation</h3>
+<p class="font-body-md text-body-md text-text-muted max-w-md">Enterprise-grade architecture ensuring every branch of your academy operates in a secure, isolated sandbox environment.</p>
+</div>
+<div class="hidden lg:block bg-surface-container-high p-4 rounded-lg border border-border-subtle">
+<pre class="font-label-mono text-[10px] text-primary leading-tight">{
+  "tenant": "academy_primary",
+  "isolation_level": "strict",
+  "encryption": "aes-256-gcm"
+}</pre>
+</div>
+</div>
+</div>
+<!-- Live Classes -->
+<div class="md:col-span-4 bg-surface-container-low border border-border-subtle rounded-xl p-8 flex flex-col justify-between overflow-hidden relative group indigo-glow-border transition-all duration-300">
+<div class="relative z-10">
+<span class="material-symbols-outlined text-primary mb-4 block text-4xl" data-icon="videocam">videocam</span>
+<h3 class="font-headline-lg text-headline-lg text-text-heading mb-2">Live Classes</h3>
+<p class="font-body-sm text-body-sm text-text-muted">Integrated low-latency video infrastructure for immersive learning.</p>
+</div>
+<div class="mt-4 flex gap-2 relative z-10">
+<div class="w-8 h-8 rounded-full bg-primary-container"></div>
+<div class="w-8 h-8 rounded-full bg-secondary-container"></div>
+<div class="w-8 h-8 rounded-full bg-tertiary-container"></div>
+</div>
+<!-- Abstract Background Graphic -->
+<div class="absolute -right-10 -bottom-10 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[200px]" data-icon="stream">stream</span>
+</div>
+</div>
+<!-- Automated Billing -->
+<div class="md:col-span-4 bg-surface-container-low border border-border-subtle rounded-xl p-8 flex flex-col justify-between indigo-glow-border transition-all duration-300">
+<div>
+<span class="material-symbols-outlined text-primary mb-4 block text-4xl" data-icon="payments">payments</span>
+<h3 class="font-headline-lg text-headline-lg text-text-heading mb-2">Automated Billing</h3>
+<p class="font-body-sm text-body-sm text-text-muted">Set it and forget it. Handle recurring subscriptions and one-time fees globally.</p>
+</div>
+<div class="bg-surface p-2 rounded border border-border-subtle mt-4">
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-3/4"></div>
+</div>
+</div>
+</div>
+<!-- Analytics -->
+<div class="md:col-span-8 bg-surface-container-low border border-border-subtle rounded-xl p-8 flex flex-col md:flex-row gap-8 items-center indigo-glow-border transition-all duration-300">
+<div class="flex-1">
+<span class="material-symbols-outlined text-primary mb-4 block text-4xl" data-icon="insights">insights</span>
+<h3 class="font-headline-lg text-headline-lg text-text-heading mb-2">Advanced Analytics</h3>
+<p class="font-body-md text-body-md text-text-muted">Real-time performance tracking for students and revenue streams with custom reporting engines.</p>
+</div>
+<div class="flex-1 w-full h-full min-h-[120px] bg-background rounded-lg border border-border-subtle p-4 overflow-hidden">
+<div class="flex items-end gap-2 h-full">
+<div class="w-full bg-primary-container/20 border-t-2 border-primary h-1/2"></div>
+<div class="w-full bg-primary-container/20 border-t-2 border-primary h-3/4"></div>
+<div class="w-full bg-primary-container/20 border-t-2 border-primary h-2/3"></div>
+<div class="w-full bg-primary-container/20 border-t-2 border-primary h-full"></div>
+<div class="w-full bg-primary-container/20 border-t-2 border-primary h-4/5"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Section -->
+<section class="py-24 bg-surface-container-lowest">
+<div class="max-w-container-max mx-auto px-gutter">
+<div class="text-center mb-16">
+<h2 class="font-headline-xl text-headline-xl text-text-heading mb-4">Transparent Pricing</h2>
+<p class="font-body-md text-body-md text-text-muted">Scalable plans built for every stage of your growth.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Starter -->
+<div class="bg-surface-container-low border border-border-subtle p-8 rounded-xl flex flex-col hover:border-primary/50 transition-all">
+<h4 class="font-label-mono text-label-mono text-primary mb-2 uppercase">Starter</h4>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="font-headline-xl text-headline-xl text-text-heading">$49</span>
+<span class="text-text-muted font-body-sm text-body-sm">/month</span>
+</div>
+<ul class="space-y-4 mb-8 flex-grow">
+<li class="flex items-center gap-3 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span> Up to 50 students
+                            </li>
+<li class="flex items-center gap-3 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span> Core CRM features
+                            </li>
+<li class="flex items-center gap-3 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span> Basic reporting
+                            </li>
+</ul>
+<button class="w-full py-3 rounded-lg border border-border-subtle font-button text-button hover:bg-surface-container-high transition-all">Select Starter</button>
+</div>
+<!-- Pro -->
+<div class="bg-surface-container-low border-2 border-primary p-8 rounded-xl flex flex-col relative indigo-glow scale-105 z-10">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Most Popular</div>
+<h4 class="font-label-mono text-label-mono text-primary mb-2 uppercase">Pro</h4>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="font-headline-xl text-headline-xl text-text-heading">$149</span>
+<span class="text-text-muted font-body-sm text-body-sm">/month</span>
+</div>
+<ul class="space-y-4 mb-8 flex-grow">
+<li class="flex items-center gap-3 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span> Unlimited students
+                            </li>
+<li class="flex items-center gap-3 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span> Automated billing
+                            </li>
+<li class="flex items-center gap-3 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span> Custom domain
+                            </li>
+<li class="flex items-center gap-3 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span> Advanced API access
+                            </li>
+</ul>
+<button class="w-full py-3 rounded-lg bg-primary text-on-primary font-button text-button hover:brightness-110 transition-all">Upgrade to Pro</button>
+</div>
+<!-- Enterprise -->
+<div class="bg-surface-container-low border border-border-subtle p-8 rounded-xl flex flex-col hover:border-primary/50 transition-all">
+<h4 class="font-label-mono text-label-mono text-primary mb-2 uppercase">Enterprise</h4>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="font-headline-xl text-headline-xl text-text-heading">Custom</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted mb-6">Bespoke solutions for global organizations with specialized requirements.</p>
+<ul class="space-y-4 mb-8 flex-grow">
+<li class="flex items-center gap-3 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span> 24/7 Priority support
+                            </li>
+<li class="flex items-center gap-3 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span> Multi-tenant clusters
+                            </li>
+<li class="flex items-center gap-3 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span> Custom SLA
+                            </li>
+</ul>
+<button class="w-full py-3 rounded-lg border border-border-subtle font-button text-button hover:bg-surface-container-high transition-all">Contact Sales</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-24 px-gutter">
+<div class="max-w-4xl mx-auto bg-primary-container rounded-3xl p-12 text-center relative overflow-hidden indigo-glow">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent pointer-events-none"></div>
+<div class="relative z-10">
+<h2 class="font-headline-xl text-headline-xl text-on-primary-container mb-6">Ready to scale your academy?</h2>
+<p class="font-body-md text-body-md text-on-primary-container/80 mb-10 max-w-xl mx-auto">Join 1,200+ elite coaching centers that have modernized their operations with AcademyX.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<button class="bg-background text-primary px-8 py-4 rounded-lg font-button text-button hover:opacity-90 transition-all">Start Free Trial</button>
+<button class="bg-transparent text-on-primary-container border border-on-primary-container/30 px-8 py-4 rounded-lg font-button text-button hover:bg-on-primary-container/10 transition-all">Speak with an Expert</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest w-full py-12 border-t border-border-subtle">
+<div class="max-w-container-max mx-auto px-gutter">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+<div class="col-span-1 md:col-span-1">
+<span class="text-headline-lg font-headline-lg text-primary block mb-6">AcademyX</span>
+<p class="font-body-sm text-body-sm text-text-muted leading-relaxed">
+                        The elite management layer for modern education brands.
+                    </p>
+</div>
+<div>
+<h5 class="font-label-mono text-label-mono text-text-heading mb-6 uppercase">Product</h5>
+<ul class="space-y-3">
+<li><a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="#">Features</a></li>
+<li><a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="#">Integrations</a></li>
+<li><a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="#">Pricing</a></li>
+<li><a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="#">Changelog</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label-mono text-label-mono text-text-heading mb-6 uppercase">Company</h5>
+<ul class="space-y-3">
+<li><a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="#">About</a></li>
+<li><a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="#">Contact Us</a></li>
+<li><a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="#">Careers</a></li>
+<li><a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="#">Blog</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label-mono text-label-mono text-text-heading mb-6 uppercase">Resources</h5>
+<ul class="space-y-3">
+<li><a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="#">Documentation</a></li>
+<li><a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li><a class="font-body-sm text-body-sm text-text-muted hover:text-primary transition-colors" href="#">Security</a></li>
+</ul>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-border-subtle/30">
+<p class="font-body-sm text-body-sm text-text-muted opacity-80 hover:opacity-100">© 2024 AcademyX. All rights reserved.</p>
+<div class="flex gap-6 mt-4 md:mt-0">
+<span class="material-symbols-outlined text-text-muted hover:text-primary cursor-pointer transition-colors" data-icon="public">public</span>
+<span class="material-symbols-outlined text-text-muted hover:text-primary cursor-pointer transition-colors" data-icon="chat">chat</span>
+<span class="material-symbols-outlined text-text-muted hover:text-primary cursor-pointer transition-colors" data-icon="mail">mail</span>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interaction for header scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-background/80', 'backdrop-blur-md');
+            } else {
+                nav.classList.remove('bg-background/80', 'backdrop-blur-md');
+            }
+        });
+
+        // Simple parallax effect for grid cards
+        document.querySelectorAll('.indigo-glow-border').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>

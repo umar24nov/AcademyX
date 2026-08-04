@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AcademyX Admin Console</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom scrollbar for high-density feel */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #09090b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 2px;
+        }
+        .glass-card {
+            background: rgba(24, 24, 27, 0.8);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-high": "#2a2a2c",
+                      "tertiary-fixed-dim": "#ffb783",
+                      "surface-container-highest": "#353437",
+                      "surface-container-low": "#1c1b1d",
+                      "on-error": "#690005",
+                      "on-primary-fixed-variant": "#2f2ebe",
+                      "text-muted": "#a1a1aa",
+                      "inverse-primary": "#494bd6",
+                      "on-secondary-container": "#b6b4b8",
+                      "secondary-fixed": "#e4e1e6",
+                      "on-surface": "#e5e1e4",
+                      "on-primary-fixed": "#07006c",
+                      "on-primary-container": "#0d0096",
+                      "on-surface-variant": "#c7c4d7",
+                      "surface-tint": "#c0c1ff",
+                      "on-tertiary-fixed-variant": "#703700",
+                      "on-secondary-fixed": "#1b1b1e",
+                      "surface-bright": "#39393b",
+                      "error-container": "#93000a",
+                      "success-green": "#37cd8f",
+                      "outline-variant": "#464554",
+                      "surface-container": "#201f22",
+                      "on-tertiary-container": "#452000",
+                      "tertiary-fixed": "#ffdcc5",
+                      "on-tertiary-fixed": "#301400",
+                      "inverse-on-surface": "#313032",
+                      "inverse-surface": "#e5e1e4",
+                      "surface": "#131315",
+                      "on-secondary": "#303033",
+                      "primary-container": "#8083ff",
+                      "surface-dim": "#131315",
+                      "surface-variant": "#353437",
+                      "error": "#ffb4ab",
+                      "secondary-fixed-dim": "#c8c5ca",
+                      "on-secondary-fixed-variant": "#47464a",
+                      "background": "#131315",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "on-error-container": "#ffdad6",
+                      "border-subtle": "#27272a",
+                      "tertiary-container": "#d97721",
+                      "surface-container-lowest": "#0e0e10",
+                      "text-heading": "#fafafa",
+                      "primary": "#c0c1ff",
+                      "primary-fixed": "#e1e0ff",
+                      "on-background": "#e5e1e4",
+                      "tertiary": "#ffb783",
+                      "secondary": "#c8c5ca",
+                      "on-tertiary": "#4f2500",
+                      "on-primary": "#1000a9",
+                      "secondary-container": "#47464a",
+                      "outline": "#908fa0"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "4px",
+                      "margin-desktop": "32px",
+                      "container-max": "1280px",
+                      "gutter": "16px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-xl": ["Inter"],
+                      "body-md": ["Inter"],
+                      "label-mono": ["JetBrains Mono"],
+                      "button": ["Inter"],
+                      "body-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                      "label-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "button": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary/30 selection:text-primary min-h-screen pb-24">
+<!-- Top AppBar (Mobile Sticky) -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface-dim/80 backdrop-blur-md flex justify-between items-center px-4 h-16 border-b border-border-subtle">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-xl">school</span>
+</div>
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold tracking-tight text-primary">AcademyX</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors focus-within:ring-1 focus-within:ring-primary rounded-full">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="relative w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors focus-within:ring-1 focus-within:ring-primary rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-surface-dim"></span>
+</button>
+<div class="w-8 h-8 rounded-full border border-border-subtle overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close up professional portrait of a tech-savvy female academic administrator with short hair and glasses, wearing a minimalist dark blazer, against a clean monochromatic studio background with subtle soft side lighting. The image evokes a sense of leadership, intelligence, and modern professionalism in a high-end educational setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWDo52hy9lS0c35WX5JflTFrSK0CDnm3lZ3IIrGx3ZPL3H4zOZHRW7EicXyNnk8ejyReaiEC3xVvBvq4f0xU2u0TlFqsDImtmCqrZhO5r3-5JXpP7MFhGC7iWy-E_oSwNboKBHSAsBjUcL2KRgG0i2IbtJbvC8nFMuxmX24V6cVf8y0IwlA5fxwJ1XBBldpbF9VU3uyH-dQ-PCRM1kK2NfTF-pGNKPH7IEg3DciXAghXL2g32YEyTC"/>
+</div>
+</div>
+</header>
+<main class="pt-20 px-4 max-w-md mx-auto space-y-6">
+<!-- Welcome Section -->
+<section class="space-y-1">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-text-heading">Admin Console</h1>
+<p class="font-body-sm text-body-sm text-text-muted">Institute Overview • July 24, 2024</p>
+</section>
+<!-- KPI Cards Grid (Bento Style) -->
+<section class="grid grid-cols-2 gap-3">
+<!-- Total Revenue -->
+<div class="col-span-2 bg-surface-container-low border border-border-subtle p-5 rounded-xl relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-mono text-label-mono text-text-muted uppercase tracking-wider">Total Revenue</span>
+<span class="text-success-green flex items-center text-xs font-medium">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span> +12.4%
+                        </span>
+</div>
+<div class="text-3xl font-bold text-text-heading tracking-tighter">$142,850.00</div>
+<p class="text-xs text-text-muted mt-2">Projection for current Q3</p>
+</div>
+<!-- Subtle graphic element -->
+<div class="absolute -right-4 -bottom-4 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-8xl" style="font-variation-settings: 'wght' 700;">payments</span>
+</div>
+</div>
+<!-- Total Students -->
+<div class="bg-surface-container-low border border-border-subtle p-4 rounded-xl">
+<div class="flex items-center gap-2 mb-3">
+<div class="p-1.5 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary text-lg">group</span>
+</div>
+<span class="font-label-mono text-[10px] text-text-muted uppercase">Students</span>
+</div>
+<div class="text-2xl font-bold text-text-heading">1,284</div>
+<div class="h-1 w-full bg-surface-variant rounded-full mt-3 overflow-hidden">
+<div class="h-full bg-primary w-3/4"></div>
+</div>
+</div>
+<!-- Attendance -->
+<div class="bg-surface-container-low border border-border-subtle p-4 rounded-xl">
+<div class="flex items-center gap-2 mb-3">
+<div class="p-1.5 bg-tertiary/10 rounded-lg">
+<span class="material-symbols-outlined text-tertiary text-lg">person_check</span>
+</div>
+<span class="font-label-mono text-[10px] text-text-muted uppercase">Attendance</span>
+</div>
+<div class="text-2xl font-bold text-text-heading">94.2%</div>
+<p class="text-[10px] text-text-muted mt-2">Avg. Teacher daily rate</p>
+</div>
+</section>
+<!-- Recent Activity Feed -->
+<section class="space-y-4">
+<div class="flex justify-between items-end">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-text-heading">Activity</h2>
+<button class="text-primary text-xs font-medium hover:underline">View All</button>
+</div>
+<div class="space-y-3">
+<!-- Activity Item 1 -->
+<div class="flex gap-4 p-3 hover:bg-surface-container-high transition-colors duration-150 rounded-lg group cursor-pointer">
+<div class="relative">
+<div class="w-10 h-10 rounded-full border border-border-subtle overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="High-resolution profile photograph of a young male software developer student with a friendly expression, wearing a minimalist black hoodie, sitting in a dimly lit modern workspace with soft indigo backlighting. The aesthetic is clean, professional, and tech-oriented, matching a high-end dark mode UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyxECEq9aKNgXMfzrOr6hCIpMC8t2jBXLXXcFmi3OxYIv6r3Hp9_eOgbOLxjiFWGntKhvvZOAmk1dS99t--I_JXl9HQSH7BbRnYbq96RsKb3BsCrBgfNyhAaFNMeI1HWAoFRH1e8bJAGROn8SzG7xHtFpHZfLrRVXYesv0ZViW5x7W2YdOBIA_GJB_VAbp6wwihyZC-Pa-26EOoex9NTFDvkuURfGU3wmZeR61FYr_4H4qYvQXdYLt"/>
+</div>
+<div class="absolute -right-1 -bottom-1 bg-success-green w-4 h-4 rounded-full border-2 border-background flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-on-background font-bold">check</span>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between">
+<p class="text-sm font-semibold text-text-heading truncate">Marcus Chen</p>
+<span class="text-[10px] text-text-muted">2m ago</span>
+</div>
+<p class="text-xs text-text-muted truncate">Paid tuition for <span class="text-on-surface-variant font-medium">Advanced React Patterns</span></p>
+</div>
+</div>
+<!-- Activity Item 2 -->
+<div class="flex gap-4 p-3 hover:bg-surface-container-high transition-colors duration-150 rounded-lg group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-surface-variant border border-border-subtle flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">warning</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between">
+<p class="text-sm font-semibold text-text-heading">System Alert</p>
+<span class="text-[10px] text-text-muted">1h ago</span>
+</div>
+<p class="text-xs text-text-muted truncate">Server utilization exceeded 85% in <span class="text-on-surface-variant font-medium">Node.js Lab B</span></p>
+</div>
+</div>
+<!-- Activity Item 3 -->
+<div class="flex gap-4 p-3 hover:bg-surface-container-high transition-colors duration-150 rounded-lg group cursor-pointer">
+<div class="w-10 h-10 rounded-full border border-border-subtle overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Candid medium shot of an experienced female educator with grey-streaked hair and a warm smile, wearing a professional charcoal grey turtleneck, captured in a modern library with books blurred in the background. Soft warm lighting accents her features, creating an atmosphere of wisdom, accessibility, and high-end academic prestige." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0mxn9UW17nRiVDiV8q6anv17-pRGdd6tejZ4mHt75wp6LrWL8mDepuJ35BNRhX97HQpGtTx1NqpQWcU6xgBePikunaBMVwVl-AMgzlGqk6BNdBPYa5f_jpBM9x74bKobY9SjbuHB92Zhsvj_y5ttCNgnLDN5DWI3Fkziu05kxZRsyZUxp2Zy86O1YvFSN4jyCdxfDXj3CKsRfU-ulzFeDsMVRNswbSE5Ve7tHAZz5v5qVf6jonOdd"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between">
+<p class="text-sm font-semibold text-text-heading">Sarah Jenkins</p>
+<span class="text-[10px] text-text-muted">3h ago</span>
+</div>
+<p class="text-xs text-text-muted truncate">Published new course: <span class="text-on-surface-variant font-medium">Distributed Systems 101</span></p>
+</div>
+</div>
+</div>
+</section>
+<!-- Batch Overview (High-Density List) -->
+<section class="space-y-4">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-text-heading">Active Batches</h2>
+<div class="bg-surface-container-lowest border border-border-subtle rounded-xl overflow-hidden divide-y divide-border-subtle">
+<!-- Batch 1 -->
+<div class="p-4 flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="space-y-1">
+<p class="font-label-mono text-label-mono text-primary">CS-2024-ALPHA</p>
+<h3 class="text-sm font-bold text-text-heading">Full Stack Engineering</h3>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-success-green"></span>
+<span class="text-[10px] text-text-muted">42 Students Enrolled</span>
+</div>
+</div>
+<div class="text-right">
+<span class="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded border border-primary/20 font-label-mono">MORNING</span>
+<div class="mt-2 text-xs text-text-muted font-label-mono">WEEK 12/24</div>
+</div>
+</div>
+<!-- Batch 2 -->
+<div class="p-4 flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="space-y-1">
+<p class="font-label-mono text-label-mono text-tertiary">DS-2024-BETA</p>
+<h3 class="text-sm font-bold text-text-heading">Data Science Masters</h3>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span class="text-[10px] text-text-muted">28 Students Enrolled</span>
+</div>
+</div>
+<div class="text-right">
+<span class="text-[10px] bg-tertiary/10 text-tertiary px-2 py-0.5 rounded border border-tertiary/20 font-label-mono">EVENING</span>
+<div class="mt-2 text-xs text-text-muted font-label-mono">WEEK 04/24</div>
+</div>
+</div>
+<!-- Batch 3 -->
+<div class="p-4 flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="space-y-1">
+<p class="font-label-mono text-label-mono text-secondary">UI-2024-GAMMA</p>
+<h3 class="text-sm font-bold text-text-heading">Advanced UX Design</h3>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="text-[10px] text-text-muted">15 Students Enrolled</span>
+</div>
+</div>
+<div class="text-right">
+<span class="text-[10px] bg-secondary/10 text-secondary px-2 py-0.5 rounded border border-secondary/20 font-label-mono">WEEKEND</span>
+<div class="mt-2 text-xs text-text-muted font-label-mono">WEEK 01/24</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg shadow-primary/20 flex items-center justify-center active:scale-95 transition-transform z-40">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-surface-dim border-t border-border-subtle h-20 flex items-center justify-around px-2">
+<!-- Dashboard (Active) -->
+<button class="flex flex-col items-center gap-1 flex-1 text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined active-icon">dashboard</span>
+<span class="font-label-mono text-[10px] font-bold">Dashboard</span>
+</button>
+<!-- Institutes -->
+<button class="flex flex-col items-center gap-1 flex-1 text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">domain</span>
+<span class="font-label-mono text-[10px]">Institutes</span>
+</button>
+<!-- Courses -->
+<button class="flex flex-col items-center gap-1 flex-1 text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-mono text-[10px]">Courses</span>
+</button>
+<!-- Financials -->
+<button class="flex flex-col items-center gap-1 flex-1 text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-mono text-[10px]">Finance</span>
+</button>
+<!-- Settings -->
+<button class="flex flex-col items-center gap-1 flex-1 text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-mono text-[10px]">Settings</span>
+</button>
+</nav>
+<!-- Micro-interaction script -->
+<script>
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('touchstart', function() {
+                this.classList.add('opacity-80');
+            });
+            button.addEventListener('touchend', function() {
+                this.classList.remove('opacity-80');
+            });
+        });
+        
+        // Dynamic Greeting
+        const welcomeText = document.querySelector('h1');
+        const hour = new Date().getHours();
+        let greeting = "Admin Console";
+        if (hour < 12) greeting = "Good Morning, Admin";
+        else if (hour < 18) greeting = "Good Afternoon, Admin";
+        else greeting = "Good Evening, Admin";
+        // To maintain JSON casing integrity, we just keep the dashboard title but could update subtext
+    </script>
+</body></html>

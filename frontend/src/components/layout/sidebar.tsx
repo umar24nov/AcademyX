@@ -15,6 +15,10 @@ export function Sidebar({ user }: { user: UserSession }) {
   const main = getNavForRole(user.role, "main");
   const manage = getNavForRole(user.role, "manage");
 
+  const isLearner = user.role === "STUDENT";
+  const isTeacher = user.role === "TEACHER";
+  const newCourseHref = isTeacher ? "/curriculum/courses" : "/courses";
+
   const handleSignOut = async () => {
     await signOut();
     router.push("/login");
@@ -54,29 +58,39 @@ export function Sidebar({ user }: { user: UserSession }) {
       </nav>
 
       <div className="mt-auto flex flex-col gap-1 border-t border-border-subtle pt-4">
-        <div className="p-4 bg-surface-container-high rounded-xl mb-4">
-          <p className="text-sm text-on-surface mb-2">Need more seats?</p>
+        {isLearner || isTeacher ? (
           <Link
-            href="/settings/billing"
-            className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-95 transition-all"
+            href={newCourseHref}
+            className="w-full flex items-center justify-center gap-2 bg-primary-container text-on-primary-container py-2.5 rounded-lg text-sm font-medium hover:opacity-90 active:scale-95 transition-all indigo-glow mb-4"
           >
-            <Sparkles className="h-4 w-4" />
-            Upgrade Plan
+            <Icon name="menu_book" className="h-4 w-4" />
+            New Course
           </Link>
-        </div>
+        ) : (
+          <div className="p-4 bg-surface-container-high rounded-xl mb-4">
+            <p className="text-sm text-on-surface mb-2">Need more seats?</p>
+            <Link
+              href="/settings/billing"
+              className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-95 transition-all"
+            >
+              <Sparkles className="h-4 w-4" />
+              Upgrade Plan
+            </Link>
+          </div>
+        )}
         <Link
           href="/support"
           className="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors duration-150 cursor-pointer"
         >
           <LifeBuoy className="h-5 w-5" />
-          <span className="text-sm">Support</span>
+          <span className="text-sm">Help</span>
         </Link>
         <button
           onClick={handleSignOut}
           className="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors duration-150 cursor-pointer text-left"
         >
           <LogOut className="h-5 w-5" />
-          <span className="text-sm">Sign Out</span>
+          <span className="text-sm">Logout</span>
         </button>
       </div>
     </aside>

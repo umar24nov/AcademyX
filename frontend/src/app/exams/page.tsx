@@ -9,21 +9,30 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Icon } from "@/components/shared/icon";
 import { useLive } from "@/lib/live";
+import { getStoredUser } from "@/lib/api";
 import { fetchExams, mockExamsData } from "@/lib/live-data";
 
 export default function ExamsPage() {
   const exams = useLive(fetchExams, mockExamsData);
+  const user = React.useMemo(() => getStoredUser(), []);
+  const isStudent = user?.role === "STUDENT";
   return (
     <DashboardShell>
       <div className="flex flex-col gap-6">
         <PageHeader
           title="Exams"
-          description="Create and manage MCQ and subjective assessments."
+          description={
+            isStudent
+              ? "Take your scheduled MCQ and subjective assessments."
+              : "Create and manage MCQ and subjective assessments."
+          }
           actions={
-            <Button>
-              <Icon name="add" className="h-4 w-4" />
-              New Exam
-            </Button>
+            !isStudent ? (
+              <Button>
+                <Icon name="add" className="h-4 w-4" />
+                New Exam
+              </Button>
+            ) : undefined
           }
         />
 
@@ -61,13 +70,19 @@ export default function ExamsPage() {
                   {e.scheduledFor}
                 </div>
                 <div className="flex items-center justify-between mt-auto">
-                  <span className="text-xs text-text-muted font-mono">{e.attempts} attempts</span>
+                  <span className="text-xs text-text-muted font-mono">
+                    {isStudent
+                      ? e.attempts > 0
+                        ? "Attempted"
+                        : "Not attempted"
+                      : `${e.attempts} attempts`}
+                  </span>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm">Edit</Button>
+                    {!isStudent && <Button variant="outline" size="sm">Edit</Button>}
                     <Button size="sm" asChild>
                       <Link href={`/exams/mcq?id=${e.id}`}>
                         <Icon name="play_circle" className="h-4 w-4" />
-                        Preview
+                        {isStudent ? "Start Exam" : "Preview"}
                       </Link>
                     </Button>
                   </div>
