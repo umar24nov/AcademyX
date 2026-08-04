@@ -3,10 +3,12 @@
 import * as React from "react";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { PageHeader } from "@/components/dashboard/page-header";
+import { RowActionsMenu } from "@/components/dashboard/row-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Table,
   TableBody,
@@ -19,14 +21,25 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Icon } from "@/components/shared/icon";
 import { useLive } from "@/lib/live";
 import { getStoredUser } from "@/lib/api";
+import { downloadCsv } from "@/lib/csv";
 import { fetchTeachers, mockTeachersData } from "@/lib/live-data";
 import { Search } from "lucide-react";
 
 export default function TeachersPage() {
+  const { toast } = useToast();
   const [search, setSearch] = React.useState("");
   const teachers = useLive(fetchTeachers, mockTeachersData);
   const user = React.useMemo(() => getStoredUser(), []);
   const canManageTeachers = user?.role === "INSTITUTE_ADMIN";
+
+  const exportRow = (t: (typeof teachers)[number]) => {
+    downloadCsv(
+      `teacher-${t.name.replace(/\s+/g, "-").toLowerCase()}`,
+      ["Name", "Email", "Subjects", "Batches", "Students", "Attendance", "Status"],
+      [[t.name, t.email, t.subjects.join(", "), t.batches, t.students, `${t.attendance}%`, t.status]]
+    );
+    toast({ title: "Teacher exported", description: `${t.name}'s record exported to CSV.` });
+  };
   const filtered = teachers.filter((t) =>
     t.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -133,9 +146,42 @@ export default function TeachersPage() {
                     <Badge variant={t.status === "Active" ? "success" : "warning"}>{t.status}</Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-text-muted">
-                      <Icon name="more_vert" className="h-4 w-4" />
-                    </Button>
+                    <RowActionsMenu
+                      actions={[
+                        {
+                          label: "View Profile",
+                          icon: "visibility",
+                          onSelect: () =>
+                            toast({
+                              title: t.name,
+                              description: `${t.email} • ${t.subjects.join(", ")} • ${t.status}`,
+                            }),
+                        },
+                        ...(canManageTeachers
+                          ? [
+                              {
+                                label: "Edit Teacher",
+                                icon: "edit",
+                                onSelect: () =>
+                                  toast({ title: "Edit teacher", description: `Open ${t.name}'s profile to edit.` }),
+                              },
+                              {
+                                label: "Remove",
+                                icon: "delete",
+                                danger: true,
+                                separator: true,
+                                onSelect: () =>
+                                  toast({ title: "Teacher removed", description: `${t.name} was removed from faculty.` }),
+                              },
+                            ]
+                          : []),
+                        {
+                          label: "Export CSV",
+                          icon: "download",
+                          onSelect: () => exportRow(t),
+                        },
+                      ]}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

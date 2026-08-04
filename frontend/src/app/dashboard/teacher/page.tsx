@@ -1,26 +1,93 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { PageHeader } from "@/components/dashboard/page-header";
+import { RowActionsMenu } from "@/components/dashboard/row-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Icon } from "@/components/shared/icon";
-import { Button as Btn } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import { useLive } from "@/lib/live";
-import { fetchTeacherDashboard, mockTeacherDashboardData } from "@/lib/live-data";
+import { downloadCsv } from "@/lib/csv";
+import {
+  fetchTeacherDashboard,
+  mockTeacherDashboardData,
+  fetchStudents,
+  type TeacherClassRow,
+  type TeacherMaterialRow,
+} from "@/lib/live-data";
 
 const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
+const MATERIAL_TYPES = ["PDF", "Video", "ZIP", "Other"] as const;
+
+function materialIconFor(type: string): string {
+  const t = type.toLowerCase();
+  if (t.includes("video")) return "play_circle";
+  if (t.includes("zip")) return "folder_zip";
+  return "description";
+}
+
 export default function TeacherDashboardPage() {
+  const { toast } = useToast();
+  const router = useRouter();
   const data = useLive(fetchTeacherDashboard, mockTeacherDashboardData);
+  const [materials, setMaterials] = React.useState<TeacherMaterialRow[]>([]);
+  const [scheduleOpen, setScheduleOpen] = React.useState(false);
+  const [createOpen, setCreateOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    setMaterials(data.materials);
+  }, [data.materials]);
+
   const performance = data.weeklyPerformance;
   const max = Math.max(...performance, 100);
   const nextClass = data.nextClass ?? data.upcomingClasses[0];
   const presentPct = data.attendanceToday.rate;
   const firstName = data.name.split(" ")[0];
+
+  const handleExportStudents = async () => {
+    const students = await fetchStudents();
+    downloadCsv(
+      "student-list",
+      ["ID", "Name", "Email", "Course", "Batch", "Attendance", "Status"],
+      students.map((s) => [s.studentId, s.name, s.email, s.course, s.batch, `${s.attendance}%`, s.status])
+    );
+    toast({ title: "Student list exported", description: `${students.length} students exported to CSV.` });
+  };
+
+  const addMaterial = (m: TeacherMaterialRow) => {
+    setMaterials((prev) => [m, ...prev]);
+    toast({ title: "Material created", description: `"${m.title}" was added to your materials.` });
+  };
+
+  const removeMaterial = (id: string, title: string) => {
+    setMaterials((prev) => prev.filter((m) => m.id !== id));
+    toast({ title: "Material deleted", description: `"${title}" was removed from your materials.` });
+  };
 
   return (
     <DashboardShell>
@@ -30,8 +97,11 @@ export default function TeacherDashboardPage() {
           description={`You have ${data.stats.classesToday} classes today and ${data.stats.ungradedAssignments} ungraded assignments.`}
           actions={
             <>
-              <Button variant="outline">View Schedule</Button>
-              <Button>
+              <Button variant="outline" onClick={() => setScheduleOpen(true)}>
+                <Icon name="calendar_today" className="h-4 w-4" />
+                View Schedule
+              </Button>
+              <Button onClick={() => setCreateOpen(true)}>
                 <Icon name="add" className="h-4 w-4" />
                 Create New Material
               </Button>
@@ -98,20 +168,26 @@ export default function TeacherDashboardPage() {
               <CardContent className="p-5">
                 <h3 className="text-xl font-semibold text-text-heading mb-4">Quick Actions</h3>
                 <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { icon: "history_edu", label: "Grade Tasks" },
-                    { icon: "mail", label: "Message All" },
-                    { icon: "calendar_today", label: "Reschedule" },
-                    { icon: "download", label: "Export List" },
-                  ].map((q) => (
-                    <button
-                      key={q.label}
-                      className="flex flex-col items-center justify-center p-4 bg-surface-container border border-border-subtle rounded-lg hover:bg-surface-container-high transition-colors group"
-                    >
-                      <Icon name={q.icon} className="h-6 w-6 text-primary mb-2 transition-transform group-hover:scale-110" />
-                      <span className="text-xs font-medium">{q.label}</span>
-                    </button>
-                  ))}
+                  <QuickAction
+                    icon="history_edu"
+                    label="Grade Tasks"
+                    onClick={() => router.push("/assignments/submissions")}
+                  />
+                  <QuickAction
+                    icon="mail"
+                    label="Message All"
+                    onClick={() => router.push("/messages")}
+                  />
+                  <QuickAction
+                    icon="calendar_today"
+                    label="Reschedule"
+                    onClick={() => router.push("/live-classes")}
+                  />
+                  <QuickAction
+                    icon="download"
+                    label="Export List"
+                    onClick={handleExportStudents}
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -120,21 +196,49 @@ export default function TeacherDashboardPage() {
           <Card className="md:col-span-12 lg:col-span-7 overflow-hidden">
             <CardHeader className="flex-row items-center justify-between space-y-0 border-b border-border-subtle">
               <CardTitle>Recent Materials</CardTitle>
-              <Button variant="link" className="text-primary">View All</Button>
+              <Button variant="link" className="text-primary" onClick={() => router.push("/lectures")}>
+                View All
+              </Button>
             </CardHeader>
             <div className="divide-y divide-border-subtle">
-              {data.materials.map((m) => (
+              {materials.map((m) => (
                 <div key={m.id} className="p-4 flex items-center gap-4 hover:bg-surface-container-low transition-colors group cursor-pointer">
                   <div className="h-12 w-12 rounded bg-surface-container-highest border border-border-subtle flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
                     <Icon name={m.icon} className="h-6 w-6" />
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1" onClick={() => toast({ title: m.title, description: m.meta })}>
                     <h4 className="text-sm font-medium text-on-surface">{m.title}</h4>
                     <p className="text-xs text-text-muted">{m.meta}</p>
                   </div>
-                  <Icon name="more_vert" className="h-5 w-5 text-outline group-hover:text-primary transition-colors" />
+                  <RowActionsMenu
+                    iconClassName="h-5 w-5"
+                    triggerClassName="h-9 w-9"
+                    actions={[
+                      {
+                        label: "Preview",
+                        icon: "visibility",
+                        onSelect: () => toast({ title: m.title, description: `Previewing ${m.meta}.` }),
+                      },
+                      {
+                        label: "Edit",
+                        icon: "edit",
+                        onSelect: () =>
+                          toast({ title: "Edit material", description: `Open "${m.title}" to edit it.` }),
+                      },
+                      {
+                        label: "Delete",
+                        icon: "delete",
+                        danger: true,
+                        separator: true,
+                        onSelect: () => removeMaterial(m.id, m.title),
+                      },
+                    ]}
+                  />
                 </div>
               ))}
+              {materials.length === 0 && (
+                <div className="p-8 text-center text-text-muted text-sm">No materials yet. Create one to get started.</div>
+              )}
             </div>
           </Card>
 
@@ -163,9 +267,12 @@ export default function TeacherDashboardPage() {
                     </div>
                   </div>
                 </div>
-                <Btn className="w-full mt-8 bg-on-surface text-background hover:opacity-90">
-                  Launch Live Session
-                </Btn>
+                <Button asChild className="w-full mt-8 bg-on-surface text-background hover:opacity-90">
+                  <Link href={`/live-classes/session?id=${nextClass.id}`}>
+                    <Icon name="video" className="h-4 w-4" />
+                    Launch Live Session
+                  </Link>
+                </Button>
               </CardContent>
               <div className="absolute -bottom-10 -right-10 opacity-[0.03] pointer-events-none">
                 <Icon name="group" className="h-44 w-44" />
@@ -174,6 +281,206 @@ export default function TeacherDashboardPage() {
           )}
         </div>
       </div>
+
+      <ScheduleDialog
+        open={scheduleOpen}
+        onOpenChange={setScheduleOpen}
+        classes={data.upcomingClasses}
+        onReschedule={(c) => {
+          setScheduleOpen(false);
+          router.push("/live-classes");
+          toast({ title: "Reschedule class", description: `Open "${c.title}" in live classes to reschedule.` });
+        }}
+      />
+
+      <CreateMaterialDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onCreated={addMaterial}
+      />
     </DashboardShell>
+  );
+}
+
+function QuickAction({
+  icon,
+  label,
+  onClick,
+}: {
+  icon: string;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex flex-col items-center justify-center p-4 bg-surface-container border border-border-subtle rounded-lg hover:bg-surface-container-high transition-colors group active:scale-95"
+    >
+      <Icon name={icon} className="h-6 w-6 text-primary mb-2 transition-transform group-hover:scale-110" />
+      <span className="text-xs font-medium">{label}</span>
+    </button>
+  );
+}
+
+function ScheduleDialog({
+  open,
+  onOpenChange,
+  classes,
+  onReschedule,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  classes: TeacherClassRow[];
+  onReschedule: (c: TeacherClassRow) => void;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Icon name="calendar_today" className="h-5 w-5 text-primary" />
+            Class Schedule
+          </DialogTitle>
+          <DialogDescription>Your upcoming classes for today.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-3 max-h-[50vh] overflow-y-auto custom-scrollbar">
+          {classes.map((c) => (
+            <div
+              key={c.id}
+              className="flex items-center justify-between gap-4 p-4 bg-surface-container-low border border-border-subtle rounded-xl"
+            >
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-on-surface truncate">{c.title}</p>
+                <p className="text-xs text-text-muted truncate">{c.meta}</p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <Badge variant={c.label === "NEXT CLASS" ? "default" : "secondary"} className="font-mono">
+                  {c.time}
+                </Badge>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8"
+                  onClick={() => onReschedule(c)}
+                >
+                  Reschedule
+                </Button>
+              </div>
+            </div>
+          ))}
+          {classes.length === 0 && (
+            <p className="text-center text-text-muted text-sm py-6">No classes scheduled.</p>
+          )}
+        </div>
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>Close</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function CreateMaterialDialog({
+  open,
+  onOpenChange,
+  onCreated,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  onCreated: (m: TeacherMaterialRow) => void;
+}) {
+  const [title, setTitle] = React.useState("");
+  const [type, setType] = React.useState<string>(MATERIAL_TYPES[0]);
+  const [course, setCourse] = React.useState("");
+  const [description, setDescription] = React.useState("");
+
+  const reset = () => {
+    setTitle("");
+    setType(MATERIAL_TYPES[0]);
+    setCourse("");
+    setDescription("");
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Icon name="add" className="h-5 w-5 text-primary" />
+            Create New Material
+          </DialogTitle>
+          <DialogDescription>Upload or author a learning material for your courses.</DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div>
+            <Label className="font-mono text-xs text-text-muted uppercase">Material Title</Label>
+            <Input
+              className="mt-2"
+              placeholder="e.g. CSS Layouts Masterclass"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className="font-mono text-xs text-text-muted uppercase">Type</Label>
+              <Select value={type} onValueChange={setType}>
+                <SelectTrigger className="mt-2">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {MATERIAL_TYPES.map((t) => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="font-mono text-xs text-text-muted uppercase">Course</Label>
+              <Input
+                className="mt-2"
+                placeholder="e.g. UI Design Systems"
+                value={course}
+                onChange={(e) => setCourse(e.target.value)}
+              />
+            </div>
+          </div>
+          <div>
+            <Label className="font-mono text-xs text-text-muted uppercase">Description</Label>
+            <Textarea
+              className="mt-2"
+              placeholder="What does this material cover?"
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>Discard</Button>
+          <Button
+            disabled={!title.trim()}
+            onClick={() => {
+              const t = title.trim();
+              const meta = [description.trim() && `Description attached`, course.trim() && course.trim()]
+                .filter(Boolean)
+                .join(" • ");
+              onCreated({
+                id: `m_${Date.now()}`,
+                icon: materialIconFor(type),
+                title: t,
+                meta: `Uploaded just now • ${type}${meta ? ` • ${meta}` : ""}`,
+              });
+              reset();
+              onOpenChange(false);
+            }}
+          >
+            Save Material
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { PageHeader, ExportButton } from "@/components/dashboard/page-header";
 import { StatCard } from "@/components/dashboard/stat-card";
@@ -7,6 +8,7 @@ import { RevenueBarChart, MetricCardHeader } from "@/components/dashboard/charts
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Table,
   TableBody,
@@ -17,20 +19,32 @@ import {
 } from "@/components/ui/table";
 import { Icon } from "@/components/shared/icon";
 import { useLive } from "@/lib/live";
+import { downloadCsv } from "@/lib/csv";
 import { fetchSuperAdminOverview, mockSuperAdminOverviewData } from "@/lib/live-data";
 
 export default function SuperAdminDashboardPage() {
+  const { toast } = useToast();
   const { platformStats, mrrSeries, institutes } = useLive(
     fetchSuperAdminOverview,
     mockSuperAdminOverviewData
   );
+
+  const exportInstitutes = () => {
+    downloadCsv(
+      "institute-directory",
+      ["Institute", "Plan", "Students", "MRR", "Status"],
+      institutes.map((i) => [i.name, i.plan, i.students, i.mrr, i.status])
+    );
+    toast({ title: "Directory exported", description: `${institutes.length} institutes exported to CSV.` });
+  };
+
   return (
     <DashboardShell>
       <div className="flex flex-col gap-8">
         <PageHeader
           title="System Overview"
           description="Platform-wide health, revenue and growth across all institutes."
-          actions={<ExportButton />}
+          actions={<ExportButton onClick={exportInstitutes} />}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
@@ -117,7 +131,11 @@ export default function SuperAdminDashboardPage() {
           <Card className="lg:col-span-3 overflow-hidden">
             <CardHeader className="flex-row items-center justify-between space-y-0 border-b border-border-subtle">
               <CardTitle>Institute Directory</CardTitle>
-              <Button variant="outline" className="h-8">
+              <Button
+                variant="outline"
+                className="h-8"
+                onClick={() => toast({ title: "Invite institute", description: "Use Institutes → New Institute to onboard a new institute." })}
+              >
                 <Icon name="add" className="h-4 w-4" />
                 Invite Institute
               </Button>

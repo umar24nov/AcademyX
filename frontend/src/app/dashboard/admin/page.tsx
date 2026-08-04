@@ -1,13 +1,17 @@
 "use client";
 
+import * as React from "react";
+import { useRouter } from "next/navigation";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { PageHeader, ExportButton, NewButton } from "@/components/dashboard/page-header";
+import { RowActionsMenu } from "@/components/dashboard/row-menu";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { RevenueBarChart, MetricCardHeader } from "@/components/dashboard/charts";
 import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Table,
   TableBody,
@@ -19,14 +23,35 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Icon } from "@/components/shared/icon";
 import { useLive } from "@/lib/live";
+import { downloadCsv } from "@/lib/csv";
 import { fetchAdminOverview, mockAdminOverviewData } from "@/lib/live-data";
 import { OnboardingBanner } from "@/components/dashboard/onboarding-banner";
 
 export default function InstituteAdminDashboardPage() {
+  const { toast } = useToast();
+  const router = useRouter();
   const { dashboardStats, revenueSeries, announcements, recentAdmissions, activity } = useLive(
     fetchAdminOverview,
     mockAdminOverviewData
   );
+
+  const exportAdmissions = () => {
+    downloadCsv(
+      "recent-admissions",
+      ["ID", "Name", "Department", "Date", "Status", "Fees"],
+      recentAdmissions.map((s) => [s.id, s.name, s.department, s.date, s.status, s.fees])
+    );
+    toast({ title: "Admissions exported", description: `${recentAdmissions.length} records exported to CSV.` });
+  };
+
+  const exportRow = (s: (typeof recentAdmissions)[number]) => {
+    downloadCsv(
+      `admission-${s.id}`,
+      ["ID", "Name", "Department", "Date", "Status", "Fees"],
+      [[s.id, s.name, s.department, s.date, s.status, s.fees]]
+    );
+    toast({ title: "Admission exported", description: `${s.id} exported to CSV.` });
+  };
   return (
     <DashboardShell>
       <div className="flex flex-col gap-8">
@@ -35,8 +60,10 @@ export default function InstituteAdminDashboardPage() {
           description="Real-time overview of AcademyX operations and performance."
           actions={
             <>
-              <ExportButton />
-              <NewButton>New Entry</NewButton>
+              <ExportButton onClick={exportAdmissions} />
+              <NewButton onClick={() => toast({ title: "New admission", description: "Use Students → Add Student to onboard a new learner." })}>
+                New Entry
+              </NewButton>
             </>
           }
         />
@@ -125,7 +152,11 @@ export default function InstituteAdminDashboardPage() {
                   <p className="text-text-muted text-sm line-clamp-2">{a.description}</p>
                 </div>
               ))}
-              <Button variant="ghost" className="text-primary w-full">
+              <Button
+                variant="ghost"
+                className="text-primary w-full"
+                onClick={() => toast({ title: "Announcements", description: `${announcements.length} announcements are live for your institute.` })}
+              >
                 View All Announcements
               </Button>
             </CardContent>
@@ -139,7 +170,7 @@ export default function InstituteAdminDashboardPage() {
                   List of the last 15 students admitted to the academy.
                 </p>
               </div>
-              <Button variant="link" className="text-primary">
+              <Button variant="link" className="text-primary" onClick={() => router.push("/students")}>
                 View Student Directory
               </Button>
             </CardHeader>
@@ -184,9 +215,33 @@ export default function InstituteAdminDashboardPage() {
                       {s.fees}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-text-muted">
-                        <Icon name="more_vert" className="h-4 w-4" />
-                      </Button>
+                      <RowActionsMenu
+                        actions={[
+                          {
+                            label: "View Admission",
+                            icon: "visibility",
+                            onSelect: () =>
+                              toast({
+                                title: s.name,
+                                description: `${s.id} • ${s.department} • ${s.date} • ${s.status}`,
+                              }),
+                          },
+                          {
+                            label: s.status === "Verified" ? "Recheck" : "Verify",
+                            icon: "verified_user",
+                            onSelect: () =>
+                              toast({
+                                title: s.status === "Verified" ? "Recheck requested" : "Admission verified",
+                                description: `${s.id} (${s.name}) ${s.status === "Verified" ? "marked for recheck." : "is now verified."}`,
+                              }),
+                          },
+                          {
+                            label: "Export CSV",
+                            icon: "download",
+                            onSelect: () => exportRow(s),
+                          },
+                        ]}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -197,7 +252,11 @@ export default function InstituteAdminDashboardPage() {
           <Card className="lg:col-span-3 overflow-hidden">
             <CardHeader className="flex-row items-center justify-between space-y-0 border-b border-border-subtle">
               <CardTitle>Recent Activity</CardTitle>
-              <Button variant="link" className="text-primary">
+              <Button
+                variant="link"
+                className="text-primary"
+                onClick={() => toast({ title: "Recent activity", description: `${activity.length} recent events across your institute.` })}
+              >
                 View All
               </Button>
             </CardHeader>

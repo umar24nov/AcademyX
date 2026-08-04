@@ -17,7 +17,6 @@ export function Sidebar({ user }: { user: UserSession }) {
 
   const isLearner = user.role === "STUDENT";
   const isTeacher = user.role === "TEACHER";
-  const newCourseHref = isTeacher ? "/curriculum/courses" : "/courses";
 
   const handleSignOut = async () => {
     await signOut();
@@ -58,13 +57,21 @@ export function Sidebar({ user }: { user: UserSession }) {
       </nav>
 
       <div className="mt-auto flex flex-col gap-1 border-t border-border-subtle pt-4">
-        {isLearner || isTeacher ? (
+        {isTeacher ? (
           <Link
-            href={newCourseHref}
+            href="/curriculum/courses"
             className="w-full flex items-center justify-center gap-2 bg-primary-container text-on-primary-container py-2.5 rounded-lg text-sm font-medium hover:opacity-90 active:scale-95 transition-all indigo-glow mb-4"
           >
             <Icon name="menu_book" className="h-4 w-4" />
-            New Course
+            Manage Courses
+          </Link>
+        ) : isLearner ? (
+          <Link
+            href="/courses"
+            className="w-full flex items-center justify-center gap-2 bg-primary-container text-on-primary-container py-2.5 rounded-lg text-sm font-medium hover:opacity-90 active:scale-95 transition-all indigo-glow mb-4"
+          >
+            <Icon name="menu_book" className="h-4 w-4" />
+            My Courses
           </Link>
         ) : (
           <div className="p-4 bg-surface-container-high rounded-xl mb-4">

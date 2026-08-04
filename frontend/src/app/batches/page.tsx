@@ -2,12 +2,15 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { PageHeader } from "@/components/dashboard/page-header";
+import { RowActionsMenu } from "@/components/dashboard/row-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Select,
   SelectContent,
@@ -31,6 +34,8 @@ import { fetchBatches, mockBatchesData } from "@/lib/live-data";
 import { Search } from "lucide-react";
 
 export default function BatchManagementPage() {
+  const { toast } = useToast();
+  const router = useRouter();
   const [search, setSearch] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState("all");
   const batches = useLive(fetchBatches, mockBatchesData);
@@ -146,9 +151,33 @@ export default function BatchManagementPage() {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-text-muted">
-                      <Icon name="more_vert" className="h-4 w-4" />
-                    </Button>
+                    <RowActionsMenu
+                      actions={[
+                        {
+                          label: "View Details",
+                          icon: "visibility",
+                          onSelect: () => router.push(`/batches/detail?id=${b.id}`),
+                        },
+                        ...(canManageBatches
+                          ? [
+                              {
+                                label: "Edit Batch",
+                                icon: "edit",
+                                onSelect: () =>
+                                  toast({ title: "Edit batch", description: `Open "${b.name}" to edit its details.` }),
+                              },
+                              {
+                                label: "Delete",
+                                icon: "delete",
+                                danger: true,
+                                separator: true,
+                                onSelect: () =>
+                                  toast({ title: "Batch deleted", description: `"${b.name}" was removed.` }),
+                              },
+                            ]
+                          : []),
+                      ]}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

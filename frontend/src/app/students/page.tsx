@@ -3,10 +3,12 @@
 import * as React from "react";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { PageHeader } from "@/components/dashboard/page-header";
+import { RowActionsMenu } from "@/components/dashboard/row-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Select,
   SelectContent,
@@ -26,16 +28,27 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Icon } from "@/components/shared/icon";
 import { useLive } from "@/lib/live";
 import { getStoredUser } from "@/lib/api";
+import { downloadCsv } from "@/lib/csv";
 import { fetchStudents, mockStudentsData } from "@/lib/live-data";
 import { Search } from "lucide-react";
 
 export default function StudentsPage() {
+  const { toast } = useToast();
   const [search, setSearch] = React.useState("");
   const [status, setStatus] = React.useState("all");
   const students = useLive(fetchStudents, mockStudentsData);
   const user = React.useMemo(() => getStoredUser(), []);
   const canManageStudents =
     user?.role === "INSTITUTE_ADMIN" || user?.role === "TEACHER";
+
+  const exportRow = (s: (typeof students)[number]) => {
+    downloadCsv(
+      `student-${s.studentId}`,
+      ["ID", "Name", "Email", "Course", "Batch", "Attendance", "Status", "Enrolled"],
+      [[s.studentId, s.name, s.email, s.course, s.batch, `${s.attendance}%`, s.status, s.enrolledOn]]
+    );
+    toast({ title: "Student exported", description: `${s.name}'s record exported to CSV.` });
+  };
 
   const filtered = students.filter((s) => {
     const q = search.toLowerCase();
@@ -161,9 +174,40 @@ export default function StudentsPage() {
                   </TableCell>
                   <TableCell className="text-sm text-on-surface-variant">{s.enrolledOn}</TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-text-muted">
-                      <Icon name="more_vert" className="h-4 w-4" />
-                    </Button>
+                    <RowActionsMenu
+                      actions={[
+                        {
+                          label: "View Profile",
+                          icon: "visibility",
+                          onSelect: () =>
+                            toast({
+                              title: s.name,
+                              description: `${s.email} • ${s.course} • Enrolled ${s.enrolledOn}`,
+                            }),
+                        },
+                        ...(canManageStudents
+                          ? [
+                              {
+                                label: "Edit Student",
+                                icon: "edit",
+                                onSelect: () =>
+                                  toast({ title: "Edit student", description: `Open ${s.name}'s record to edit.` }),
+                              },
+                              {
+                                label: "Mark Attendance",
+                                icon: "check_circle",
+                                onSelect: () =>
+                                  toast({ title: "Attendance", description: `${s.name} is ${s.attendance}% for the term.` }),
+                              },
+                            ]
+                          : []),
+                        {
+                          label: "Export CSV",
+                          icon: "download",
+                          onSelect: () => exportRow(s),
+                        },
+                      ]}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

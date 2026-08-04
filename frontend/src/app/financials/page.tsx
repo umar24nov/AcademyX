@@ -29,15 +29,28 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Icon } from "@/components/shared/icon";
+import { RowActionsMenu } from "@/components/dashboard/row-menu";
+import { useToast } from "@/components/ui/use-toast";
 import { useLive } from "@/lib/live";
 import { getStoredUser } from "@/lib/api";
+import { downloadCsv } from "@/lib/csv";
 import { fetchFinancials, mockFinancialsData } from "@/lib/live-data";
 import { Search } from "lucide-react";
 
 export default function FinancialsPage() {
+  const { toast } = useToast();
   const { payments, revenueSeries } = useLive(fetchFinancials, mockFinancialsData);
   const user = React.useMemo(() => getStoredUser(), []);
   const canManageInvoices = user?.role === "INSTITUTE_ADMIN";
+
+  const exportRow = (p: (typeof payments)[number]) => {
+    downloadCsv(
+      `receipt-${p.txId}`,
+      ["Receipt", "Student", "Course", "Amount", "Method", "Status", "Date"],
+      [[p.txId, p.student, p.course, p.amount, p.method, p.status, p.date]]
+    );
+    toast({ title: "Receipt exported", description: `${p.txId} exported to CSV.` });
+  };
   const [tab, setTab] = React.useState("payments");
   const [status, setStatus] = React.useState("all");
   const [search, setSearch] = React.useState("");
@@ -139,9 +152,26 @@ export default function FinancialsPage() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button variant="ghost" size="icon" className="text-text-muted">
-                            <Icon name="more_vert" className="h-5 w-5" />
-                          </Button>
+                          <RowActionsMenu
+                            iconClassName="h-5 w-5"
+                            triggerClassName="h-9 w-9"
+                            actions={[
+                              {
+                                label: "View Invoice",
+                                icon: "visibility",
+                                onSelect: () =>
+                                  toast({
+                                    title: p.txId,
+                                    description: `${p.student} • ${p.course} • ₹${p.amount.toLocaleString()} • ${p.status}`,
+                                  }),
+                              },
+                              {
+                                label: "Download Receipt",
+                                icon: "download",
+                                onSelect: () => exportRow(p),
+                              },
+                            ]}
+                          />
                         </TableCell>
                       </TableRow>
                     ))}

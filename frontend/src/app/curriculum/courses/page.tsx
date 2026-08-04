@@ -1,8 +1,10 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { PageHeader } from "@/components/dashboard/page-header";
+import { RowActionsMenu } from "@/components/dashboard/row-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,16 +30,17 @@ import { useToast } from "@/components/ui/use-toast";
 import { useLive } from "@/lib/live";
 import { getStoredUser } from "@/lib/api";
 import { fetchCourses, mockCoursesData } from "@/lib/live-data";
-import { Search, MoreVertical, GripVertical, Plus } from "lucide-react";
+import { Search, GripVertical, Plus } from "lucide-react";
 
 export default function CourseManagementPage() {
   const { toast } = useToast();
+  const router = useRouter();
   const [modalOpen, setModalOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
   const courses = useLive(fetchCourses, mockCoursesData);
   const user = React.useMemo(() => getStoredUser(), []);
-  const canManageCourses =
-    user?.role === "INSTITUTE_ADMIN" || user?.role === "TEACHER";
+  const isAdmin = user?.role === "INSTITUTE_ADMIN";
+  const canCreateCourses = isAdmin;
 
   const filtered = courses.filter((c) =>
     c.title.toLowerCase().includes(search.toLowerCase())
@@ -50,7 +53,7 @@ export default function CourseManagementPage() {
           title="Curriculum Builder"
           description="Manage your active courses and architectural framework."
           actions={
-            canManageCourses ? (
+            canCreateCourses ? (
               <Button onClick={() => setModalOpen(true)}>
                 <Icon name="add" className="h-4 w-4" />
                 New Course
@@ -115,9 +118,45 @@ export default function CourseManagementPage() {
                     </div>
                   </div>
                 </div>
-                <Button variant="ghost" size="icon" className="self-center text-text-muted hover:text-text-heading">
-                  <MoreVertical className="h-5 w-5" />
-                </Button>
+                <RowActionsMenu
+                  actions={[
+                    {
+                      label: "View Course",
+                      icon: "visibility",
+                      onSelect: () => router.push("/courses"),
+                    },
+                    {
+                      label: "Edit Course",
+                      icon: "edit",
+                      onSelect: () =>
+                        toast({
+                          title: "Edit course",
+                          description: `Open "${c.title}" in the course builder to edit its blueprint.`,
+                        }),
+                    },
+                    {
+                      label: "Duplicate",
+                      icon: "content_copy",
+                      onSelect: () =>
+                        toast({ title: "Course duplicated", description: `A copy of "${c.title}" was created.` }),
+                    },
+                    ...(isAdmin
+                      ? [
+                          {
+                            label: "Delete",
+                            icon: "delete",
+                            danger: true,
+                            separator: true,
+                            onSelect: () =>
+                              toast({
+                                title: "Course deleted",
+                                description: `"${c.title}" was removed from the curriculum.`,
+                              }),
+                          },
+                        ]
+                      : []),
+                  ]}
+                />
               </div>
             ))}
           </div>

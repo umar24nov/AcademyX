@@ -14,7 +14,15 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Icon } from "@/components/shared/icon";
+import { useToast } from "@/components/ui/use-toast";
 import {
   fetchConversations,
   mockConversationsData,
@@ -37,6 +45,7 @@ const ROLE_LABEL: Record<string, string> = {
 };
 
 export default function MessagesPage() {
+  const { toast } = useToast();
   const [conversations, setConversations] = React.useState(mockConversationsData);
   const [activeConvId, setActiveConvId] = React.useState<string | null>(null);
   const [messages, setMessages] = React.useState<ThreadMessage[]>([]);
@@ -263,15 +272,51 @@ export default function MessagesPage() {
                 <p className="text-xs text-text-muted">{activeConv?.role}</p>
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" className="text-text-muted">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-text-muted"
+                  onClick={() => toast({ title: "Audio call", description: `Calling ${activeConv?.name}...` })}
+                >
                   <Icon name="call" className="h-5 w-5" />
                 </Button>
-                <Button variant="ghost" size="icon" className="text-text-muted">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-text-muted"
+                  onClick={() => toast({ title: "Video call", description: `Starting video with ${activeConv?.name}...` })}
+                >
                   <Icon name="videocam" className="h-5 w-5" />
                 </Button>
-                <Button variant="ghost" size="icon" className="text-text-muted">
-                  <MoreVertical className="h-5 w-5" />
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="text-text-muted">
+                      <MoreVertical className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem
+                      onClick={() =>
+                        toast({ title: "View profile", description: `${activeConv?.name} • ${activeConv?.role}` })
+                      }
+                    >
+                      <Icon name="person" className="h-4 w-4" />
+                      <span>View Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => toast({ title: "Notifications muted", description: `You won't get alerts from ${activeConv?.name}.` })}>
+                      <Icon name="notifications_off" className="h-4 w-4" />
+                      <span>Mute Notifications</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      className="text-error focus:text-error"
+                      onClick={() => toast({ title: "Chat cleared", description: `Conversation with ${activeConv?.name} was cleared.` })}
+                    >
+                      <Icon name="delete" className="h-4 w-4" />
+                      <span>Clear Chat</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
 

@@ -2,8 +2,10 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { PageHeader } from "@/components/dashboard/page-header";
+import { RowActionsMenu } from "@/components/dashboard/row-menu";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +23,7 @@ import { fetchLiveClasses, mockLiveClassesData } from "@/lib/live-data";
 
 export default function LiveClassesPage() {
   const { toast } = useToast();
+  const router = useRouter();
   const liveClasses = useLive(fetchLiveClasses, mockLiveClassesData);
   const user = React.useMemo(() => getStoredUser(), []);
   const isStudent = user?.role === "STUDENT";
@@ -146,9 +149,37 @@ export default function LiveClassesPage() {
                             </a>
                           </Button>
                         )}
-                        <Button variant="ghost" size="icon" className="text-text-muted">
-                          <Icon name="more_vert" className="h-5 w-5" />
-                        </Button>
+                        <RowActionsMenu
+                          iconClassName="h-5 w-5"
+                          triggerClassName="h-9 w-9"
+                          actions={[
+                            {
+                              label: "Open Session",
+                              icon: "video",
+                              onSelect: () => router.push(`/live-classes/session?id=${l.id}`),
+                            },
+                            ...(l.status !== "Ended"
+                              ? [
+                                  {
+                                    label: l.status === "Live" ? "End Class" : "Edit Details",
+                                    icon: l.status === "Live" ? "stop_circle" : "edit",
+                                    onSelect: () =>
+                                      l.status === "Live"
+                                        ? toast({ title: "Class ended", description: `"${l.title}" has ended.` })
+                                        : toast({ title: "Edit class", description: `Open "${l.title}" to edit.` }),
+                                  },
+                                ]
+                              : []),
+                            {
+                              label: "Delete",
+                              icon: "delete",
+                              danger: true,
+                              separator: true,
+                              onSelect: () =>
+                                toast({ title: "Class deleted", description: `"${l.title}" was removed.` }),
+                            },
+                          ]}
+                        />
                       </>
                     )}
                   </div>

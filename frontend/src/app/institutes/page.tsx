@@ -16,11 +16,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Icon } from "@/components/shared/icon";
+import { RowActionsMenu } from "@/components/dashboard/row-menu";
+import { useToast } from "@/components/ui/use-toast";
 import { useLive } from "@/lib/live";
 import { fetchInstitutes, mockInstitutesData } from "@/lib/live-data";
 import { Search } from "lucide-react";
 
 export default function InstitutesPage() {
+  const { toast } = useToast();
   const [search, setSearch] = React.useState("");
   const institutes = useLive(fetchInstitutes, mockInstitutesData);
 
@@ -141,9 +144,40 @@ export default function InstitutesPage() {
                       <Badge variant={i.status === "Active" ? "success" : "destructive"}>{i.status}</Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" className="text-text-muted">
-                        <Icon name="more_vert" className="h-5 w-5" />
-                      </Button>
+                      <RowActionsMenu
+                        iconClassName="h-5 w-5"
+                        triggerClassName="h-9 w-9"
+                        actions={[
+                          {
+                            label: "View Details",
+                            icon: "visibility",
+                            onSelect: () =>
+                              toast({
+                                title: i.name,
+                                description: `${i.domain} • ${i.plan} • ${i.students} students • ₹${i.mrr.toLocaleString()} MRR`,
+                              }),
+                          },
+                          {
+                            label: "Edit Institute",
+                            icon: "edit",
+                            onSelect: () =>
+                              toast({ title: "Edit institute", description: `Open ${i.name}'s settings to edit.` }),
+                          },
+                          {
+                            label: i.status === "Active" ? "Suspend" : "Activate",
+                            icon: i.status === "Active" ? "pause" : "play_arrow",
+                            danger: i.status === "Active",
+                            separator: true,
+                            onSelect: () =>
+                              toast({
+                                title: i.status === "Active" ? "Institute suspended" : "Institute activated",
+                                description: i.status === "Active"
+                                  ? `${i.name} is now suspended.`
+                                  : `${i.name} is now active.`,
+                              }),
+                          },
+                        ]}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}

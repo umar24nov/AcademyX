@@ -22,11 +22,56 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Icon } from "@/components/shared/icon";
+import { RowActionsMenu } from "@/components/dashboard/row-menu";
+import { useToast } from "@/components/ui/use-toast";
 import { useLive } from "@/lib/live";
+import { downloadCsv } from "@/lib/csv";
 import { fetchReports, mockReportsData } from "@/lib/live-data";
 
+function gradeFor(percentage: number): string {
+  if (percentage >= 90) return "A+";
+  if (percentage >= 80) return "A";
+  if (percentage >= 70) return "B+";
+  if (percentage >= 60) return "B";
+  if (percentage >= 50) return "C";
+  return "F";
+}
+
 export default function ReportsPage() {
+  const { toast } = useToast();
   const reports = useLive(fetchReports, mockReportsData);
+
+  const exportResults = () => {
+    downloadCsv(
+      "exam-results",
+      ["Student", "Course", "Score", "Max", "Percentage", "Grade"],
+      reports.examResults.map((r) => [r.student, r.course, r.score, r.max, `${r.percentage}%`, gradeFor(r.percentage)])
+    );
+    toast({ title: "Results exported", description: "Exam results exported to CSV." });
+  };
+
+  const generateReport = () => {
+    const rows = [
+      ...reports.examResults.map((r) => ["Exam", r.student, r.course, r.score, r.max, `${r.percentage}%`, gradeFor(r.percentage)]),
+      ...reports.attendanceByBatch.map((a) => ["Attendance", a.batch, "—", "—", "—", `${a.rate}%`, "—"]),
+    ];
+    downloadCsv(
+      "academic-report",
+      ["Type", "Student / Batch", "Course", "Score", "Max", "Value", "Grade"],
+      rows
+    );
+    toast({ title: "Report generated", description: "Academic report downloaded as CSV." });
+  };
+
+  const exportRow = (r: (typeof reports.examResults)[number]) => {
+    downloadCsv(
+      `result-${r.student.replace(/\s+/g, "-").toLowerCase()}`,
+      ["Student", "Course", "Score", "Max", "Percentage", "Grade"],
+      [[r.student, r.course, r.score, r.max, `${r.percentage}%`, gradeFor(r.percentage)]]
+    );
+    toast({ title: "Result exported", description: `${r.student}'s result exported to CSV.` });
+  };
+
   return (
     <DashboardShell>
       <div className="flex flex-col gap-6">
@@ -35,11 +80,11 @@ export default function ReportsPage() {
           description="Generate and export academic and financial reports."
           actions={
             <>
-              <Button variant="outline">
+              <Button variant="outline" onClick={exportResults}>
                 <Icon name="download" className="h-4 w-4" />
                 Export CSV
               </Button>
-              <Button>
+              <Button onClick={generateReport}>
                 <Icon name="description" className="h-4 w-4" />
                 Generate Report
               </Button>
@@ -110,13 +155,29 @@ export default function ReportsPage() {
                       <TableCell className="font-mono text-right">{r.percentage}%</TableCell>
                       <TableCell>
                         <Badge variant={r.percentage >= 75 ? "success" : r.percentage >= 50 ? "warning" : "destructive"}>
-                          {r.percentage >= 90 ? "A+" : r.percentage >= 80 ? "A" : r.percentage >= 70 ? "B+" : r.percentage >= 60 ? "B" : r.percentage >= 50 ? "C" : "F"}
+                          {gradeFor(r.percentage)}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="icon" className="text-text-muted">
-                          <Icon name="more_vert" className="h-5 w-5" />
-                        </Button>
+                        <RowActionsMenu
+                          iconClassName="h-5 w-5"
+                          actions={[
+                            {
+                              label: "View Result",
+                              icon: "visibility",
+                              onSelect: () =>
+                                toast({
+                                  title: `${r.student} — ${gradeFor(r.percentage)}`,
+                                  description: `${r.course} • ${r.score}/${r.max} (${r.percentage}%)`,
+                                }),
+                            },
+                            {
+                              label: "Export CSV",
+                              icon: "download",
+                              onSelect: () => exportRow(r),
+                            },
+                          ]}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
