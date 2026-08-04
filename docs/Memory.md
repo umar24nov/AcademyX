@@ -44,19 +44,21 @@ Multi-tenant EdTech SaaS ("the operating system for coaching institutes"). Next.
 | 12 | Student dashboard aligned to reference UI (`Students Section Correct UI/code.html`): bento progress + achievements, live-class cards grid, assignments table; reference DESIGN.md/code.html committed | `209af9a` |
 | 13 | Student-section role gating: sidebar `New Course` (students/teachers) + `Help` + `Logout` (was `Upgrade Plan`/`Support`/`Sign Out`); dashboard chip never says "Starts in Completed" (ended classes excluded, ENDED cards → Watch Recording/Details); live-classes/lectures/exams hide Schedule-Live-Class / Upload-Lecture / New-Exam + Edit for students | `7a10150` |
 | 14 | Teacher/Admin/Super-Admin role gating: gate create/edit buttons to match backend `requireRole` — New Batch + Edit Batch → INSTITUTE_ADMIN only; Add Student → ADMIN+TEACHER; Invite Teacher → ADMIN only; New Course → ADMIN+TEACHER; Create Invoice → ADMIN only (Export/read-only stays for all). Super admin now sees management pages read-only. | `e17002e` |
+| 15 | Functional buttons everywhere: teacher dashboard wired (View Schedule dialog, Create Material dialog → prepends to list, Launch Live Session → `/live-classes/session?id=`, Quick Actions → grade/messages/live-classes/CSV export, materials kebab, View All → `/lectures`); Reports Export CSV + Generate Report + row kebab → real CSV downloads (`lib/csv.ts` `downloadCsv`); every `⋮` kebab now a working dropdown (`components/dashboard/row-menu.tsx` `RowActionsMenu`) on batches/students/teachers/financials/institutes/live-classes/messages/curriculum/admin dashboard; admin dashboard Export/New Entry/View-All + super-admin Export/Invite Institute wired. Labels role-corrected: sidebar teacher CTA `New Course` → `Manage Courses` (/curriculum/courses), student CTA → `My Courses` (/courses); curriculum `New Course` button now INSTITUTE_ADMIN only (was ADMIN+TEACHER) | `450ba26` |
 
 ## 5. Currently Being Worked On
 
-- **None in progress.** Last completed: Teacher/Admin/Super-Admin role gating (`e17002e`). Full role-gate matrix now: students (student fixes `7a10150`) + management create/edit actions (this commit).
+- **None in progress.** Last completed: functional wiring + label fixes (`450ba26`). Note: curriculum `New Course` is now admin-only in UI but backend `POST /courses` still allows TEACHER — decided to keep UI more restrictive per product direction; backend can be tightened later if wanted.
 
 ## 6. Watch Items / Gotchas
 
 - WebRTC is STUN-only — may not traverse all NATs (acceptable demo scope); browser mic/camera permission required.
 - CI runs on every push; the pushed docs commit will trigger a CI run — harmless.
 - `RAZORPAY_*`, `HMS_*`, `CLOUDINARY_*`, `RESEND_API_KEY` env keys are optional and currently unused.
-- Backend permission matrix (UI gating mirrors it): batches POST/PATCH/DELETE → INSTITUTE_ADMIN; students POST/PATCH/attendance → ADMIN+TEACHER; teachers POST/PATCH/DELETE → ADMIN; courses POST/PATCH/modules → ADMIN+TEACHER (DELETE → ADMIN); exams create/publish → ADMIN+TEACHER; lectures POST/DELETE → ADMIN+TEACHER; payments POST → ADMIN+STUDENT. SUPER_ADMIN is allowed through `requireInstitute` but can only GET (read-only) on institute pages.
+- Backend permission matrix (UI gating mirrors it): batches POST/PATCH/DELETE → INSTITUTE_ADMIN; students POST/PATCH/attendance → ADMIN+TEACHER; teachers POST/PATCH/DELETE → ADMIN; courses POST/PATCH/modules → ADMIN+TEACHER (DELETE → ADMIN; UI now hides create for TEACHER); exams create/publish → ADMIN+TEACHER; lectures POST/DELETE → ADMIN+TEACHER; payments POST → ADMIN+STUDENT. SUPER_ADMIN is allowed through `requireInstitute` but can only GET (read-only) on institute pages.
+- `New Institute` (institutes page) and `Invite Institute` (super-admin dashboard) have no backend POST route yet — currently toast only.
 
 ## 7. Next Steps
 
-1. Commit + push this docs set (single commit, e.g. `docs: update memory - management role gating`).
+1. Commit + push this docs set (single commit, e.g. `docs: update memory - functional wiring`).
 2. Await direction: align next reference screen from `AcademyX_Screens_Arranged/` (teacher dashboard 11/12, or a student sub-screen like live classroom 07 / quiz 08), or Phase 10 Razorpay payments.
