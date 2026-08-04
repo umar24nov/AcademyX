@@ -23,7 +23,8 @@ Multi-tenant EdTech SaaS ("the operating system for coaching institutes"). Next.
 - Backend: `ApiError` factories (`badRequest/unauthorized/forbidden/notFound/conflict/tooManyRequests`), `requireInstitute`, `requireRole`, zod `validate`; `verifyAccessToken` → `{sub, role, instituteId}`; env schema in `src/config/env.ts` (`CORS_ORIGIN`, `JWT_*`, `HMS_*`/`RAZORPAY_*` optional).
 - Prisma quirks: `ExamAttempt.status` is **String** (`in_progress|submitted|graded`); `AssignmentSubmission.status` enum `SUBMITTED|LATE|GRADED`; `Course.createdById` → TeacherProfile (RESTRICT) — admins auto-get a profile on `POST /courses`.
 - Deploy note: Render rebuild lags after push; deployed code can be old for ~1-2 min — don't treat immediate failures as regressions.
-- Files to never stage: `~$AcademyX_UI_Walkthrough.pptx`; never modify `AcademyX_UI_Screens/`.
+- Role gating pattern (student vs staff): read role once via `const user = React.useMemo(() => getStoredUser(), [])`, then `isStudent = user?.role === "STUDENT"`; students must never see create/schedule/upload/edit actions (backend already enforces: live-class POST/PATCH/status/DELETE + lecture upload + exam create require TEACHER/INSTITUTE_ADMIN).
+- Files to never stage: `~$*.pptx` (gitignored); never modify `AcademyX_UI_Screens/`. Full reference pack lives in `AcademyX_Screens_Arranged/` (tracked).
 
 ## 4. Completed Work (chronological)
 
@@ -41,10 +42,11 @@ Multi-tenant EdTech SaaS ("the operating system for coaching institutes"). Next.
 | 10 | Docs: PRD, Architecture, Rules, Phases, Design, Memory | — |
 | 11 | Docs diagrams (Mermaid) across Architecture/PRD/Rules/Phases/Design | `3dc9824` |
 | 12 | Student dashboard aligned to reference UI (`Students Section Correct UI/code.html`): bento progress + achievements, live-class cards grid, assignments table; reference DESIGN.md/code.html committed | `209af9a` |
+| 13 | Student-section role gating: sidebar `New Course` (students/teachers) + `Help` + `Logout` (was `Upgrade Plan`/`Support`/`Sign Out`); dashboard chip never says "Starts in Completed" (ended classes excluded, ENDED cards → Watch Recording/Details); live-classes/lectures/exams hide Schedule-Live-Class / Upload-Lecture / New-Exam + Edit for students | `7a10150` |
 
 ## 5. Currently Being Worked On
 
-- **None in progress.** Last completed: student dashboard UI alignment (`209af9a`). Reference folder `Students Section Correct UI/` (code.html + DESIGN.md) committed at repo root; `screen.png` inside it is a broken 28-byte file, intentionally not committed.
+- **None in progress.** Last completed: student-section role gating (`7a10150`). Reference pack `AcademyX_Screens_Arranged/` committed at repo root (19 screens + previews; the old `Students Section Correct UI/` was folded into `04_STUDENT_Dashboard_Desktop` via rename detection).
 
 ## 6. Watch Items / Gotchas
 
@@ -54,5 +56,5 @@ Multi-tenant EdTech SaaS ("the operating system for coaching institutes"). Next.
 
 ## 7. Next Steps
 
-1. Commit + push this docs set (single commit, e.g. `docs: add PRD/Architecture/Rules/Phases/Design/Memory`).
-2. Await direction: Phase 10 Razorpay payments, or another enhancement.
+1. Commit + push this docs set (single commit, e.g. `docs: update memory - student-section role gating`).
+2. Await direction: align next reference screen from `AcademyX_Screens_Arranged/` (teacher dashboard 11/12, or a student sub-screen like live classroom 07 / quiz 08), or Phase 10 Razorpay payments.
