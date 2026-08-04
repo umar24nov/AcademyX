@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/table";
 import { Icon } from "@/components/shared/icon";
 import { useLive } from "@/lib/live";
+import { getStoredUser } from "@/lib/api";
 import { fetchBatches, mockBatchesData } from "@/lib/live-data";
 import { Search } from "lucide-react";
 
@@ -33,6 +34,8 @@ export default function BatchManagementPage() {
   const [search, setSearch] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState("all");
   const batches = useLive(fetchBatches, mockBatchesData);
+  const user = React.useMemo(() => getStoredUser(), []);
+  const canManageBatches = user?.role === "INSTITUTE_ADMIN";
 
   const filtered = batches.filter((b) => {
     const matchesSearch = b.name.toLowerCase().includes(search.toLowerCase());
@@ -47,10 +50,12 @@ export default function BatchManagementPage() {
           title="Batch Management"
           description="Organize students into cohorts, assign teachers and track capacity."
           actions={
-            <Button>
-              <Icon name="add" className="h-4 w-4" />
-              New Batch
-            </Button>
+            canManageBatches ? (
+              <Button>
+                <Icon name="add" className="h-4 w-4" />
+                New Batch
+              </Button>
+            ) : undefined
           }
         />
 

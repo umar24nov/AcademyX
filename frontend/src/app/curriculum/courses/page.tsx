@@ -26,6 +26,7 @@ import {
 import { Icon } from "@/components/shared/icon";
 import { useToast } from "@/components/ui/use-toast";
 import { useLive } from "@/lib/live";
+import { getStoredUser } from "@/lib/api";
 import { fetchCourses, mockCoursesData } from "@/lib/live-data";
 import { Search, MoreVertical, GripVertical, Plus } from "lucide-react";
 
@@ -34,6 +35,9 @@ export default function CourseManagementPage() {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
   const courses = useLive(fetchCourses, mockCoursesData);
+  const user = React.useMemo(() => getStoredUser(), []);
+  const canManageCourses =
+    user?.role === "INSTITUTE_ADMIN" || user?.role === "TEACHER";
 
   const filtered = courses.filter((c) =>
     c.title.toLowerCase().includes(search.toLowerCase())
@@ -46,10 +50,12 @@ export default function CourseManagementPage() {
           title="Curriculum Builder"
           description="Manage your active courses and architectural framework."
           actions={
-            <Button onClick={() => setModalOpen(true)}>
-              <Icon name="add" className="h-4 w-4" />
-              New Course
-            </Button>
+            canManageCourses ? (
+              <Button onClick={() => setModalOpen(true)}>
+                <Icon name="add" className="h-4 w-4" />
+                New Course
+              </Button>
+            ) : undefined
           }
         />
 

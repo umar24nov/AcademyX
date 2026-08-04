@@ -18,12 +18,15 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Icon } from "@/components/shared/icon";
 import { useLive } from "@/lib/live";
+import { getStoredUser } from "@/lib/api";
 import { fetchTeachers, mockTeachersData } from "@/lib/live-data";
 import { Search } from "lucide-react";
 
 export default function TeachersPage() {
   const [search, setSearch] = React.useState("");
   const teachers = useLive(fetchTeachers, mockTeachersData);
+  const user = React.useMemo(() => getStoredUser(), []);
+  const canManageTeachers = user?.role === "INSTITUTE_ADMIN";
   const filtered = teachers.filter((t) =>
     t.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -40,10 +43,12 @@ export default function TeachersPage() {
                 <Icon name="download" className="h-4 w-4" />
                 Export
               </Button>
-              <Button>
-                <Icon name="add" className="h-4 w-4" />
-                Invite Teacher
-              </Button>
+              {canManageTeachers ? (
+                <Button>
+                  <Icon name="add" className="h-4 w-4" />
+                  Invite Teacher
+                </Button>
+              ) : null}
             </>
           }
         />

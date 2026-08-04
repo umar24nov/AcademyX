@@ -25,6 +25,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Icon } from "@/components/shared/icon";
 import { useLive } from "@/lib/live";
+import { getStoredUser } from "@/lib/api";
 import { fetchStudents, mockStudentsData } from "@/lib/live-data";
 import { Search } from "lucide-react";
 
@@ -32,6 +33,9 @@ export default function StudentsPage() {
   const [search, setSearch] = React.useState("");
   const [status, setStatus] = React.useState("all");
   const students = useLive(fetchStudents, mockStudentsData);
+  const user = React.useMemo(() => getStoredUser(), []);
+  const canManageStudents =
+    user?.role === "INSTITUTE_ADMIN" || user?.role === "TEACHER";
 
   const filtered = students.filter((s) => {
     const q = search.toLowerCase();
@@ -55,10 +59,12 @@ export default function StudentsPage() {
                 <Icon name="download" className="h-4 w-4" />
                 Export
               </Button>
-              <Button>
-                <Icon name="add" className="h-4 w-4" />
-                Add Student
-              </Button>
+              {canManageStudents ? (
+                <Button>
+                  <Icon name="add" className="h-4 w-4" />
+                  Add Student
+                </Button>
+              ) : null}
             </>
           }
         />

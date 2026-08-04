@@ -30,11 +30,14 @@ import {
 } from "@/components/ui/table";
 import { Icon } from "@/components/shared/icon";
 import { useLive } from "@/lib/live";
+import { getStoredUser } from "@/lib/api";
 import { fetchFinancials, mockFinancialsData } from "@/lib/live-data";
 import { Search } from "lucide-react";
 
 export default function FinancialsPage() {
   const { payments, revenueSeries } = useLive(fetchFinancials, mockFinancialsData);
+  const user = React.useMemo(() => getStoredUser(), []);
+  const canManageInvoices = user?.role === "INSTITUTE_ADMIN";
   const [tab, setTab] = React.useState("payments");
   const [status, setStatus] = React.useState("all");
   const [search, setSearch] = React.useState("");
@@ -58,10 +61,12 @@ export default function FinancialsPage() {
           title="Financials"
           description="Track payments, invoices and revenue across your institute."
           actions={
-            <Button>
-              <Icon name="add" className="h-4 w-4" />
-              Create Invoice
-            </Button>
+            canManageInvoices ? (
+              <Button>
+                <Icon name="add" className="h-4 w-4" />
+                Create Invoice
+              </Button>
+            ) : undefined
           }
         />
 
