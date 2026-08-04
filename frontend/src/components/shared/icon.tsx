@@ -70,6 +70,14 @@ import {
   CloudUpload,
   Hourglass,
   Save,
+  History,
+  FolderArchive,
+  Copy,
+  BellOff,
+  Pause,
+  Play,
+  StopCircle,
+  User,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -144,6 +152,14 @@ const iconMap: Record<string, LucideIcon> = {
   hourglass_top: Hourglass,
   videocam: Video,
   save: Save,
+  history_edu: History,
+  folder_zip: FolderArchive,
+  content_copy: Copy,
+  notifications_off: BellOff,
+  pause: Pause,
+  play_arrow: Play,
+  stop_circle: StopCircle,
+  person: User,
   groups: Users,
 };
 

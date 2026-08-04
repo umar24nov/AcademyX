@@ -45,10 +45,13 @@ Multi-tenant EdTech SaaS ("the operating system for coaching institutes"). Next.
 | 13 | Student-section role gating: sidebar `New Course` (students/teachers) + `Help` + `Logout` (was `Upgrade Plan`/`Support`/`Sign Out`); dashboard chip never says "Starts in Completed" (ended classes excluded, ENDED cards → Watch Recording/Details); live-classes/lectures/exams hide Schedule-Live-Class / Upload-Lecture / New-Exam + Edit for students | `7a10150` |
 | 14 | Teacher/Admin/Super-Admin role gating: gate create/edit buttons to match backend `requireRole` — New Batch + Edit Batch → INSTITUTE_ADMIN only; Add Student → ADMIN+TEACHER; Invite Teacher → ADMIN only; New Course → ADMIN+TEACHER; Create Invoice → ADMIN only (Export/read-only stays for all). Super admin now sees management pages read-only. | `e17002e` |
 | 15 | Functional buttons everywhere: teacher dashboard wired (View Schedule dialog, Create Material dialog → prepends to list, Launch Live Session → `/live-classes/session?id=`, Quick Actions → grade/messages/live-classes/CSV export, materials kebab, View All → `/lectures`); Reports Export CSV + Generate Report + row kebab → real CSV downloads (`lib/csv.ts` `downloadCsv`); every `⋮` kebab now a working dropdown (`components/dashboard/row-menu.tsx` `RowActionsMenu`) on batches/students/teachers/financials/institutes/live-classes/messages/curriculum/admin dashboard; admin dashboard Export/New Entry/View-All + super-admin Export/Invite Institute wired. Labels role-corrected: sidebar teacher CTA `New Course` → `Manage Courses` (/curriculum/courses), student CTA → `My Courses` (/courses); curriculum `New Course` button now INSTITUTE_ADMIN only (was ADMIN+TEACHER) | `450ba26` |
+| 16 | Teacher dashboard refinement: View Schedule dialog enlarged (`max-w-2xl`, roomier class rows, count in description); Create/Edit Material dialog now has attachment upload (file picker + name/size + remove), Publishing toggle (Draft/Published), Targeted Batch select (was free-text Course, populated from `fetchBatches`); materials kebab → Edit Details (opens prefilled edit dialog)/Share with Class/Download Asset (real `.txt` Blob download)/Delete. Also added 8 missing icon-map names that made kebab items render the generic `Info` fallback (`history_edu`, `folder_zip`, `content_copy`, `notifications_off`, `pause`, `play_arrow`, `stop_circle`, `person` in `components/shared/icon.tsx`) — this was the "kebab not perfectly working" symptom | `f36ba60` |
 
 ## 5. Currently Being Worked On
 
-- **None in progress.** Last completed: functional wiring + label fixes (`450ba26`). Note: curriculum `New Course` is now admin-only in UI but backend `POST /courses` still allows TEACHER — decided to keep UI more restrictive per product direction; backend can be tightened later if wanted.
+- **None in progress.** Last completed: teacher dashboard refinement — bigger schedule dialog, material dialog attachment + Publishing + Targeted Batch, materials kebab (Edit Details/Share/Download/Delete), icon-map fixes (`f36ba60`).
+- Gotcha to remember: `Icon` falls back to `Info` for unknown names — always add new names to `components/shared/icon.tsx` or kebab/quick-action items silently render a generic icon (looks broken).
+- Note: curriculum `New Course` is now admin-only in UI but backend `POST /courses` still allows TEACHER — decided to keep UI more restrictive per product direction; backend can be tightened later if wanted.
 
 ## 6. Watch Items / Gotchas
 
@@ -60,5 +63,5 @@ Multi-tenant EdTech SaaS ("the operating system for coaching institutes"). Next.
 
 ## 7. Next Steps
 
-1. Commit + push this docs set (single commit, e.g. `docs: update memory - functional wiring`).
+1. Commit + push this set (`f36ba60` teacher refinement + docs).
 2. Await direction: align next reference screen from `AcademyX_Screens_Arranged/` (teacher dashboard 11/12, or a student sub-screen like live classroom 07 / quiz 08), or Phase 10 Razorpay payments.

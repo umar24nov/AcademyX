@@ -29,6 +29,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Icon } from "@/components/shared/icon";
+import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { useLive } from "@/lib/live";
 import { downloadCsv } from "@/lib/csv";
@@ -36,6 +37,7 @@ import {
   fetchTeacherDashboard,
   mockTeacherDashboardData,
   fetchStudents,
+  fetchBatches,
   type TeacherClassRow,
   type TeacherMaterialRow,
 } from "@/lib/live-data";
@@ -51,6 +53,34 @@ function materialIconFor(type: string): string {
   return "description";
 }
 
+function formatBytes(bytes: number): string {
+  if (!bytes) return "0 B";
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function downloadMaterialAsset(m: TeacherMaterialRow) {
+  const slug =
+    m.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "material";
+  const body = [
+    "AcademyX Material",
+    "-----------------",
+    `Title: ${m.title}`,
+    `Details: ${m.meta}`,
+    "",
+    "This is a placeholder asset for demo purposes.",
+  ].join("\n");
+  const blob = new Blob([body], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${slug}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 export default function TeacherDashboardPage() {
   const { toast } = useToast();
   const router = useRouter();
@@ -58,10 +88,16 @@ export default function TeacherDashboardPage() {
   const [materials, setMaterials] = React.useState<TeacherMaterialRow[]>([]);
   const [scheduleOpen, setScheduleOpen] = React.useState(false);
   const [createOpen, setCreateOpen] = React.useState(false);
+  const [editingMaterial, setEditingMaterial] = React.useState<TeacherMaterialRow | null>(null);
+  const [batches, setBatches] = React.useState<{ id: string; name: string }[]>([]);
 
   React.useEffect(() => {
     setMaterials(data.materials);
   }, [data.materials]);
+
+  React.useEffect(() => {
+    fetchBatches().then((rows) => setBatches(rows.map((b) => ({ id: b.id, name: b.name }))));
+  }, []);
 
   const performance = data.weeklyPerformance;
   const max = Math.max(...performance, 100);
@@ -79,9 +115,15 @@ export default function TeacherDashboardPage() {
     toast({ title: "Student list exported", description: `${students.length} students exported to CSV.` });
   };
 
-  const addMaterial = (m: TeacherMaterialRow) => {
-    setMaterials((prev) => [m, ...prev]);
-    toast({ title: "Material created", description: `"${m.title}" was added to your materials.` });
+  const handleSaveMaterial = (m: TeacherMaterialRow) => {
+    setMaterials((prev) => {
+      const idx = prev.findIndex((x) => x.id === m.id);
+      if (idx === -1) return [m, ...prev];
+      const copy = [...prev];
+      copy[idx] = m;
+      return copy;
+    });
+    toast({ title: "Material saved", description: `"${m.title}" was saved.` });
   };
 
   const removeMaterial = (id: string, title: string) => {
@@ -215,15 +257,23 @@ export default function TeacherDashboardPage() {
                     triggerClassName="h-9 w-9"
                     actions={[
                       {
-                        label: "Preview",
-                        icon: "visibility",
-                        onSelect: () => toast({ title: m.title, description: `Previewing ${m.meta}.` }),
+                        label: "Edit Details",
+                        icon: "edit",
+                        onSelect: () => {
+                          setEditingMaterial(m);
+                          setCreateOpen(true);
+                        },
                       },
                       {
-                        label: "Edit",
-                        icon: "edit",
+                        label: "Share with Class",
+                        icon: "send",
                         onSelect: () =>
-                          toast({ title: "Edit material", description: `Open "${m.title}" to edit it.` }),
+                          toast({ title: "Material shared", description: `"${m.title}" was shared with your class.` }),
+                      },
+                      {
+                        label: "Download Asset",
+                        icon: "download",
+                        onSelect: () => downloadMaterialAsset(m),
                       },
                       {
                         label: "Delete",
@@ -295,8 +345,17 @@ export default function TeacherDashboardPage() {
 
       <CreateMaterialDialog
         open={createOpen}
-        onOpenChange={setCreateOpen}
-        onCreated={addMaterial}
+        onOpenChange={(v) => {
+          setCreateOpen(v);
+          if (!v) setEditingMaterial(null);
+        }}
+        batches={batches}
+        initial={editingMaterial}
+        onSave={(m) => {
+          handleSaveMaterial(m);
+          setEditingMaterial(null);
+          setCreateOpen(false);
+        }}
       />
     </DashboardShell>
   );
@@ -335,32 +394,39 @@ function ScheduleDialog({
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Icon name="calendar_today" className="h-5 w-5 text-primary" />
             Class Schedule
           </DialogTitle>
-          <DialogDescription>Your upcoming classes for today.</DialogDescription>
+          <DialogDescription>
+            {classes.length} upcoming class{classes.length === 1 ? "" : "es"} — open a session or reschedule.
+          </DialogDescription>
         </DialogHeader>
-        <div className="space-y-3 max-h-[50vh] overflow-y-auto custom-scrollbar">
+        <div className="space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1">
           {classes.map((c) => (
             <div
               key={c.id}
-              className="flex items-center justify-between gap-4 p-4 bg-surface-container-low border border-border-subtle rounded-xl"
+              className="flex items-center justify-between gap-4 p-5 bg-surface-container-low border border-border-subtle rounded-xl"
             >
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-on-surface truncate">{c.title}</p>
-                <p className="text-xs text-text-muted truncate">{c.meta}</p>
+                <div className="flex items-center gap-2 mb-1.5">
+                  {c.label && (
+                    <Badge variant={c.label === "NEXT CLASS" ? "default" : "secondary"} className="font-mono">
+                      {c.label}
+                    </Badge>
+                  )}
+                  <span className="text-xs text-text-muted font-mono">{c.time}</span>
+                </div>
+                <p className="text-base font-semibold text-on-surface truncate">{c.title}</p>
+                <p className="text-sm text-text-muted truncate">{c.meta}</p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <Badge variant={c.label === "NEXT CLASS" ? "default" : "secondary"} className="font-mono">
-                  {c.time}
-                </Badge>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8"
+                  className="h-9"
                   onClick={() => onReschedule(c)}
                 >
                   Reschedule
@@ -369,7 +435,7 @@ function ScheduleDialog({
             </div>
           ))}
           {classes.length === 0 && (
-            <p className="text-center text-text-muted text-sm py-6">No classes scheduled.</p>
+            <p className="text-center text-text-muted text-sm py-8">No classes scheduled.</p>
           )}
         </div>
         <DialogFooter>
@@ -383,22 +449,48 @@ function ScheduleDialog({
 function CreateMaterialDialog({
   open,
   onOpenChange,
-  onCreated,
+  batches,
+  initial,
+  onSave,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  onCreated: (m: TeacherMaterialRow) => void;
+  batches: { id: string; name: string }[];
+  initial: TeacherMaterialRow | null;
+  onSave: (m: TeacherMaterialRow) => void;
 }) {
   const [title, setTitle] = React.useState("");
   const [type, setType] = React.useState<string>(MATERIAL_TYPES[0]);
-  const [course, setCourse] = React.useState("");
+  const [batch, setBatch] = React.useState("");
   const [description, setDescription] = React.useState("");
+  const [publishState, setPublishState] = React.useState<"Draft" | "Published">("Published");
+  const [attachment, setAttachment] = React.useState<{ name: string; size: number } | null>(null);
+  const fileRef = React.useRef<HTMLInputElement>(null);
 
-  const reset = () => {
-    setTitle("");
-    setType(MATERIAL_TYPES[0]);
-    setCourse("");
+  const editing = !!initial;
+
+  React.useEffect(() => {
+    if (!open) return;
+    setTitle(initial?.title ?? "");
+    setType(
+      initial ? (MATERIAL_TYPES.find((t) => initial.meta.includes(t)) ?? MATERIAL_TYPES[0]) : MATERIAL_TYPES[0]
+    );
+    setBatch("");
     setDescription("");
+    setPublishState("Published");
+    setAttachment(null);
+  }, [open, initial]);
+
+  const handleSubmit = () => {
+    const parts = [description.trim(), batch.trim() && `Batch: ${batch.trim()}`, attachment?.name]
+      .filter(Boolean)
+      .join(" • ");
+    onSave({
+      id: initial?.id ?? `m_${Date.now()}`,
+      icon: materialIconFor(type),
+      title: title.trim(),
+      meta: `${type} • ${publishState}${parts ? ` • ${parts}` : ""}`,
+    });
   };
 
   return (
@@ -407,9 +499,13 @@ function CreateMaterialDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Icon name="add" className="h-5 w-5 text-primary" />
-            Create New Material
+            {editing ? "Edit Material" : "Create New Material"}
           </DialogTitle>
-          <DialogDescription>Upload or author a learning material for your courses.</DialogDescription>
+          <DialogDescription>
+            {editing
+              ? "Update the details of this material."
+              : "Author a learning material and share it with a batch."}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -422,6 +518,7 @@ function CreateMaterialDialog({
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label className="font-mono text-xs text-text-muted uppercase">Type</Label>
@@ -437,15 +534,88 @@ function CreateMaterialDialog({
               </Select>
             </div>
             <div>
-              <Label className="font-mono text-xs text-text-muted uppercase">Course</Label>
-              <Input
-                className="mt-2"
-                placeholder="e.g. UI Design Systems"
-                value={course}
-                onChange={(e) => setCourse(e.target.value)}
-              />
+              <Label className="font-mono text-xs text-text-muted uppercase">Targeted Batch</Label>
+              <Select value={batch} onValueChange={setBatch}>
+                <SelectTrigger className="mt-2">
+                  <SelectValue placeholder="Select batch" />
+                </SelectTrigger>
+                <SelectContent>
+                  {batches.length === 0 && (
+                    <SelectItem value="__none__" disabled>No batches available</SelectItem>
+                  )}
+                  {batches.map((b) => (
+                    <SelectItem key={b.id} value={b.name}>{b.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
+
+          <div>
+            <Label className="font-mono text-xs text-text-muted uppercase">Attachment</Label>
+            <input
+              ref={fileRef}
+              type="file"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) setAttachment({ name: f.name, size: f.size });
+              }}
+            />
+            {attachment ? (
+              <div className="mt-2 flex items-center justify-between gap-3 p-3 bg-surface-container-low border border-border-subtle rounded-lg">
+                <div className="flex items-center gap-3 min-w-0">
+                  <Icon name="attach_file" className="h-5 w-5 text-primary shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-on-surface truncate">{attachment.name}</p>
+                    <p className="text-xs text-text-muted font-mono">{formatBytes(attachment.size)}</p>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-text-muted shrink-0"
+                  onClick={() => {
+                    setAttachment(null);
+                    if (fileRef.current) fileRef.current.value = "";
+                  }}
+                >
+                  <Icon name="close" className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="outline"
+                className="mt-2 w-full h-20 border-dashed flex-col gap-1.5"
+                onClick={() => fileRef.current?.click()}
+              >
+                <Icon name="cloud_upload" className="h-6 w-6 text-primary" />
+                <span className="text-xs font-medium">Click to attach a file</span>
+              </Button>
+            )}
+          </div>
+
+          <div>
+            <Label className="font-mono text-xs text-text-muted uppercase">Publishing</Label>
+            <div className="mt-2 grid grid-cols-2 gap-2 p-1 bg-surface-container-low border border-border-subtle rounded-lg">
+              {(["Draft", "Published"] as const).map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setPublishState(s)}
+                  className={cn(
+                    "py-2 rounded-md text-sm font-medium transition-colors",
+                    publishState === s
+                      ? "bg-primary text-primary-foreground shadow"
+                      : "text-text-muted hover:text-on-surface"
+                  )}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div>
             <Label className="font-mono text-xs text-text-muted uppercase">Description</Label>
             <Textarea
@@ -462,22 +632,9 @@ function CreateMaterialDialog({
           <Button variant="ghost" onClick={() => onOpenChange(false)}>Discard</Button>
           <Button
             disabled={!title.trim()}
-            onClick={() => {
-              const t = title.trim();
-              const meta = [description.trim() && `Description attached`, course.trim() && course.trim()]
-                .filter(Boolean)
-                .join(" • ");
-              onCreated({
-                id: `m_${Date.now()}`,
-                icon: materialIconFor(type),
-                title: t,
-                meta: `Uploaded just now • ${type}${meta ? ` • ${meta}` : ""}`,
-              });
-              reset();
-              onOpenChange(false);
-            }}
+            onClick={handleSubmit}
           >
-            Save Material
+            {editing ? "Update Material" : "Save Material"}
           </Button>
         </DialogFooter>
       </DialogContent>
