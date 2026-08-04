@@ -43,18 +43,20 @@ Multi-tenant EdTech SaaS ("the operating system for coaching institutes"). Next.
 | 11 | Docs diagrams (Mermaid) across Architecture/PRD/Rules/Phases/Design | `3dc9824` |
 | 12 | Student dashboard aligned to reference UI (`Students Section Correct UI/code.html`): bento progress + achievements, live-class cards grid, assignments table; reference DESIGN.md/code.html committed | `209af9a` |
 | 13 | Student-section role gating: sidebar `New Course` (students/teachers) + `Help` + `Logout` (was `Upgrade Plan`/`Support`/`Sign Out`); dashboard chip never says "Starts in Completed" (ended classes excluded, ENDED cards → Watch Recording/Details); live-classes/lectures/exams hide Schedule-Live-Class / Upload-Lecture / New-Exam + Edit for students | `7a10150` |
+| 14 | Teacher/Admin/Super-Admin role gating: gate create/edit buttons to match backend `requireRole` — New Batch + Edit Batch → INSTITUTE_ADMIN only; Add Student → ADMIN+TEACHER; Invite Teacher → ADMIN only; New Course → ADMIN+TEACHER; Create Invoice → ADMIN only (Export/read-only stays for all). Super admin now sees management pages read-only. | `e17002e` |
 
 ## 5. Currently Being Worked On
 
-- **None in progress.** Last completed: student-section role gating (`7a10150`). Reference pack `AcademyX_Screens_Arranged/` committed at repo root (19 screens + previews; the old `Students Section Correct UI/` was folded into `04_STUDENT_Dashboard_Desktop` via rename detection).
+- **None in progress.** Last completed: Teacher/Admin/Super-Admin role gating (`e17002e`). Full role-gate matrix now: students (student fixes `7a10150`) + management create/edit actions (this commit).
 
 ## 6. Watch Items / Gotchas
 
 - WebRTC is STUN-only — may not traverse all NATs (acceptable demo scope); browser mic/camera permission required.
 - CI runs on every push; the pushed docs commit will trigger a CI run — harmless.
 - `RAZORPAY_*`, `HMS_*`, `CLOUDINARY_*`, `RESEND_API_KEY` env keys are optional and currently unused.
+- Backend permission matrix (UI gating mirrors it): batches POST/PATCH/DELETE → INSTITUTE_ADMIN; students POST/PATCH/attendance → ADMIN+TEACHER; teachers POST/PATCH/DELETE → ADMIN; courses POST/PATCH/modules → ADMIN+TEACHER (DELETE → ADMIN); exams create/publish → ADMIN+TEACHER; lectures POST/DELETE → ADMIN+TEACHER; payments POST → ADMIN+STUDENT. SUPER_ADMIN is allowed through `requireInstitute` but can only GET (read-only) on institute pages.
 
 ## 7. Next Steps
 
-1. Commit + push this docs set (single commit, e.g. `docs: update memory - student-section role gating`).
+1. Commit + push this docs set (single commit, e.g. `docs: update memory - management role gating`).
 2. Await direction: align next reference screen from `AcademyX_Screens_Arranged/` (teacher dashboard 11/12, or a student sub-screen like live classroom 07 / quiz 08), or Phase 10 Razorpay payments.
