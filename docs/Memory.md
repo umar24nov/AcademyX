@@ -39,10 +39,12 @@ Multi-tenant EdTech SaaS ("the operating system for coaching institutes"). Next.
 | 8 | Live classes real-time: socket.io presence/chat/signaling + WebRTC mesh, real session page (`useLiveSession`, `useLiveWebRTC`, `setLiveClassStatus`) | `c1f8be1` |
 | 9 | CI/CD: GitHub Actions CI + gated deploy hooks, Node 20 pin, smoke test, gitleaks, Dependabot | `68fe10b`, `fb2cea3` |
 | 10 | Docs: PRD, Architecture, Rules, Phases, Design, Memory | — |
+| 11 | Docs diagrams (Mermaid) across Architecture/PRD/Rules/Phases/Design | `3dc9824` |
+| 12 | Student dashboard aligned to reference UI (`Students Section Correct UI/code.html`): bento progress + achievements, live-class cards grid, assignments table; reference DESIGN.md/code.html committed | `209af9a` |
 
 ## 5. Currently Being Worked On
 
-- **Docs with diagrams** (this step): added Mermaid diagrams to `docs/` — system architecture, request lifecycle, ER data model, Socket.IO/WebRTC sequence, CI/CD pipeline (Architecture.md); feature mindmap + exam/live-class flows (PRD.md); error handling + commit checklist flows (Rules.md); phase timeline (Phases.md); color/token map + typography scale (Design.md). Next: commit + push, then confirm whether to start Phase 10 (Razorpay).
+- **None in progress.** Last completed: student dashboard UI alignment (`209af9a`). Reference folder `Students Section Correct UI/` (code.html + DESIGN.md) committed at repo root; `screen.png` inside it is a broken 28-byte file, intentionally not committed.
 
 ## 6. Watch Items / Gotchas
 
