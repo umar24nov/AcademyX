@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { dashboardPathFor, signOut } from "@/lib/api";
 import type { UserSession } from "@/lib/types";
 
-export function Sidebar({ user }: { user: UserSession }) {
+export function Sidebar({ user, mobile = false }: { user: UserSession; mobile?: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
   const main = getNavForRole(user.role, "main");
@@ -25,7 +25,12 @@ export function Sidebar({ user }: { user: UserSession }) {
   };
 
   return (
-    <aside className="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-surface border-r border-border-subtle flex-col p-4 gap-2 z-40">
+    <aside
+      className={cn(
+        "h-screen w-64 fixed left-0 top-0 bg-surface border-r border-border-subtle flex-col p-4 gap-2 z-40",
+        mobile ? "flex w-full" : "hidden md:flex"
+      )}
+    >
       <Link href={dashboardPathFor(user.role)} className="flex items-center gap-3 px-2 py-4 mb-4">
         <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
           <GraduationCap className="h-6 w-6" />

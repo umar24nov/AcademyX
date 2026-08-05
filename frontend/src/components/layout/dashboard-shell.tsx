@@ -39,7 +39,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetContent side="left" className="w-72 p-0">
           <SheetTitle className="sr-only">Navigation</SheetTitle>
-          <Sidebar user={user} />
+          <Sidebar user={user} mobile />
         </SheetContent>
       </Sheet>
       <main className="flex-1 md:ml-64 flex flex-col min-h-screen">
