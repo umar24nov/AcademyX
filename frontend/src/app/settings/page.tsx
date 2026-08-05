@@ -89,12 +89,22 @@ export default function SettingsPage() {
         />
 
         <Tabs defaultValue="general">
-          <TabsList>
-            <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="branding">Branding</TabsTrigger>
-            <TabsTrigger value="academics">Academics</TabsTrigger>
-            <TabsTrigger value="notifications">Notifications</TabsTrigger>
-            <TabsTrigger value="security">Security</TabsTrigger>
+          <TabsList className="w-full h-auto flex-col items-stretch gap-1 justify-start rounded-xl p-1.5 md:w-auto md:h-10 md:flex-row md:items-center md:gap-0 md:rounded-lg md:p-1">
+            <TabsTrigger value="general" className="w-full justify-start px-4 py-2.5 md:w-auto md:justify-center md:px-3 md:py-1.5">
+              General
+            </TabsTrigger>
+            <TabsTrigger value="branding" className="w-full justify-start px-4 py-2.5 md:w-auto md:justify-center md:px-3 md:py-1.5">
+              Branding
+            </TabsTrigger>
+            <TabsTrigger value="academics" className="w-full justify-start px-4 py-2.5 md:w-auto md:justify-center md:px-3 md:py-1.5">
+              Academics
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="w-full justify-start px-4 py-2.5 md:w-auto md:justify-center md:px-3 md:py-1.5">
+              Notifications
+            </TabsTrigger>
+            <TabsTrigger value="security" className="w-full justify-start px-4 py-2.5 md:w-auto md:justify-center md:px-3 md:py-1.5">
+              Security
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="general" className="space-y-6">

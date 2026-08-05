@@ -197,7 +197,12 @@ export default function LandingPage() {
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Open menu">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-10 w-10 border-border-subtle text-on-surface"
+                  aria-label="Open menu"
+                >
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>

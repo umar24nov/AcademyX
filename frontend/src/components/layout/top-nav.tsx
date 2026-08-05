@@ -47,8 +47,9 @@ export function TopNav({
     <header className="w-full sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border-subtle h-16 flex items-center px-6">
       <div className="flex-1 flex items-center gap-4">
         <button
-          className="md:hidden p-2 text-on-surface-variant hover:text-primary"
+          className="md:hidden h-10 w-10 flex items-center justify-center rounded-lg border border-border-subtle bg-surface-container-low text-on-surface hover:bg-surface-container-high hover:text-primary transition-colors"
           onClick={onMenuClick}
+          aria-label="Open navigation menu"
         >
           <Menu className="h-5 w-5" />
         </button>
