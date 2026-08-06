@@ -36,7 +36,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen">
       <Sidebar user={user} />
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-1/3 p-0">
+        <SheetContent side="left" className="w-2/3 p-0">
           <SheetTitle className="sr-only">Navigation</SheetTitle>
           <Sidebar user={user} mobile />
         </SheetContent>
