@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Sidebar } from "@/components/layout/sidebar";
 import { TopNav } from "@/components/layout/top-nav";
-import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { currentUser } from "@/lib/mock-data";
@@ -37,7 +36,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen">
       <Sidebar user={user} />
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-72 p-0">
+        <SheetContent side="left" className="w-1/3 p-0">
           <SheetTitle className="sr-only">Navigation</SheetTitle>
           <Sidebar user={user} mobile />
         </SheetContent>
@@ -67,7 +66,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </div>
         </footer>
       </main>
-      <MobileBottomNav user={user} />
     </div>
   );
 }

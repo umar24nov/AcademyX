@@ -206,7 +206,7 @@ export default function LandingPage() {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-72">
+              <SheetContent side="right" className="w-1/3">
                 <SheetTitle className="sr-only">Menu</SheetTitle>
                 <div className="flex flex-col gap-1">
                   {["Features", "Testimonials", "Pricing", "FAQ"].map((label) => (
