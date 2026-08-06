@@ -17,15 +17,14 @@ import {
 } from "@/components/ui/tabs";
 import { Icon } from "@/components/shared/icon";
 import { useToast } from "@/components/ui/use-toast";
-import { useLive } from "@/lib/live";
-import { getStoredUser } from "@/lib/api";
+import { useLive, useStoredUser } from "@/lib/live";
 import { fetchLiveClasses, mockLiveClassesData } from "@/lib/live-data";
 
 export default function LiveClassesPage() {
   const { toast } = useToast();
   const router = useRouter();
   const liveClasses = useLive(fetchLiveClasses, mockLiveClassesData);
-  const user = React.useMemo(() => getStoredUser(), []);
+  const user = useStoredUser();
   const isStudent = user?.role === "STUDENT";
 
   const startClass = (title: string) => {

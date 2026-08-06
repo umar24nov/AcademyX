@@ -1,19 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Sparkles, Menu } from "lucide-react";
+import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Icon } from "@/components/shared/icon";
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-  SheetClose,
-} from "@/components/ui/sheet";
+import { MarketingHeader } from "@/components/marketing/marketing-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
-import { BrandLogo } from "@/components/layout/brand-logo";
 
 const features = [
   {
@@ -107,67 +100,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background text-on-surface">
       {/* Nav */}
-      <header className="sticky top-0 z-50 border-b border-border-subtle bg-background/80 backdrop-blur-md">
-        <div className="max-w-[1280px] mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-          <BrandLogo boxClass="w-9 h-9 rounded-lg" iconClass="h-5 w-5" textClass="text-xl" />
-          <nav className="hidden md:flex items-center gap-8 text-sm text-text-muted">
-            <a href="#features" className="hover:text-primary transition-colors">Features</a>
-            <a href="#pricing" className="hover:text-primary transition-colors">Pricing</a>
-          </nav>
-          <div className="hidden md:flex items-center gap-3">
-            <Link href="/login" className="text-sm text-on-surface-variant hover:text-primary transition-colors">
-              Sign in
-            </Link>
-            <Button asChild>
-              <Link href="/register">Get Started</Link>
-            </Button>
-          </div>
-          <div className="md:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-10 w-10 border-border-subtle text-on-surface"
-                  aria-label="Open menu"
-                >
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-72">
-                <SheetTitle className="sr-only">Menu</SheetTitle>
-                <div className="flex flex-col gap-1">
-                  {["Features", "Pricing"].map((label) => (
-                    <SheetClose asChild key={label}>
-                      <a
-                        href={`#${label.toLowerCase()}`}
-                        className="rounded-lg px-3 py-2.5 text-sm font-medium text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors"
-                      >
-                        {label}
-                      </a>
-                    </SheetClose>
-                  ))}
-                  <div className="mt-3 border-t border-border-subtle pt-4 flex flex-col gap-2 px-1">
-                    <SheetClose asChild>
-                      <Link
-                        href="/login"
-                        className="rounded-lg px-3 py-2.5 text-sm font-medium text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors"
-                      >
-                        Sign in
-                      </Link>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <Button asChild className="w-full">
-                        <Link href="/register">Get Started</Link>
-                      </Button>
-                    </SheetClose>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </div>
-      </header>
+      <MarketingHeader />
 
       {/* Hero */}
       <section className="relative overflow-hidden">

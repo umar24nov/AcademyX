@@ -26,8 +26,7 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Icon } from "@/components/shared/icon";
-import { useLive } from "@/lib/live";
-import { getStoredUser } from "@/lib/api";
+import { useLive, useStoredUser } from "@/lib/live";
 import { downloadCsv } from "@/lib/csv";
 import { fetchStudents, mockStudentsData } from "@/lib/live-data";
 import { Search } from "lucide-react";
@@ -37,7 +36,7 @@ export default function StudentsPage() {
   const [search, setSearch] = React.useState("");
   const [status, setStatus] = React.useState("all");
   const students = useLive(fetchStudents, mockStudentsData);
-  const user = React.useMemo(() => getStoredUser(), []);
+  const user = useStoredUser();
   const canManageStudents =
     user?.role === "INSTITUTE_ADMIN" || user?.role === "TEACHER";
 

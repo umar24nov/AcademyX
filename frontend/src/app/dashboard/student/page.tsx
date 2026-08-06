@@ -14,15 +14,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Icon } from "@/components/shared/icon";
-import { useLive } from "@/lib/live";
+import { useLive, useStoredUser } from "@/lib/live";
 import {
   fetchStudentDashboard,
   mockStudentDashboardData,
   fetchLiveClasses,
   mockLiveClassesData,
   formatTime,
-} from "@/lib/live-data";
-import { getStoredUser } from "@/lib/api";
+  } from "@/lib/live-data";
 import { cn } from "@/lib/utils";
 
 export default function StudentDashboardPage() {
@@ -31,7 +30,7 @@ export default function StudentDashboardPage() {
     mockStudentDashboardData
   );
   const liveClasses = useLive(fetchLiveClasses, mockLiveClassesData);
-  const firstName = getStoredUser()?.name?.split(" ")[0] ?? "Student";
+  const firstName = useStoredUser()?.name?.split(" ")[0] ?? "Student";
 
   const focus = courses[0];
   const upcoming = liveClasses.filter((c) => c.status !== "Ended").slice(0, 3);

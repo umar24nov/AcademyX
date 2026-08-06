@@ -18,7 +18,8 @@ import { BrandLogo } from "@/components/layout/brand-logo";
 const productLinks = [
   { label: "Features", href: "/#features" },
   { label: "Pricing", href: "/#pricing" },
-  { label: "FAQ", href: "/#faq" },
+  { label: "Testimonials", href: "/testimonials" },
+  { label: "FAQ", href: "/faq" },
   { label: "Sign in", href: "/login" },
   { label: "Create an institute", href: "/register" },
 ];

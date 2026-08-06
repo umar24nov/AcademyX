@@ -15,8 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Icon } from "@/components/shared/icon";
-import { useLive } from "@/lib/live";
-import { getStoredUser } from "@/lib/api";
+import { useLive, useStoredUser } from "@/lib/live";
 import { fetchLectures, mockLecturesData } from "@/lib/live-data";
 import { Search, Play } from "lucide-react";
 
@@ -24,7 +23,7 @@ export default function RecordedLecturesPage() {
   const [search, setSearch] = React.useState("");
   const [visibility, setVisibility] = React.useState("all");
   const recordedLectures = useLive(fetchLectures, mockLecturesData);
-  const user = React.useMemo(() => getStoredUser(), []);
+  const user = useStoredUser();
   const isStudent = user?.role === "STUDENT";
 
   const filtered = recordedLectures.filter((l) => {

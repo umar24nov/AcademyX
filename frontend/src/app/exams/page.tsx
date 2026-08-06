@@ -8,13 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Icon } from "@/components/shared/icon";
-import { useLive } from "@/lib/live";
-import { getStoredUser } from "@/lib/api";
+import { useLive, useStoredUser } from "@/lib/live";
 import { fetchExams, mockExamsData } from "@/lib/live-data";
 
 export default function ExamsPage() {
   const exams = useLive(fetchExams, mockExamsData);
-  const user = React.useMemo(() => getStoredUser(), []);
+  const user = useStoredUser();
   const isStudent = user?.role === "STUDENT";
   return (
     <DashboardShell>

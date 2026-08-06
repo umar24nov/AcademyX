@@ -25,8 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Icon } from "@/components/shared/icon";
-import { useLive } from "@/lib/live";
-import { getStoredUser } from "@/lib/api";
+import { useLive, useStoredUser } from "@/lib/live";
 import {
   fetchBatchDetail,
   mockBatchDetailData,
@@ -55,7 +54,7 @@ function BatchDetailPageInner() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id") ?? undefined;
   const batch = useLive(() => fetchBatchDetail(id), mockBatchDetailData);
-  const user = React.useMemo(() => getStoredUser(), []);
+  const user = useStoredUser();
   const canManageBatches = user?.role === "INSTITUTE_ADMIN";
 
   const filled = batch.capacity > 0 ? (batch.students.length / batch.capacity) * 100 : 0;

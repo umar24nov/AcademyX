@@ -31,8 +31,7 @@ import {
 import { Icon } from "@/components/shared/icon";
 import { RowActionsMenu } from "@/components/dashboard/row-menu";
 import { useToast } from "@/components/ui/use-toast";
-import { useLive } from "@/lib/live";
-import { getStoredUser } from "@/lib/api";
+import { useLive, useStoredUser } from "@/lib/live";
 import { downloadCsv } from "@/lib/csv";
 import { fetchFinancials, mockFinancialsData } from "@/lib/live-data";
 import { Search } from "lucide-react";
@@ -40,7 +39,7 @@ import { Search } from "lucide-react";
 export default function FinancialsPage() {
   const { toast } = useToast();
   const { payments, revenueSeries } = useLive(fetchFinancials, mockFinancialsData);
-  const user = React.useMemo(() => getStoredUser(), []);
+  const user = useStoredUser();
   const canManageInvoices = user?.role === "INSTITUTE_ADMIN";
 
   const exportRow = (p: (typeof payments)[number]) => {

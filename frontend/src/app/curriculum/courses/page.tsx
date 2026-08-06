@@ -27,8 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import { Icon } from "@/components/shared/icon";
 import { useToast } from "@/components/ui/use-toast";
-import { useLive } from "@/lib/live";
-import { getStoredUser } from "@/lib/api";
+import { useLive, useStoredUser } from "@/lib/live";
 import { fetchCourses, mockCoursesData } from "@/lib/live-data";
 import { Search, GripVertical, Plus } from "lucide-react";
 
@@ -38,7 +37,7 @@ export default function CourseManagementPage() {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
   const courses = useLive(fetchCourses, mockCoursesData);
-  const user = React.useMemo(() => getStoredUser(), []);
+  const user = useStoredUser();
   const isAdmin = user?.role === "INSTITUTE_ADMIN";
   const canCreateCourses = isAdmin;
 

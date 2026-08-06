@@ -1,6 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { getStoredUser } from "@/lib/api";
+import type { UserSession } from "@/lib/types";
+
+/**
+ * Reads the current user session from localStorage only after mount, so SSR
+ * and the first client render both see `null` (no hydration mismatch). Pages
+ * should render a loading/fallback state until `user` becomes available.
+ */
+export function useStoredUser(): UserSession | null {
+  const [user, setUser] = useState<UserSession | null>(null);
+  useEffect(() => {
+    setUser(getStoredUser());
+  }, []);
+  return user;
+}
 
 /**
  * Loads live data from the backend API once on mount. While the fetch is in

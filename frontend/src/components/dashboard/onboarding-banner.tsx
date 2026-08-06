@@ -5,12 +5,12 @@ import Link from "next/link";
 import { Rocket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { getStoredUser } from "@/lib/api";
+import { useStoredUser } from "@/lib/live";
 import { fetchOnboardingState, type OnboardingState } from "@/lib/live-data";
 
 export function OnboardingBanner() {
   const [state, setState] = React.useState<OnboardingState | null>(null);
-  const user = React.useMemo(() => getStoredUser(), []);
+  const user = useStoredUser();
 
   React.useEffect(() => {
     if (user?.role !== "INSTITUTE_ADMIN" || !user.instituteId) return;

@@ -11,8 +11,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Icon } from "@/components/shared/icon";
 import { useToast } from "@/components/ui/use-toast";
 import { Send, Mic, MicOff, Video, VideoOff, PhoneOff, Sparkles } from "lucide-react";
-import { useLive } from "@/lib/live";
-import { getStoredUser } from "@/lib/api";
+import { useLive, useStoredUser } from "@/lib/live";
 import {
   fetchLiveClassDetail,
   mockLiveClassDetailData,
@@ -46,7 +45,7 @@ function LiveClassSessionPageInner() {
   const id = searchParams.get("id") ?? undefined;
   const live = useLive(() => fetchLiveClassDetail(id), mockLiveClassDetailData);
 
-  const user = React.useMemo(() => getStoredUser(), []);
+  const user = useStoredUser();
   const [status, setStatus] = React.useState(live.status);
   const [joined, setJoined] = React.useState(false);
   const [launching, setLaunching] = React.useState(false);

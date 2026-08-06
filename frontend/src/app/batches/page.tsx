@@ -28,8 +28,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Icon } from "@/components/shared/icon";
-import { useLive } from "@/lib/live";
-import { getStoredUser } from "@/lib/api";
+import { useLive, useStoredUser } from "@/lib/live";
 import { fetchBatches, mockBatchesData } from "@/lib/live-data";
 import { Search } from "lucide-react";
 
@@ -39,7 +38,7 @@ export default function BatchManagementPage() {
   const [search, setSearch] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState("all");
   const batches = useLive(fetchBatches, mockBatchesData);
-  const user = React.useMemo(() => getStoredUser(), []);
+  const user = useStoredUser();
   const canManageBatches = user?.role === "INSTITUTE_ADMIN";
 
   const filtered = batches.filter((b) => {

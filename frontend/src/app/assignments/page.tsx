@@ -9,13 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Icon } from "@/components/shared/icon";
-import { useLive } from "@/lib/live";
-import { getStoredUser } from "@/lib/api";
+import { useLive, useStoredUser } from "@/lib/live";
 import { fetchAssignments, mockAssignmentsData } from "@/lib/live-data";
 
 export default function AssignmentsPage() {
   const assignments = useLive(fetchAssignments, mockAssignmentsData);
-  const user = React.useMemo(() => getStoredUser(), []);
+  const user = useStoredUser();
   const isStudent = user?.role === "STUDENT";
   return (
     <DashboardShell>

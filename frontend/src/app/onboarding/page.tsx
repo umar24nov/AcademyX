@@ -21,7 +21,8 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
-import { dashboardPathFor, getStoredUser } from "@/lib/api";
+import { dashboardPathFor } from "@/lib/api";
+import { useStoredUser } from "@/lib/live";
 import {
   fetchOnboardingState,
   fetchOnboardingCourses,
@@ -49,7 +50,7 @@ export default function OnboardingPage() {
 function OnboardingInner() {
   const router = useRouter();
   const { toast } = useToast();
-  const user = React.useMemo(() => getStoredUser(), []);
+  const user = useStoredUser();
   const instituteId = user?.instituteId;
 
   const [state, setState] = React.useState<OnboardingState | null>(null);
