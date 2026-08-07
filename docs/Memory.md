@@ -67,6 +67,7 @@ Multi-tenant EdTech SaaS ("the operating system for coaching institutes"). Next.
 - WebRTC is STUN-only — may not traverse all NATs (acceptable demo scope); browser mic/camera permission required.
 - CI runs on every push; the pushed docs commit will trigger a CI run — harmless.
 - `RAZORPAY_*`, `HMS_*`, `CLOUDINARY_*`, `RESEND_API_KEY` env keys are optional and currently unused.
+- Frontend env: only `NEXT_PUBLIC_API_URL` (see `frontend/.env.example`); nothing secret ever goes in frontend env. Backend `NODE_ENV` defaults to `production` (dev-only behaviors like returning the reset token are gated behind explicit `development`).
 - Backend permission matrix (UI gating mirrors it): batches POST/PATCH/DELETE → INSTITUTE_ADMIN; students POST/PATCH/attendance → ADMIN+TEACHER; teachers POST/PATCH/DELETE → ADMIN; courses POST/PATCH/modules → ADMIN+TEACHER (DELETE → ADMIN; UI now hides create for TEACHER); exams create/publish → ADMIN+TEACHER; lectures POST/DELETE → ADMIN+TEACHER; payments POST → ADMIN+STUDENT. SUPER_ADMIN is allowed through `requireInstitute` but can only GET (read-only) on institute pages.
 - `New Institute` (institutes page) and `Invite Institute` (super-admin dashboard) have no backend POST route yet — currently toast only.
 

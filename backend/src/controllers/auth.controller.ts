@@ -243,7 +243,7 @@ export async function forgotPassword(req: Request, res: Response, next: NextFunc
 
     if (env.NODE_ENV === "production" && env.RESEND_API_KEY) {
       // TODO: wire Resend email delivery
-      console.log("Reset token email would be sent to:", user.email);
+      console.log("Reset email delivery not yet wired; would email the reset link.");
     }
 
     res.status(200).json({

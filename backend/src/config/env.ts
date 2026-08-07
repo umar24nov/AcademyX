@@ -4,7 +4,10 @@ import { z } from "zod";
 dotenv.config();
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+  // Default to production so dev-only behaviors (e.g. returning the
+  // forgot-password reset token in the API response) are never exposed
+  // on a host that forgets to set NODE_ENV explicitly.
+  NODE_ENV: z.enum(["development", "test", "production"]).default("production"),
   PORT: z.coerce.number().default(5000),
   DATABASE_URL: z.string().min(1),
   JWT_ACCESS_SECRET: z.string().min(16),
