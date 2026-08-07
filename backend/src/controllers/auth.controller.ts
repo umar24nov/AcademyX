@@ -12,6 +12,7 @@ import {
   verifyRefreshToken,
 } from "../utils/jwt";
 import { env } from "../config/env";
+import { resetAccountBackoff } from "../middleware/rateLimit";
 
 const TOKEN_TTL_SECONDS = 7 * 24 * 60 * 60;
 
@@ -60,6 +61,8 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     }
 
     await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
+
+    resetAccountBackoff("auth", user.email.toLowerCase());
 
     const tokens = await issueTokens(user.id, user.instituteId, user.role);
 

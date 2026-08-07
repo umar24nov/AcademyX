@@ -18,11 +18,15 @@ import { liveClassesRouter } from "./routes/live-classes.routes";
 import { lecturesRouter } from "./routes/lectures.routes";
 import { reportsRouter } from "./routes/reports.routes";
 import { notFoundHandler, errorHandler } from "./middleware/error";
+import { publicRateLimit } from "./middleware/rateLimit";
+import { requestId } from "./middleware/requestId";
 
 export function createApp(): Express {
   const app = express();
 
   app.set("trust proxy", 1);
+
+  app.use(requestId);
 
   app.use(
     helmet({
@@ -42,7 +46,7 @@ export function createApp(): Express {
   app.use(express.json({ limit: "10mb" }));
   app.use(express.urlencoded({ extended: true }));
 
-  app.get("/health", (_req, res) => {
+  app.get("/health", publicRateLimit, (_req, res) => {
     res.status(200).json({
       success: true,
       data: { status: "ok", service: "academyx-api", timestamp: new Date().toISOString() },

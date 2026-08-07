@@ -4,22 +4,24 @@ import { Role } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { validate } from "../middleware/validate";
 import { authenticate, requireInstitute, requireRole } from "../middleware/auth";
+import { authenticatedRateLimit } from "../middleware/rateLimit";
 import { ApiError } from "../utils/ApiError";
+import { httpUrl, optionalHttpUrl } from "../utils/schema";
 
 const router = Router();
 
-router.use(authenticate, requireInstitute);
+router.use(authenticate, requireInstitute, authenticatedRateLimit);
 
 const lectureSchema = z.object({
-  title: z.string().min(2),
-  description: z.string().optional(),
+  title: z.string().min(2).max(200),
+  description: z.string().max(5000).optional(),
   courseId: z.string().optional().nullable(),
   moduleId: z.string().optional().nullable(),
-  videoUrl: z.string().min(1),
-  duration: z.string().optional(),
-  size: z.string().optional(),
+  videoUrl: httpUrl,
+  duration: z.string().max(50).optional(),
+  size: z.string().max(50).optional(),
   visibility: z.enum(["Public", "Course Wide", "Batch Only"]).default("Course Wide"),
-  thumbnailUrl: z.string().optional(),
+  thumbnailUrl: optionalHttpUrl,
 });
 
 router.get("/", async (req, res, next) => {

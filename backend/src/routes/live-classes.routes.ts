@@ -4,23 +4,24 @@ import { LiveClassStatus, Role } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { validate } from "../middleware/validate";
 import { authenticate, requireInstitute, requireRole } from "../middleware/auth";
+import { authenticatedRateLimit } from "../middleware/rateLimit";
 import { ApiError } from "../utils/ApiError";
 
 const router = Router();
 
-router.use(authenticate, requireInstitute);
+router.use(authenticate, requireInstitute, authenticatedRateLimit);
 
 const liveClassSchema = z.object({
-  title: z.string().min(2),
-  description: z.string().optional(),
+  title: z.string().min(2).max(200),
+  description: z.string().max(5000).optional(),
   courseId: z.string().optional().nullable(),
   batchId: z.string().optional().nullable(),
   teacherId: z.string().optional().nullable(),
   startsAt: z.string().datetime(),
-  durationMin: z.number().int().positive().default(60),
+  durationMin: z.number().int().positive().max(1440).default(60),
   status: z.nativeEnum(LiveClassStatus).optional(),
-  hmsRoomCode: z.string().optional(),
-  roomId: z.string().optional(),
+  hmsRoomCode: z.string().max(200).optional(),
+  roomId: z.string().max(200).optional(),
 });
 
 function describeStartsIn(startsAt: Date): string {

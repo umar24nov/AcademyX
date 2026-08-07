@@ -4,22 +4,23 @@ import { Role, UserStatus } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { validate } from "../middleware/validate";
 import { authenticate, requireInstitute, requireRole } from "../middleware/auth";
+import { authenticatedRateLimit } from "../middleware/rateLimit";
 import { ApiError } from "../utils/ApiError";
 import { hashPassword } from "../utils/password";
 
 const router = Router();
 
-router.use(authenticate, requireInstitute);
+router.use(authenticate, requireInstitute, authenticatedRateLimit);
 
 const teacherCreateSchema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  password: z.string().min(8).optional(),
-  employeeId: z.string().min(1),
-  department: z.string().optional(),
-  qualification: z.string().optional(),
-  specialization: z.string().optional(),
-  phone: z.string().optional(),
+  name: z.string().min(2).max(200),
+  email: z.string().email().max(254),
+  password: z.string().min(8).max(128).optional(),
+  employeeId: z.string().min(1).max(50),
+  department: z.string().max(200).optional(),
+  qualification: z.string().max(500).optional(),
+  specialization: z.string().max(200).optional(),
+  phone: z.string().max(20).optional(),
 });
 
 router.get("/", requireRole(Role.INSTITUTE_ADMIN, Role.TEACHER, Role.SUPER_ADMIN), async (req, res, next) => {

@@ -4,15 +4,17 @@ import { AssignmentStatus, Role } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { validate } from "../middleware/validate";
 import { authenticate, requireInstitute, requireRole } from "../middleware/auth";
+import { authenticatedRateLimit } from "../middleware/rateLimit";
 import { ApiError } from "../utils/ApiError";
+import { httpUrl } from "../utils/schema";
 
 const router = Router();
 
-router.use(authenticate, requireInstitute);
+router.use(authenticate, requireInstitute, authenticatedRateLimit);
 
 const assignmentSchema = z.object({
-  title: z.string().min(2),
-  description: z.string().optional(),
+  title: z.string().min(2).max(200),
+  description: z.string().max(5000).optional(),
   courseId: z.string().optional().nullable(),
   moduleId: z.string().optional().nullable(),
   batchId: z.string().optional().nullable(),
@@ -22,9 +24,9 @@ const assignmentSchema = z.object({
 });
 
 const submissionSchema = z.object({
-  title: z.string().optional(),
-  notes: z.string().optional(),
-  attachments: z.array(z.string()).optional(),
+  title: z.string().max(200).optional(),
+  notes: z.string().max(5000).optional(),
+  attachments: z.array(httpUrl).max(10).optional(),
 });
 
 router.get("/", async (req, res, next) => {

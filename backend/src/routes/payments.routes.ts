@@ -4,18 +4,19 @@ import { PaymentMethod, Role } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { validate } from "../middleware/validate";
 import { authenticate, requireInstitute, requireRole } from "../middleware/auth";
+import { authenticatedRateLimit } from "../middleware/rateLimit";
 import { ApiError } from "../utils/ApiError";
 
 const router = Router();
 
-router.use(authenticate, requireInstitute);
+router.use(authenticate, requireInstitute, authenticatedRateLimit);
 
 const createPaymentSchema = z.object({
   studentId: z.string().min(1),
-  amount: z.number().positive(),
-  currency: z.string().default("INR"),
+  amount: z.number().positive().max(100_000_000),
+  currency: z.string().min(3).max(10).default("INR"),
   method: z.nativeEnum(PaymentMethod).default(PaymentMethod.RAZORPAY),
-  purpose: z.string().optional(),
+  purpose: z.string().max(500).optional(),
 });
 
 function generateTxId() {

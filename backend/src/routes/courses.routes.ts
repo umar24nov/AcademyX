@@ -4,40 +4,42 @@ import { CourseStatus, ModuleType, Role } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { validate } from "../middleware/validate";
 import { authenticate, requireInstitute, requireRole } from "../middleware/auth";
+import { authenticatedRateLimit } from "../middleware/rateLimit";
 import { ApiError } from "../utils/ApiError";
+import { optionalHttpUrl } from "../utils/schema";
 
 const router = Router();
 
-router.use(authenticate, requireInstitute);
+router.use(authenticate, requireInstitute, authenticatedRateLimit);
 
 function tenantWhere(req: { user?: { instituteId?: string | null } }) {
   return { instituteId: req.user!.instituteId! };
 }
 
 const courseCreateSchema = z.object({
-  title: z.string().min(2),
-  code: z.string().optional(),
-  description: z.string().optional(),
-  category: z.string().optional(),
-  level: z.string().optional(),
-  duration: z.string().optional(),
+  title: z.string().min(2).max(200),
+  code: z.string().max(50).optional(),
+  description: z.string().max(5000).optional(),
+  category: z.string().max(100).optional(),
+  level: z.string().max(100).optional(),
+  duration: z.string().max(50).optional(),
   credits: z.number().int().optional(),
-  thumbnailUrl: z.string().optional(),
+  thumbnailUrl: optionalHttpUrl,
   status: z.nativeEnum(CourseStatus).optional(),
 });
 
 const moduleSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().optional(),
+  title: z.string().min(1).max(200),
+  description: z.string().max(5000).optional(),
   type: z.nativeEnum(ModuleType).optional(),
-  duration: z.string().optional(),
+  duration: z.string().max(50).optional(),
   lessons: z
     .array(
       z.object({
-        title: z.string().min(1),
-        content: z.string().optional(),
-        videoUrl: z.string().optional(),
-        duration: z.string().optional(),
+        title: z.string().min(1).max(200),
+        content: z.string().max(20000).optional(),
+        videoUrl: optionalHttpUrl,
+        duration: z.string().max(50).optional(),
       })
     )
     .optional(),

@@ -4,23 +4,24 @@ import { Role } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { validate } from "../middleware/validate";
 import { authenticate, requireRole } from "../middleware/auth";
+import { authenticatedRateLimit } from "../middleware/rateLimit";
 import { ApiError } from "../utils/ApiError";
 
 const router = Router();
 
-router.use(authenticate);
+router.use(authenticate, authenticatedRateLimit);
 
 const updateSchema = z.object({
   name: z.string().min(2).max(120).optional(),
-  contactEmail: z.string().email().optional(),
-  phone: z.string().optional(),
-  address: z.string().optional(),
-  about: z.string().optional(),
+  contactEmail: z.string().email().max(254).optional(),
+  phone: z.string().max(20).optional(),
+  address: z.string().max(1000).optional(),
+  about: z.string().max(5000).optional(),
   branding: z.record(z.unknown()).optional(),
-  gradingSystem: z.string().optional(),
+  gradingSystem: z.string().max(200).optional(),
   passingMarks: z.number().int().min(0).max(100).optional(),
   attendanceThreshold: z.number().int().min(0).max(100).optional(),
-  academicYear: z.string().optional(),
+  academicYear: z.string().max(20).optional(),
 });
 
 router.get("/", async (req, res, next) => {

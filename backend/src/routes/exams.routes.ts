@@ -4,15 +4,16 @@ import { ExamStatus, ExamType, Role } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { validate } from "../middleware/validate";
 import { authenticate, requireInstitute, requireRole } from "../middleware/auth";
+import { authenticatedRateLimit } from "../middleware/rateLimit";
 import { ApiError } from "../utils/ApiError";
 
 const router = Router();
 
-router.use(authenticate, requireInstitute);
+router.use(authenticate, requireInstitute, authenticatedRateLimit);
 
 const questionSchema = z.object({
-  text: z.string().min(1),
-  options: z.array(z.string()).min(2),
+  text: z.string().min(1).max(2000),
+  options: z.array(z.string().min(1).max(500)).min(2).max(8),
   correctOption: z.number().int().nonnegative().optional(),
   marks: z.number().int().positive().default(1),
   order: z.number().int().default(0),
@@ -20,20 +21,20 @@ const questionSchema = z.object({
 });
 
 const examCreateSchema = z.object({
-  title: z.string().min(2),
-  description: z.string().optional(),
+  title: z.string().min(2).max(200),
+  description: z.string().max(5000).optional(),
   type: z.nativeEnum(ExamType).optional(),
   courseId: z.string().optional().nullable(),
   moduleId: z.string().optional().nullable(),
   batchId: z.string().optional().nullable(),
-  durationMin: z.number().int().positive(),
+  durationMin: z.number().int().positive().max(1440),
   totalMarks: z.number().int().positive(),
   passMarks: z.number().int().optional(),
   status: z.nativeEnum(ExamStatus).optional(),
   scheduledAt: z.string().datetime().optional().nullable(),
   shuffleQuestions: z.boolean().optional(),
   randomizeOptions: z.boolean().optional(),
-  questions: z.array(questionSchema).optional(),
+  questions: z.array(questionSchema).max(200).optional(),
 });
 
 const attemptSchema = z.object({

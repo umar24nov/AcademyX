@@ -4,24 +4,25 @@ import { AttendanceStatus, Role, UserStatus } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { validate } from "../middleware/validate";
 import { authenticate, requireInstitute, requireRole } from "../middleware/auth";
+import { authenticatedRateLimit } from "../middleware/rateLimit";
 import { ApiError } from "../utils/ApiError";
 import { hashPassword } from "../utils/password";
 
 const router = Router();
 
-router.use(authenticate, requireInstitute);
+router.use(authenticate, requireInstitute, authenticatedRateLimit);
 
 const studentCreateSchema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  password: z.string().min(8).optional(),
-  rollNumber: z.string().min(1),
-  guardianName: z.string().optional(),
-  guardianPhone: z.string().optional(),
+  name: z.string().min(2).max(200),
+  email: z.string().email().max(254),
+  password: z.string().min(8).max(128).optional(),
+  rollNumber: z.string().min(1).max(50),
+  guardianName: z.string().max(200).optional(),
+  guardianPhone: z.string().max(20).optional(),
   dateOfBirth: z.string().datetime().optional(),
-  phone: z.string().optional(),
+  phone: z.string().max(20).optional(),
   batchId: z.string().optional().nullable(),
-  fee: z.number().optional(),
+  fee: z.number().nonnegative().optional(),
 });
 
 router.get("/", async (req, res, next) => {

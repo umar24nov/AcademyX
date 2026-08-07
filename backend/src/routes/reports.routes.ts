@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { prisma } from "../lib/prisma";
 import { authenticate, requireInstitute } from "../middleware/auth";
+import { authenticatedRateLimit } from "../middleware/rateLimit";
 
 const router = Router();
 
-router.use(authenticate, requireInstitute);
+router.use(authenticate, requireInstitute, authenticatedRateLimit);
 
 router.get("/overview", async (req, res, next) => {
   try {

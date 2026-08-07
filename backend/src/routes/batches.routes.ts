@@ -4,20 +4,21 @@ import { BatchStatus, Role } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { validate } from "../middleware/validate";
 import { authenticate, requireInstitute, requireRole } from "../middleware/auth";
+import { authenticatedRateLimit } from "../middleware/rateLimit";
 import { ApiError } from "../utils/ApiError";
 
 const router = Router();
 
-router.use(authenticate, requireInstitute);
+router.use(authenticate, requireInstitute, authenticatedRateLimit);
 
 const batchSchema = z.object({
-  name: z.string().min(2),
-  code: z.string().min(1),
+  name: z.string().min(2).max(200),
+  code: z.string().min(1).max(50),
   courseId: z.string().optional().nullable(),
   startDate: z.string().datetime().optional().nullable(),
   endDate: z.string().datetime().optional().nullable(),
   status: z.nativeEnum(BatchStatus).optional(),
-  capacity: z.number().int().positive().optional(),
+  capacity: z.number().int().positive().max(100000).optional(),
   timetable: z.record(z.unknown()).optional(),
 });
 

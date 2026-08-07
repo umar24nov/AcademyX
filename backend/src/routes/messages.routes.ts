@@ -3,20 +3,22 @@ import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { validate } from "../middleware/validate";
 import { authenticate, requireInstitute } from "../middleware/auth";
+import { authenticatedRateLimit } from "../middleware/rateLimit";
 import { ApiError } from "../utils/ApiError";
+import { httpUrl } from "../utils/schema";
 
 const router = Router();
 
-router.use(authenticate, requireInstitute);
+router.use(authenticate, requireInstitute, authenticatedRateLimit);
 
 const conversationSchema = z.object({
-  participantIds: z.array(z.string().min(1)).min(1),
-  title: z.string().optional(),
+  participantIds: z.array(z.string().min(1)).min(1).max(50),
+  title: z.string().max(200).optional(),
 });
 
 const messageSchema = z.object({
   content: z.string().min(1).max(5000),
-  attachments: z.array(z.string()).optional(),
+  attachments: z.array(httpUrl).max(10).optional(),
 });
 
 // List conversations for the current user
