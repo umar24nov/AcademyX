@@ -7,7 +7,6 @@ import { PageHeader } from "@/components/dashboard/page-header";
 import { RowActionsMenu } from "@/components/dashboard/row-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -52,29 +51,69 @@ export default function CourseManagementPage() {
           title="Curriculum Builder"
           description="Manage your active courses and architectural framework."
           actions={
-            canCreateCourses ? (
-              <Button onClick={() => setModalOpen(true)}>
-                <Icon name="add" className="h-4 w-4" />
-                New Course
+            <>
+              <div className="flex -space-x-2">
+                {["AV", "MT", "SC"].map((initials, idx) => (
+                  <div
+                    key={initials}
+                    className={`h-8 w-8 rounded-full border-2 border-background flex items-center justify-center text-[10px] font-bold text-on-surface ${
+                      idx === 0
+                        ? "bg-primary-container"
+                        : idx === 1
+                          ? "bg-tertiary-container"
+                          : "bg-secondary-container"
+                    }`}
+                  >
+                    {initials}
+                  </div>
+                ))}
+                <div className="h-8 w-8 rounded-full border-2 border-background bg-surface-container-high flex items-center justify-center text-[10px] font-bold text-text-muted">
+                  +12
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  toast({ title: "Filters", description: "Filter courses by track, status and instructor." })
+                }
+              >
+                <Icon name="filter_list" className="h-4 w-4" />
+                Filters
               </Button>
-            ) : undefined
+              {canCreateCourses && (
+                <Button onClick={() => setModalOpen(true)}>
+                  <Icon name="add" className="h-4 w-4" />
+                  New Course
+                </Button>
+              )}
+            </>
           }
         />
 
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 lg:col-span-7 space-y-4">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
               <h3 className="font-mono text-sm text-primary uppercase tracking-widest">
                 Active Courses ({filtered.length})
               </h3>
-              <div className="relative w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-                <Input
-                  className="pl-10 h-9"
-                  placeholder="Search courses..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
+              <div className="flex items-center gap-4">
+                <div className="relative w-56">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
+                  <Input
+                    className="pl-10 h-9"
+                    placeholder="Search courses..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+                <button
+                  className="text-sm text-primary hover:underline"
+                  onClick={() =>
+                    toast({ title: "All courses", description: `${filtered.length} active courses are shown here.` })
+                  }
+                >
+                  View All
+                </button>
               </div>
             </div>
 
@@ -83,8 +122,8 @@ export default function CourseManagementPage() {
                 key={c.id}
                 className="bg-surface-container-low border border-border-subtle p-4 rounded-xl flex gap-4 hover:border-primary transition-all group"
               >
-                <div className="w-32 h-20 rounded-lg flex-shrink-0 bg-surface-container-highest flex items-center justify-center">
-                  <Icon name="menu_book" className="h-8 w-8 text-primary/60" />
+                <div className="w-32 h-20 rounded-lg flex-shrink-0 bg-gradient-to-br from-primary/30 via-surface-container-highest to-tertiary/20 flex items-center justify-center grayscale group-hover:grayscale-0 transition-all duration-300">
+                  <Icon name="menu_book" className="h-8 w-8 text-primary/80" />
                 </div>
                 <div className="flex-1 flex flex-col justify-between">
                   <div className="flex justify-between items-start">
@@ -93,28 +132,37 @@ export default function CourseManagementPage() {
                         {c.title}
                       </h4>
                       <p className="text-text-muted text-xs font-mono mt-1">
-                        {c.code} • {c.track} • {c.instructor}
+                        {c.code} • {c.track}
                       </p>
                     </div>
-                    <Badge variant={c.status === "Published" ? "success" : "warning"} className="uppercase">
-                      {c.status}
-                    </Badge>
+                    {c.status === "Published" ? (
+                      <span className="text-[10px] px-2 py-0.5 rounded border font-bold uppercase bg-success-green/10 text-success-green border-success-green/20">
+                        {c.status}
+                      </span>
+                    ) : (
+                      <span className="text-[10px] px-2 py-0.5 rounded border font-bold uppercase bg-primary/10 text-primary border-primary/20">
+                        {c.status}
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center gap-6 mt-2">
                     <div className="flex items-center gap-1.5 text-text-muted">
                       <Icon name="group" className="h-4 w-4" />
                       <span className="text-xs">{c.enrolled.toLocaleString()} Enrolled</span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-text-muted">
-                      <Icon name="star" className="h-4 w-4" />
-                      <span className="text-xs">
-                        {c.rating > 0 ? `${c.rating} (${c.reviews.toLocaleString()})` : "No reviews"}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-text-muted">
-                      <Icon name="play_circle" className="h-4 w-4" />
-                      <span className="text-xs">{c.modules} modules</span>
-                    </div>
+                    {c.status === "Draft" ? (
+                      <div className="flex items-center gap-1.5 text-text-muted">
+                        <Icon name="schedule" className="h-4 w-4" />
+                        <span className="text-xs">Modified 2h ago</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1.5 text-text-muted">
+                        <Icon name="star" className="h-4 w-4" />
+                        <span className="text-xs">
+                          {c.rating > 0 ? `${c.rating} (${c.reviews.toLocaleString()})` : "No reviews"}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <RowActionsMenu
@@ -195,7 +243,7 @@ export default function CourseManagementPage() {
               <CardContent className="space-y-6">
                 {[
                   { icon: "play_circle", label: "Completion Rate", value: 76 },
-                  { icon: "forum", label: "Forum Activity", value: 42 },
+                  { icon: "chat_bubble", label: "Forum Activity", value: 42 },
                   { icon: "assignment", label: "Grading Queue", value: 90, danger: true, pending: 94 },
                 ].map((m) => (
                   <div key={m.label} className="flex items-center gap-4">
@@ -242,15 +290,20 @@ function CreateCourseModal({
   onCreated: () => void;
 }) {
   const [title, setTitle] = React.useState("");
-  const [visibility, setVisibility] = React.useState("private");
+  const [visibility, setVisibility] = React.useState("public");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl h-[85vh] overflow-y-auto custom-scrollbar">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Icon name="menu_book" className="h-5 w-5 text-primary" />
-            Create Course Blueprint
+          <DialogTitle className="flex flex-col items-start gap-1">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-primary">
+              Module Builder
+            </span>
+            <span className="flex items-center gap-2">
+              <Icon name="menu_book" className="h-5 w-5 text-primary" />
+              Designing &quot;{title || "Untitled Course"}&quot;
+            </span>
           </DialogTitle>
         </DialogHeader>
 

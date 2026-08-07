@@ -24,11 +24,11 @@ export function PageHeader({
   );
 }
 
-export function ExportButton({ onClick }: { onClick?: () => void }) {
+export function ExportButton({ onClick, label = "Export" }: { onClick?: () => void; label?: string }) {
   return (
     <Button variant="outline" onClick={onClick}>
       <Icon name="download" className="h-4 w-4" />
-      Export
+      {label}
     </Button>
   );
 }

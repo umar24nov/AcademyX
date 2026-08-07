@@ -3,6 +3,7 @@
 import {
   Bar,
   BarChart,
+  Cell,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -33,13 +34,23 @@ export function RevenueBarChart({
   yKey = "revenue",
   color = "#8083ff",
   height = 256,
+  highlightIndex,
 }: {
   data: SeriesPoint[];
   xKey?: string;
   yKey?: string;
   color?: string;
   height?: number;
+  highlightIndex?: number;
 }) {
+  const mutedFill = highlightIndex !== undefined ? "rgba(99,102,241,0.2)" : color;
+  const bars = data.map((d, i) => (
+    <Cell
+      key={`${d[xKey]}-${i}`}
+      fill={i === highlightIndex ? "#6366f1" : mutedFill}
+      {...(i === highlightIndex ? { className: "drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]" } : {})}
+    />
+  ));
   return (
     <ResponsiveContainer width="100%" height={height}>
       <BarChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
@@ -47,7 +58,13 @@ export function RevenueBarChart({
         <XAxis dataKey={xKey} stroke="#a1a1aa" fontSize={11} tickLine={false} axisLine={false} />
         <YAxis stroke="#a1a1aa" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v / 1000}k`} />
         <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "rgba(99,102,241,0.08)" }} />
-        <Bar dataKey={yKey} fill={color} radius={[6, 6, 0, 0]} maxBarSize={48} />
+        {highlightIndex !== undefined ? (
+          <Bar dataKey={yKey} radius={[6, 6, 0, 0]} maxBarSize={48}>
+            {bars}
+          </Bar>
+        ) : (
+          <Bar dataKey={yKey} fill={color} radius={[6, 6, 0, 0]} maxBarSize={48} />
+        )}
       </BarChart>
     </ResponsiveContainer>
   );

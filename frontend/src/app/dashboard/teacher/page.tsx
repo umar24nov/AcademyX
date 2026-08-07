@@ -330,6 +330,14 @@ export default function TeacherDashboardPage() {
             </Card>
           )}
         </div>
+
+        <button
+          className="fixed bottom-6 right-6 z-40 md:hidden w-14 h-14 bg-primary text-on-primary rounded-full shadow-[0_0_20px_rgba(192,193,255,0.4)] flex items-center justify-center active:scale-90 transition-transform"
+          onClick={() => setCreateOpen(true)}
+          aria-label="Create new material"
+        >
+          <Icon name="add" className="h-7 w-7" />
+        </button>
       </div>
 
       <ScheduleDialog

@@ -60,7 +60,7 @@ export default function InstituteAdminDashboardPage() {
           description="Real-time overview of AcademyX operations and performance."
           actions={
             <>
-              <ExportButton onClick={exportAdmissions} />
+              <ExportButton label="Export PDF" onClick={exportAdmissions} />
               <NewButton onClick={() => toast({ title: "New admission", description: "Use Students → Add Student to onboard a new learner." })}>
                 New Entry
               </NewButton>
@@ -70,28 +70,29 @@ export default function InstituteAdminDashboardPage() {
 
         <OnboardingBanner />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard
-            label="Total Students"
-            value={dashboardStats.activeStudents.total.toLocaleString()}
-            icon="group"
-            trend="+12%"
-            trendUp
-            accent="primary"
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="sm:col-span-2 lg:col-span-1">
+            <StatCard
+              label="Total Students"
+              value={dashboardStats.activeStudents.total.toLocaleString()}
+              icon="group"
+              trend="+12%"
+              trendUp
+              accent="primary"
+            />
+          </div>
           <StatCard
             label="Teacher Attendance"
             value={`${dashboardStats.teacherAttendance.total}%`}
             icon="verified_user"
-            sub="Daily Avg"
+            meta={{ text: "Daily Avg" }}
             accent="tertiary"
           />
           <StatCard
             label="Pending Fees"
             value={`₹${dashboardStats.pendingFees.total.toLocaleString()}`}
             icon="payments"
-            trend="Attention Required"
-            trendUp={false}
+            meta={{ text: "Attention Required", tone: "error" }}
             accent="error"
           />
         </div>
@@ -99,10 +100,10 @@ export default function InstituteAdminDashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-2">
             <CardHeader className="pb-0">
-              <MetricCardHeader title="Revenue Overview" />
+              <MetricCardHeader title="Revenue Overview" ranges={["Last 6 Months", "Year to Date"]} />
             </CardHeader>
             <CardContent>
-              <RevenueBarChart data={revenueSeries} />
+              <RevenueBarChart data={revenueSeries} color="#6366f1" highlightIndex={3} />
               <div className="grid grid-cols-2 gap-4 border-t border-border-subtle pt-6 mt-6">
                 <div>
                   <p className="text-sm text-text-muted">Net Growth</p>
@@ -247,6 +248,23 @@ export default function InstituteAdminDashboardPage() {
                 ))}
               </TableBody>
             </Table>
+            <div className="p-4 border-t border-border-subtle bg-surface-container-lowest flex items-center justify-between">
+              <p className="text-[10px] font-mono text-text-muted">
+                Showing {recentAdmissions.length} of 15 recent admissions
+              </p>
+              <div className="flex gap-2">
+                <button className="p-1 border border-border-subtle rounded opacity-40 cursor-not-allowed" aria-label="Previous page">
+                  <Icon name="chevron_left" className="h-4 w-4 text-text-muted" />
+                </button>
+                <button
+                  className="p-1 border border-border-subtle rounded hover:bg-surface-container-high"
+                  aria-label="Next page"
+                  onClick={() => toast({ title: "Admissions", description: "Loading the next page of recent admissions." })}
+                >
+                  <Icon name="chevron_right" className="h-4 w-4 text-text-muted" />
+                </button>
+              </div>
+            </div>
           </Card>
 
           <Card className="lg:col-span-3 overflow-hidden">
@@ -263,6 +281,14 @@ export default function InstituteAdminDashboardPage() {
             <ActivityFeed activities={activity} limit={5} />
           </Card>
         </div>
+
+        <button
+          className="fixed bottom-6 right-6 z-40 md:hidden w-14 h-14 bg-primary text-on-primary rounded-full shadow-[0_0_20px_rgba(192,193,255,0.4)] flex items-center justify-center active:scale-90 transition-transform"
+          onClick={() => toast({ title: "New admission", description: "Use Students → Add Student to onboard a new learner." })}
+          aria-label="New admission"
+        >
+          <Icon name="add" className="h-7 w-7" />
+        </button>
       </div>
     </DashboardShell>
   );

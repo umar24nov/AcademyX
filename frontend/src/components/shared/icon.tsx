@@ -78,6 +78,8 @@ import {
   Play,
   StopCircle,
   User,
+  Activity,
+  MessageCircle,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -161,6 +163,10 @@ const iconMap: Record<string, LucideIcon> = {
   stop_circle: StopCircle,
   person: User,
   groups: Users,
+  apartment: Building2,
+  sensors: Activity,
+  chat_bubble: MessageCircle,
+  history: History,
 };
 
 export function Icon({

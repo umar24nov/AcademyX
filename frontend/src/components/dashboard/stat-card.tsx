@@ -11,6 +11,8 @@ export type StatCardProps = {
   trend?: string;
   trendUp?: boolean;
   sub?: string;
+  meta?: { text: string; tone?: "muted" | "error" };
+  pulse?: boolean;
   accent?: "primary" | "tertiary" | "error" | "success";
 };
 
@@ -21,6 +23,8 @@ export function StatCard({
   trend,
   trendUp = true,
   sub,
+  meta,
+  pulse,
   accent = "primary",
 }: StatCardProps) {
   return (
@@ -49,6 +53,19 @@ export function StatCard({
           >
             {trendUp ? <TrendingUp className="h-3.5 w-3.5" /> : <TrendingDown className="h-3.5 w-3.5" />}
             {trend}
+          </span>
+        )}
+        {!trend && pulse && (
+          <span className="flex h-2 w-2 rounded-full bg-success-green animate-pulse" />
+        )}
+        {!trend && !pulse && meta && (
+          <span
+            className={cn(
+              "font-mono text-xs",
+              meta.tone === "error" ? "text-error" : "text-text-muted"
+            )}
+          >
+            {meta.text}
           </span>
         )}
       </div>

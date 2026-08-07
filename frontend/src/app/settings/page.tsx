@@ -84,17 +84,23 @@ export default function SettingsPage() {
     <DashboardShell>
       <div className="flex flex-col gap-6">
         <PageHeader
-          title="Settings"
-          description="Manage institute settings, branding and preferences."
+          title="Portal Customization"
+          description="Manage your institute's public appearance, branding assets, and domain configuration."
         />
 
-        <Tabs defaultValue="general">
+        <Tabs defaultValue="branding">
           <TabsList className="w-full h-auto flex-col items-stretch gap-1 justify-start rounded-xl p-1.5 md:w-auto md:h-10 md:flex-row md:items-center md:gap-0 md:rounded-lg md:p-1">
+            <TabsTrigger value="branding" className="w-full justify-start px-4 py-2.5 md:w-auto md:justify-center md:px-3 md:py-1.5">
+              Branding
+            </TabsTrigger>
             <TabsTrigger value="general" className="w-full justify-start px-4 py-2.5 md:w-auto md:justify-center md:px-3 md:py-1.5">
               General
             </TabsTrigger>
-            <TabsTrigger value="branding" className="w-full justify-start px-4 py-2.5 md:w-auto md:justify-center md:px-3 md:py-1.5">
-              Branding
+            <TabsTrigger value="domain" className="w-full justify-start px-4 py-2.5 md:w-auto md:justify-center md:px-3 md:py-1.5">
+              Domain
+            </TabsTrigger>
+            <TabsTrigger value="integrations" className="w-full justify-start px-4 py-2.5 md:w-auto md:justify-center md:px-3 md:py-1.5">
+              Integrations
             </TabsTrigger>
             <TabsTrigger value="academics" className="w-full justify-start px-4 py-2.5 md:w-auto md:justify-center md:px-3 md:py-1.5">
               Academics
@@ -110,8 +116,8 @@ export default function SettingsPage() {
           <TabsContent value="general" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Institute Information</CardTitle>
-                <CardDescription>Basic details about your institute shown across the platform.</CardDescription>
+                <CardTitle>General</CardTitle>
+                <CardDescription>Basic information about your coaching institute.</CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <label className="block">
@@ -119,11 +125,11 @@ export default function SettingsPage() {
                   <Input value={form.name} onChange={setField("name")} />
                 </label>
                 <label className="block">
-                  <span className="text-sm text-text-muted mb-1.5 block">Contact Email</span>
+                  <span className="text-sm text-text-muted mb-1.5 block">Support Email</span>
                   <Input value={form.contactEmail} onChange={setField("contactEmail")} />
                 </label>
                 <label className="block">
-                  <span className="text-sm text-text-muted mb-1.5 block">Phone</span>
+                  <span className="text-sm text-text-muted mb-1.5 block">Contact Phone</span>
                   <Input value={form.phone} onChange={setField("phone")} />
                 </label>
                 <label className="block">
@@ -152,36 +158,75 @@ export default function SettingsPage() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
-                  <span className="text-sm text-text-muted mb-2 block">Logo</span>
+                  <span className="text-sm text-text-muted mb-2 block">Institute Logo</span>
                   <div className="flex items-center gap-4">
-                    <div className="h-16 w-16 rounded-xl bg-primary flex items-center justify-center text-primary-foreground text-xl font-bold">
-                      VI
+                    <div className="h-24 w-24 rounded-2xl border-2 border-dashed border-border-subtle flex flex-col items-center justify-center gap-1 text-text-muted hover:border-primary transition-colors cursor-pointer">
+                      <Icon name="upload" className="h-6 w-6" />
+                      <span className="text-[10px] font-mono uppercase">SVG/PNG</span>
                     </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline">
-                        <Icon name="upload" className="h-4 w-4" />
-                        Upload Logo
-                      </Button>
-                      <Button variant="ghost">Remove</Button>
+                    <div className="space-y-1">
+                      <p className="text-xs text-text-muted">Recommended size 512x512px. Max size 2MB.</p>
+                      <div className="flex gap-2 pt-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => toast({ title: "Upload logo", description: "Logo upload is mocked in this demo." })}
+                        >
+                          <Icon name="upload" className="h-4 w-4" />
+                          Upload Logo
+                        </Button>
+                        <Button variant="ghost">Remove</Button>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <label className="block">
-                    <span className="text-sm text-text-muted mb-1.5 block">Primary Color</span>
+                  <div>
+                    <span className="text-sm text-text-muted mb-2 block">Primary Color</span>
                     <div className="flex items-center gap-2">
                       <input type="color" defaultValue="#6366f1" className="h-10 w-14 rounded border border-border-subtle bg-surface-container-low cursor-pointer" />
                       <Input className="font-mono" defaultValue="#6366f1" />
                     </div>
-                  </label>
-                  <label className="block">
-                    <span className="text-sm text-text-muted mb-1.5 block">Accent Color</span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-text-muted mb-2 block">Accent Color</span>
                     <div className="flex items-center gap-2">
                       <input type="color" defaultValue="#37cd8f" className="h-10 w-14 rounded border border-border-subtle bg-surface-container-low cursor-pointer" />
                       <Input className="font-mono" defaultValue="#37cd8f" />
                     </div>
-                  </label>
+                    <div className="flex items-center gap-2 mt-2">
+                      {["#6366f1", "#ec4899", "#10b981", "#f59e0b"].map((c) => (
+                        <button
+                          key={c}
+                          className="h-5 w-5 rounded-full border-2 border-border-subtle hover:border-on-surface transition-colors"
+                          style={{ backgroundColor: c }}
+                          aria-label={`Accent preset ${c}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <span className="text-sm text-text-muted mb-2 block">Portal Theme</span>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { label: "Dark Mode", active: true },
+                      { label: "Light Mode", active: false },
+                      { label: "Auto", active: false },
+                    ].map((t) => (
+                      <button
+                        key={t.label}
+                        className={`rounded-lg border p-4 text-sm font-medium transition-colors ${
+                          t.active
+                            ? "border-primary text-on-surface"
+                            : "border-border-subtle text-text-muted hover:border-on-surface-variant"
+                        }`}
+                      >
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="p-4 rounded-lg border border-border-subtle bg-surface-container-low flex items-center justify-between">
@@ -201,6 +246,73 @@ export default function SettingsPage() {
                   Save Branding
                 </Button>
               </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="domain" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Domain</CardTitle>
+                <CardDescription>Configure how users access your portal.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <span className="text-sm text-text-muted mb-1.5 block">Subdomain</span>
+                  <div className="flex items-center">
+                    <Input className="rounded-r-none font-mono" defaultValue="enterprise" />
+                    <span className="h-10 px-3 inline-flex items-center rounded-r-lg border border-l-0 border-border-subtle bg-surface-container-low font-mono text-sm text-text-muted">
+                      .academyx.app
+                    </span>
+                  </div>
+                </div>
+                <div className="p-4 rounded-lg border border-border-subtle bg-surface-container-low space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-on-surface">Custom Domain</span>
+                    <span className="px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 text-[10px] font-mono uppercase">
+                      Enterprise Only
+                    </span>
+                  </div>
+                  <p className="text-xs text-text-muted">
+                    Point your own domain to our servers using a CNAME record.
+                  </p>
+                  <Input placeholder="learn.yourdomain.com" disabled />
+                  <Button disabled>
+                    <Icon name="add" className="h-4 w-4" />
+                    Add Domain
+                  </Button>
+                </div>
+              </CardContent>
+              <div className="px-6 pb-6 flex gap-2">
+                <Button variant="ghost">Discard Changes</Button>
+                <Button onClick={() => toast({ title: "Settings saved", description: "Domain configuration has been updated successfully." })}>
+                  <Icon name="save" className="h-4 w-4" />
+                  Save Changes
+                </Button>
+              </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="integrations" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Integrations</CardTitle>
+                <CardDescription>Connect external services to extend your portal.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {[
+                  { label: "Zoom Meetings", desc: "Schedule live classes directly from Zoom" },
+                  { label: "Google Workspace", desc: "Single sign-on and calendar sync" },
+                  { label: "Razorpay", desc: "Collect fees via UPI, cards and net banking" },
+                ].map((n) => (
+                  <div key={n.label} className="flex items-center justify-between gap-4 p-4 rounded-lg border border-border-subtle bg-surface-container-low">
+                    <div>
+                      <p className="font-medium text-on-surface">{n.label}</p>
+                      <p className="text-xs text-text-muted mt-0.5">{n.desc}</p>
+                    </div>
+                    <Switch defaultChecked={n.label === "Razorpay"} />
+                  </div>
+                ))}
+              </CardContent>
             </Card>
           </TabsContent>
 

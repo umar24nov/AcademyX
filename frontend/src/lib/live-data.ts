@@ -883,11 +883,13 @@ export async function fetchAdminOverview(): Promise<AdminOverviewData> {
 export interface SuperAdminInstituteRow {
   id: string;
   name: string;
+  initials: string;
+  adminEmail: string;
   plan: string;
   students: number;
   mrr: number;
   status: string;
-  health: number;
+  onboarded: string;
 }
 
 export interface SuperAdminOverviewData {
@@ -907,23 +909,21 @@ export interface SuperAdminOverviewData {
 
 export const mockSuperAdminOverviewData: SuperAdminOverviewData = {
   platformStats: {
-    totalInstitutes: 1284,
-    activeInstitutes: 1022,
-    totalStudents: 348200,
-    mrr: 465000,
-    revenueGrowth: 18,
+    totalInstitutes: 124,
+    activeInstitutes: 124,
+    totalStudents: 45210,
+    mrr: 82400,
+    revenueGrowth: 12,
     churn: 2.4,
     trialConversions: 38,
     avgRevenuePerInstitute: 455,
   },
   mrrSeries: mockRevenueSeries.map((p) => ({ ...p, institutes: p.enrollments })),
   institutes: [
-    { id: "inst_001", name: "Sunrise Academy", plan: "Professional", students: 2842, mrr: 1240, status: "Active", health: 96 },
-    { id: "inst_002", name: "Sharma Classes", plan: "Starter", students: 540, mrr: 340, status: "Active", health: 82 },
-    { id: "inst_003", name: "Al-Madina Coaching Centre", plan: "Enterprise", students: 12300, mrr: 8900, status: "Active", health: 99 },
-    { id: "inst_004", name: "Navodaya Academy", plan: "Professional", students: 2100, mrr: 980, status: "Trial", health: 61 },
-    { id: "inst_005", name: "Crescent Institute", plan: "Starter", students: 320, mrr: 0, status: "Suspended", health: 40 },
-    { id: "inst_006", name: "Iqra Girls Academy", plan: "Professional", students: 720, mrr: 720, status: "Active", health: 91 },
+    { id: "inst_001", name: "Global Tech Academy", initials: "GT", adminEmail: "admin@globaltech.edu", plan: "Enterprise", students: 8420, mrr: 12400, status: "Active", onboarded: "Oct 24, 2023" },
+    { id: "inst_002", name: "Zenith Coaching", initials: "ZC", adminEmail: "billing@zenith.co", plan: "Pro", students: 5310, mrr: 7800, status: "Active", onboarded: "Oct 22, 2023" },
+    { id: "inst_003", name: "Vanguard Scholars", initials: "VS", adminEmail: "support@vanguard.io", plan: "Starter", students: 1890, mrr: 2400, status: "Verification Pending", onboarded: "Oct 21, 2023" },
+    { id: "inst_004", name: "Nexus Science Hub", initials: "NS", adminEmail: "contact@nexus.edu", plan: "Enterprise", students: 12200, mrr: 16800, status: "Active", onboarded: "Oct 20, 2023" },
   ],
 };
 
@@ -949,11 +949,13 @@ export async function fetchSuperAdminOverview(): Promise<SuperAdminOverviewData>
       ? institutes.institutes.map((i) => ({
           id: i.id,
           name: i.name,
+          initials: i.initials ?? initialsOf(i.name),
+          adminEmail: i.owner ?? "—",
           plan: planLabel(i.plan),
           students: i.students ?? 0,
           mrr: i.mrr ?? 0,
           status: instituteStatusLabel(i.status),
-          health: 0,
+          onboarded: "—",
         }))
       : mockSuperAdminOverviewData.institutes;
 
