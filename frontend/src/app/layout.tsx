@@ -16,9 +16,27 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AcademyX | The Operating System for Coaching Institutes",
+  metadataBase: new URL("https://academy-x-ivory.vercel.app"),
+  title: {
+    default: "AcademyX | The Operating System for Coaching Institutes",
+    template: "%s | AcademyX",
+  },
   description:
     "Multi-tenant SaaS platform for coaching institutes. Run your entire academy — students, teachers, courses, batches, live classes, exams, and payments — from a single platform.",
+  openGraph: {
+    title: "AcademyX | The Operating System for Coaching Institutes",
+    description:
+      "Multi-tenant SaaS platform for coaching institutes. Run your entire academy — students, teachers, courses, batches, live classes, exams, and payments — from a single platform.",
+    url: "https://academy-x-ivory.vercel.app",
+    siteName: "AcademyX",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "AcademyX | The Operating System for Coaching Institutes",
+    description:
+      "Multi-tenant SaaS platform for coaching institutes. Run your entire academy — students, teachers, courses, batches, live classes, exams, and payments — from a single platform.",
+  },
 };
 
 export default function RootLayout({
