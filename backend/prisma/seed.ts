@@ -335,9 +335,9 @@ async function main() {
     where: { id: { in: ["seed_batch_sunrise_01", "seed_batch_sunrise_02"] } },
   });
 
-  // Remove the legacy institute admin login (replaced by admin@sunriseacademy.in).
+  // Remove the legacy institute admin login (replaced by admin@zenrix.app).
   const legacyAdmin = await prisma.user.findUnique({
-    where: { email_role: { email: "arif.hussain@sunriseacademy.in", role: Role.INSTITUTE_ADMIN } },
+    where: { email_role: { email: "arif.hussain@zenrix.app", role: Role.INSTITUTE_ADMIN } },
   });
   if (legacyAdmin) {
     await prisma.announcement.deleteMany({ where: { authorId: legacyAdmin.id } });
@@ -347,7 +347,7 @@ async function main() {
   const sunrise = await seedInstitute({
     slug: "sunrise",
     name: "Sunrise Academy",
-    contactEmail: "admin@sunriseacademy.in",
+    contactEmail: "admin@zenrix.app",
     phone: "+91 98765 43210",
     address: "Begumpet, Hyderabad, Telangana 500016",
     about: "Premier JEE & NEET coaching centre with small batches and daily doubt sessions.",
@@ -355,25 +355,25 @@ async function main() {
     status: InstituteStatus.ACTIVE,
     primaryColor: "#6366f1",
     accentColor: "#37cd8f",
-    admin: { name: "Mohammed Arif Hussain", email: "admin@sunriseacademy.in" },
+    admin: { name: "Mohammed Arif Hussain", email: "admin@zenrix.app" },
     teachers: [
-      teacher("Dr. Ayesha Ansari", "teacher@sunriseacademy.in", "EMP-001", "Physics", "PhD, Physics", "Rotational Mechanics"),
-      teacher("Prof. Arjun Nair", "arjun.nair@sunriseacademy.in", "EMP-002", "Mathematics", "MSc, Mathematics", "Calculus & Algebra"),
-      teacher("Dr. Kavya Reddy", "kavya.reddy@sunriseacademy.in", "EMP-003", "Chemistry", "PhD, Chemistry", "Organic Chemistry"),
+      teacher("Dr. Ayesha Ansari", "teacher@zenrix.app", "EMP-001", "Physics", "PhD, Physics", "Rotational Mechanics"),
+      teacher("Prof. Arjun Nair", "arjun.nair@zenrix.app", "EMP-002", "Mathematics", "MSc, Mathematics", "Calculus & Algebra"),
+      teacher("Dr. Kavya Reddy", "kavya.reddy@zenrix.app", "EMP-003", "Chemistry", "PhD, Chemistry", "Organic Chemistry"),
     ],
     students: [
-      student("Ayesha Khan", "student@sunriseacademy.in", "AX-2026-001", "Imran Khan", "+91 99887 76651", "2008-06-15", "Secunderabad, Hyderabad"),
-      student("Mohammed Imran", "mohammed.imran@sunriseacademy.in", "AX-2026-002", "Naseer Imran", "+91 99887 76652", "2008-02-09", "Kukatpally, Hyderabad"),
-      student("Aisha Siddiqui", "aisha.siddiqui@sunriseacademy.in", "AX-2026-003", "Faisal Siddiqui", "+91 99887 76653", "2008-11-22", "Banjara Hills, Hyderabad"),
-      student("Rohan Sharma", "rohan.sharma@sunriseacademy.in", "AX-2026-004", "Pradeep Sharma", "+91 99887 76654", "2008-04-18", "Ameerpet, Hyderabad"),
-      student("Priya Patel", "priya.patel@sunriseacademy.in", "AX-2026-005", "Rajesh Patel", "+91 99887 76655", "2008-09-03", "Madhapur, Hyderabad"),
-      student("Rahul Verma", "rahul.verma@sunriseacademy.in", "AX-2026-006", "Sunil Verma", "+91 99887 76656", "2008-01-27", "Gachibowli, Hyderabad"),
-      student("Fatima Sheikh", "fatima.sheikh@sunriseacademy.in", "AX-2026-007", "Yusuf Sheikh", "+91 99887 76657", "2008-07-12", "Charminar, Hyderabad"),
-      student("Aditya Gupta", "aditya.gupta@sunriseacademy.in", "AX-2026-008", "Manoj Gupta", "+91 99887 76658", "2008-03-30", "Kavuri Hills, Hyderabad"),
-      student("Zainab Ansari", "zainab.ansari@sunriseacademy.in", "AX-2026-009", "Rashid Ansari", "+91 99887 76659", "2008-12-08", "Tolichowki, Hyderabad"),
-      student("Kabir Singh", "kabir.singh@sunriseacademy.in", "AX-2026-010", "Gurpreet Singh", "+91 99887 76660", "2008-05-25", "Attapur, Hyderabad"),
-      student("Neha Reddy", "neha.reddy@sunriseacademy.in", "AX-2026-011", "Srinivas Reddy", "+91 99887 76661", "2008-10-14", "Manikonda, Hyderabad"),
-      student("Irfan Qureshi", "irfan.qureshi@sunriseacademy.in", "AX-2026-012", "Salim Qureshi", "+91 99887 76662", "2008-08-21", "Mehdipatnam, Hyderabad"),
+      student("Ayesha Khan", "student@zenrix.app", "ZX-2026-001", "Imran Khan", "+91 99887 76651", "2008-06-15", "Secunderabad, Hyderabad"),
+      student("Mohammed Imran", "mohammed.imran@zenrix.app", "ZX-2026-002", "Naseer Imran", "+91 99887 76652", "2008-02-09", "Kukatpally, Hyderabad"),
+      student("Aisha Siddiqui", "aisha.siddiqui@zenrix.app", "ZX-2026-003", "Faisal Siddiqui", "+91 99887 76653", "2008-11-22", "Banjara Hills, Hyderabad"),
+      student("Rohan Sharma", "rohan.sharma@zenrix.app", "ZX-2026-004", "Pradeep Sharma", "+91 99887 76654", "2008-04-18", "Ameerpet, Hyderabad"),
+      student("Priya Patel", "priya.patel@zenrix.app", "ZX-2026-005", "Rajesh Patel", "+91 99887 76655", "2008-09-03", "Madhapur, Hyderabad"),
+      student("Rahul Verma", "rahul.verma@zenrix.app", "ZX-2026-006", "Sunil Verma", "+91 99887 76656", "2008-01-27", "Gachibowli, Hyderabad"),
+      student("Fatima Sheikh", "fatima.sheikh@zenrix.app", "ZX-2026-007", "Yusuf Sheikh", "+91 99887 76657", "2008-07-12", "Charminar, Hyderabad"),
+      student("Aditya Gupta", "aditya.gupta@zenrix.app", "ZX-2026-008", "Manoj Gupta", "+91 99887 76658", "2008-03-30", "Kavuri Hills, Hyderabad"),
+      student("Zainab Ansari", "zainab.ansari@zenrix.app", "ZX-2026-009", "Rashid Ansari", "+91 99887 76659", "2008-12-08", "Tolichowki, Hyderabad"),
+      student("Kabir Singh", "kabir.singh@zenrix.app", "ZX-2026-010", "Gurpreet Singh", "+91 99887 76660", "2008-05-25", "Attapur, Hyderabad"),
+      student("Neha Reddy", "neha.reddy@zenrix.app", "ZX-2026-011", "Srinivas Reddy", "+91 99887 76661", "2008-10-14", "Manikonda, Hyderabad"),
+      student("Irfan Qureshi", "irfan.qureshi@zenrix.app", "ZX-2026-012", "Salim Qureshi", "+91 99887 76662", "2008-08-21", "Mehdipatnam, Hyderabad"),
     ],
     batchId: "seed_batch_sunrise_01",
     batchName: "JEE Advanced 2027 – Batch A",
@@ -459,7 +459,7 @@ async function main() {
 
   // ---- Demo student enrollment in both batches ----
   const demoStudent = await prisma.user.findUnique({
-    where: { email_role: { email: "student@sunriseacademy.in", role: Role.STUDENT } },
+    where: { email_role: { email: "student@zenrix.app", role: Role.STUDENT } },
   });
   if (demoStudent) {
     const demoProfile = await prisma.studentProfile.findUnique({ where: { userId: demoStudent.id } });
@@ -635,7 +635,7 @@ async function main() {
 
   // ---- Announcement ----
   const sunriseAdmin = await prisma.user.findUnique({
-    where: { email_role: { email: "admin@sunriseacademy.in", role: Role.INSTITUTE_ADMIN } },
+    where: { email_role: { email: "admin@zenrix.app", role: Role.INSTITUTE_ADMIN } },
   });
   if (sunriseAdmin) {
     await prisma.announcement.create({
@@ -864,9 +864,9 @@ async function main() {
   console.log("🌱 Seeding complete.");
   console.log("\nDemo logins (password: password123):");
   console.log("  super@zenrix.app          → SUPER_ADMIN");
-  console.log("  admin@sunriseacademy.in     → INSTITUTE_ADMIN");
-  console.log("  teacher@sunriseacademy.in   → TEACHER");
-  console.log("  student@sunriseacademy.in   → STUDENT");
+  console.log("  admin@zenrix.app     → INSTITUTE_ADMIN");
+  console.log("  teacher@zenrix.app   → TEACHER");
+  console.log("  student@zenrix.app   → STUDENT");
   console.log("\nAlso seeded:");
   console.log("  Sharma Classes · Al-Madina Coaching Centre · Navodaya Academy · Crescent Institute · Iqra Girls Academy");
 }

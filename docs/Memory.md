@@ -12,7 +12,7 @@ Multi-tenant EdTech SaaS ("the operating system for coaching institutes"). Next.
 - Backend API: `https://academyx-api.onrender.com` (prefix `/api/v1`, health `/health`, socket `/socket.io`).
 - Frontend: `https://academy-x-ivory.vercel.app`.
 - DB: Neon Postgres. Git remote: `https://github.com/umar24nov/AcademyX.git` (`main`).
-- Demo logins (`password123`): `super@zenrix.app` · `admin@sunriseacademy.in` (INSTITUTE_ADMIN) · `teacher@sunriseacademy.in` (Dr. Ayesha Ansari) · `student@sunriseacademy.in` (Ayesha Khan).
+- Demo logins (`password123`): `super@zenrix.app` · `admin@zenrix.app` (INSTITUTE_ADMIN) · `teacher@zenrix.app` (Dr. Ayesha Ansari) · `student@zenrix.app` (Ayesha Khan).
 - Onboarding-created accounts: default password `Zenrix@12345`.
 - Sunrise seed IDs: `seed_course_001`, `seed_batch_sunrise_01`/`_02`, `seed_exam_001`, `seed_assign_001`.
 

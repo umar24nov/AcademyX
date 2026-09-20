@@ -108,9 +108,9 @@ All seeded accounts use the password **`password123`**:
 | Role | Email | Description |
 | --- | --- | --- |
 | Super Admin | `super@zenrix.app` | Platform operator, manages all institutes |
-| Institute Admin | `admin@sunriseacademy.in` | Owner/principal of Sunrise Academy |
-| Teacher | `teacher@sunriseacademy.in` | Dr. Ayesha Ansari (Physics) |
-| Student | `student@sunriseacademy.in` | Ayesha Khan |
+| Institute Admin | `admin@zenrix.app` | Owner/principal of Sunrise Academy |
+| Teacher | `teacher@zenrix.app` | Dr. Ayesha Ansari (Physics) |
+| Student | `student@zenrix.app` | Ayesha Khan |
 
 - Accounts created through the onboarding wizard use the default password **`Zenrix@12345`**.
 - The seed script creates **6 Indian coaching institutes and 50+ students/teachers**, with Sunrise Academy as the primary fully-wired demo tenant.
@@ -575,7 +575,7 @@ cp .env.example .env.local  # NEXT_PUBLIC_API_URL points at the backend
 npm run dev                 # -> http://localhost:3000
 ```
 
-Sign in with a seeded account (e.g. `admin@sunriseacademy.in` / `password123`).
+Sign in with a seeded account (e.g. `admin@zenrix.app` / `password123`).
 
 > The frontend ships mock fallback data (`lib/live-data.ts`, `lib/mock-data.ts`), so every page renders even when the API is unreachable.
 

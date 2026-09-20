@@ -74,9 +74,9 @@ This causes lost data, no single source of truth, and poor student experience. Z
 Demo accounts (password `password123`):
 
 - `super@zenrix.app` — Super Admin
-- `admin@sunriseacademy.in` — Institute Admin (Sunrise Academy)
-- `teacher@sunriseacademy.in` — Teacher (Dr. Ayesha Ansari)
-- `student@sunriseacademy.in` — Student (Ayesha Khan)
+- `admin@zenrix.app` — Institute Admin (Sunrise Academy)
+- `teacher@zenrix.app` — Teacher (Dr. Ayesha Ansari)
+- `student@zenrix.app` — Student (Ayesha Khan)
 
 Accounts created through the onboarding wizard use the default password `Zenrix@12345`.
 

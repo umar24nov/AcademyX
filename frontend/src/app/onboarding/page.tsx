@@ -558,7 +558,7 @@ function StudentStep({ busy, setBusy, onSaved, toast }: StepProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
           <Label className="text-on-surface">Roll number</Label>
-          <Input value={rollNumber} onChange={(e) => setRollNumber(e.target.value)} placeholder="AX-2026-001" required />
+          <Input value={rollNumber} onChange={(e) => setRollNumber(e.target.value)} placeholder="ZX-2026-001" required />
         </div>
         <div className="flex flex-col gap-1.5">
           <Label className="text-on-surface">Batch</Label>
