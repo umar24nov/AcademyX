@@ -63,7 +63,7 @@ function downloadMaterialAsset(m: TeacherMaterialRow) {
   const slug =
     m.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "material";
   const body = [
-    "AcademyX Material",
+    "Zenrix Material",
     "-----------------",
     `Title: ${m.title}`,
     `Details: ${m.meta}`,

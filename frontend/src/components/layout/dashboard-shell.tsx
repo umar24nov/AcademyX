@@ -49,7 +49,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <div className="flex flex-col md:flex-row items-center gap-6">
               <BrandLogo boxClass="w-8 h-8 rounded-md" iconClass="h-4 w-4" textClass="text-lg text-primary" />
               <p className="text-sm text-text-muted">
-                © 2026 {user.instituteName ?? "AcademyX"}. All rights reserved.
+                © 2026 {user.instituteName ?? "Zenrix"}. All rights reserved.
               </p>
             </div>
             <div className="flex gap-6">

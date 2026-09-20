@@ -29,7 +29,7 @@ export function BrandLogo({
   return (
     <Link
       href={href}
-      aria-label="AcademyX home"
+      aria-label="Zenrix home"
       className={cn("flex items-center gap-2", className)}
     >
       <div
@@ -42,7 +42,7 @@ export function BrandLogo({
       </div>
       {showText && (
         <span className={cn("font-semibold text-text-heading tracking-tight", textClass)}>
-          AcademyX
+          Zenrix
         </span>
       )}
     </Link>

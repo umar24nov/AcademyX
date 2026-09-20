@@ -35,7 +35,7 @@ const envSchema = z.object({
   RAZORPAY_KEY_ID: z.string().optional(),
   RAZORPAY_KEY_SECRET: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
-  EMAIL_FROM: z.string().default("AcademyX <no-reply@academyx.app>"),
+  EMAIL_FROM: z.string().default("Zenrix <no-reply@zenrix.app>"),
 });
 
 const parsed = envSchema.safeParse(process.env);

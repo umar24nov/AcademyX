@@ -1,10 +1,10 @@
-# AcademyX — Architecture
+# Zenrix — Architecture
 
 > Living reference. Last updated: 2026-08-04
 
 ## 1. High-Level Overview
 
-AcademyX is a **client-server monorepo** with two deployable apps plus a hosted database:
+Zenrix is a **client-server monorepo** with two deployable apps plus a hosted database:
 
 ```mermaid
 flowchart LR
@@ -226,7 +226,7 @@ sequenceDiagram
 ## 5. Frontend Architecture
 
 ### 5.1 Data Layer
-- `frontend/src/lib/api.ts`: `api.get/post/patch` wrap `fetch`, attach `Authorization`, unwrap `{success,data}`, auto-refresh expired access tokens; `getStoredUser()` reads the `ax_session` storage key; `tryGet<T>` returns `null` on any API failure.
+- `frontend/src/lib/api.ts`: `api.get/post/patch` wrap `fetch`, attach `Authorization`, unwrap `{success,data}`, auto-refresh expired access tokens; `getStoredUser()` reads the `zx_session` storage key; `tryGet<T>` returns `null` on any API failure.
 - `frontend/src/lib/live.ts`: `useLive(fetcher, mockFallback)` — fetches on mount, keeps a mock fallback while the API is unavailable.
 - `frontend/src/lib/live-data.ts`: typed fetchers + mock data per module (exams, assignments, live classes, onboarding, batches, etc.).
 

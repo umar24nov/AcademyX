@@ -1,4 +1,4 @@
-# AcademyX — Phases
+# Zenrix — Phases
 
 > Progress log of how the project was built, phase by phase. **Keep updating as new phases land.**
 > Latest phase: 9 (CI/CD). Next planned: 10 (Payments).
@@ -29,7 +29,7 @@ flowchart LR
 ```
 
 ## Phase 1 — Foundation & Multi-Tenant Scaffold — `DONE`
-- Initial AcademyX multi-tenant EdTech platform scaffold (`f488839`).
+- Initial Zenrix multi-tenant EdTech platform scaffold (`f488839`).
 - Super-admin through institute-scoped routes; init migration (`8808446`).
 - Deliverables: Express + Prisma + PostgreSQL backend, JWT auth (access + rotating refresh), RBAC (`SUPER_ADMIN/INSTITUTE_ADMIN/TEACHER/STUDENT`), institute scoping, `{success,data}` API envelope, deployed to Render / Vercel / Neon.
 

@@ -70,7 +70,7 @@ export default function ProfilePage() {
           <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle className="text-lg">Profile Information</CardTitle>
-              <CardDescription>Your account details as registered in AcademyX.</CardDescription>
+              <CardDescription>Your account details as registered in Zenrix.</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-4 mb-6">

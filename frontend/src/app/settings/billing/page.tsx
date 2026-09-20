@@ -83,7 +83,7 @@ export default function BillingPage() {
   const choosePlan = (name: string) => {
     toast({
       title: "Plan selected",
-      description: `${name} plan upgrade requests are processed by the AcademyX team.`,
+      description: `${name} plan upgrade requests are processed by the Zenrix team.`,
     });
   };
 

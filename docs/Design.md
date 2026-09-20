@@ -1,4 +1,4 @@
-# AcademyX — Design
+# Zenrix — Design
 
 > Visual design reference, extracted from the implemented codebase (`frontend/src/app/globals.css`, `layout.tsx`).
 > Last updated: 2026-08-04
@@ -124,7 +124,7 @@ flowchart LR
 
 - **lucide-react**, accessed only via the `Icon` component (`frontend/src/components/shared/icon.tsx`, `iconMap`). Add new icons by importing into `iconMap`.
 - Material-style names map to lucide (e.g., `arrow_left`, `check_circle`, `play_circle`, `videocam`, `groups`, `menu_book`, `calendar_today`, `currency_rupee`).
-- Imagery: UI design assets in `AcademyX_UI_Screens/` are presentation artifacts, not app assets.
+- Imagery: UI design assets in `Zenrix_UI_Screens/` are presentation artifacts, not app assets.
 
 ## 7. Responsive Behavior
 

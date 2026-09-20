@@ -39,7 +39,7 @@ export function Sidebar({ user, mobile = false }: { user: UserSession; mobile?: 
         </div>
         <div>
           <h1 className="font-semibold text-lg text-text-heading leading-tight tracking-tight">
-            AcademyX
+            Zenrix
           </h1>
           <p className="text-[10px] text-text-muted uppercase tracking-widest font-mono">
             {user.role === "SUPER_ADMIN" ? "Platform Admin" : user.instituteName ?? "Institute"}

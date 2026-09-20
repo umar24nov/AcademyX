@@ -2028,7 +2028,7 @@ export interface OnboardingStudentPayload {
 
 export async function createTeacherOnboarding(payload: OnboardingTeacherPayload): Promise<boolean> {
   try {
-    await api.post("/teachers", { ...payload, password: "AcademyX@12345" });
+    await api.post("/teachers", { ...payload, password: "Zenrix@12345" });
     return true;
   } catch {
     return false;
@@ -2055,7 +2055,7 @@ export async function createBatchOnboarding(payload: OnboardingBatchPayload): Pr
 
 export async function createStudentOnboarding(payload: OnboardingStudentPayload): Promise<boolean> {
   try {
-    await api.post("/students", { ...payload, password: "AcademyX@12345" });
+    await api.post("/students", { ...payload, password: "Zenrix@12345" });
     return true;
   } catch {
     return false;

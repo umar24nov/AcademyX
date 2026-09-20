@@ -18,22 +18,22 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://academy-x-ivory.vercel.app"),
   title: {
-    default: "AcademyX | The Operating System for Coaching Institutes",
-    template: "%s | AcademyX",
+    default: "Zenrix | The Operating System for Coaching Institutes",
+    template: "%s | Zenrix",
   },
   description:
     "Multi-tenant SaaS platform for coaching institutes. Run your entire academy — students, teachers, courses, batches, live classes, exams, and payments — from a single platform.",
   openGraph: {
-    title: "AcademyX | The Operating System for Coaching Institutes",
+    title: "Zenrix | The Operating System for Coaching Institutes",
     description:
       "Multi-tenant SaaS platform for coaching institutes. Run your entire academy — students, teachers, courses, batches, live classes, exams, and payments — from a single platform.",
     url: "https://academy-x-ivory.vercel.app",
-    siteName: "AcademyX",
+    siteName: "Zenrix",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "AcademyX | The Operating System for Coaching Institutes",
+    title: "Zenrix | The Operating System for Coaching Institutes",
     description:
       "Multi-tenant SaaS platform for coaching institutes. Run your entire academy — students, teachers, courses, batches, live classes, exams, and payments — from a single platform.",
   },

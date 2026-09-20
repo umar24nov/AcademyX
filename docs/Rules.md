@@ -1,4 +1,4 @@
-# AcademyX — Rules
+# Zenrix — Rules
 
 > Contract for how this codebase is built and maintained — including boundaries for AI agents.
 > Last updated: 2026-08-04
@@ -31,8 +31,8 @@
 - Do not bypass role guards or institute scoping on the backend.
 - Do not add new npm dependencies casually; prefer what's already installed (Radix UI, lucide-react, recharts, socket.io / socket.io-client, zod).
 - Do not run `npm audit fix` or bulk-dependency bumps as part of feature work; leave dependency updates to Dependabot PRs.
-- Never touch `AcademyX_UI_Screens/` source PNGs or the `AcademyX_UI_Walkthrough.pptx` deliverables.
-- Never stage/commit `~$AcademyX_UI_Walkthrough.pptx` (Office lock file).
+- Never touch `Zenrix_UI_Screens/` source PNGs or the `Zenrix_UI_Walkthrough.pptx` deliverables.
+- Never stage/commit `~$Zenrix_UI_Walkthrough.pptx` (Office lock file).
 
 ## 4. Error Handling
 

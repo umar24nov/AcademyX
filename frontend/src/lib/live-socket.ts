@@ -50,7 +50,7 @@ export function useLiveSession(liveClassId?: string) {
     if (!liveClassId) return;
     const user = getStoredUser();
     if (!user) return;
-    const token = localStorage.getItem("ax_access_token");
+    const token = localStorage.getItem("zx_access_token");
     if (!token) return;
 
     const socket = createLiveSocket(token);

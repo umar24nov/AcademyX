@@ -101,7 +101,7 @@ function OnboardingInner() {
     <DashboardShell>
       <div className="flex flex-col gap-6">
         <PageHeader
-          title="Welcome to AcademyX"
+          title="Welcome to Zenrix"
           description={state ? `Set up ${state.instituteName} in under five minutes.` : "Set up your institute."}
         />
 
@@ -308,7 +308,7 @@ function TeacherStep({ busy, setBusy, onSaved, toast }: StepProps) {
     if (ok) {
       toast({
         title: "Teacher added",
-        description: "Sign-in credentials: email + AcademyX@12345",
+        description: "Sign-in credentials: email + Zenrix@12345",
       });
       await onSaved();
     } else {
@@ -344,7 +344,7 @@ function TeacherStep({ busy, setBusy, onSaved, toast }: StepProps) {
         </div>
       </div>
       <p className="text-xs text-text-muted bg-surface-container-low rounded-lg p-3">
-        Default sign-in password is <code className="font-mono text-primary">AcademyX@12345</code>. They can change it
+        Default sign-in password is <code className="font-mono text-primary">Zenrix@12345</code>. They can change it
         after first login.
       </p>
       <StepNav onBack={() => {}} showBack={false} />
@@ -528,7 +528,7 @@ function StudentStep({ busy, setBusy, onSaved, toast }: StepProps) {
     if (ok) {
       toast({
         title: "Student added",
-        description: "Sign-in credentials: email + AcademyX@12345",
+        description: "Sign-in credentials: email + Zenrix@12345",
       });
       await onSaved();
     } else {
@@ -583,7 +583,7 @@ function StudentStep({ busy, setBusy, onSaved, toast }: StepProps) {
         </div>
       </div>
       <p className="text-xs text-text-muted bg-surface-container-low rounded-lg p-3">
-        Default sign-in password is <code className="font-mono text-primary">AcademyX@12345</code>.
+        Default sign-in password is <code className="font-mono text-primary">Zenrix@12345</code>.
       </p>
       <StepNav onBack={() => {}} showBack={false} />
       <Button type="submit" disabled={busy} className="mt-2">

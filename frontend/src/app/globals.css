@@ -99,7 +99,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* ---------- AcademyX design tokens ---------- */
+/* ---------- Zenrix design tokens ---------- */
 @theme inline {
   --color-surface: #18181b;
   --color-surface-dim: #131315;

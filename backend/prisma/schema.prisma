@@ -1,4 +1,4 @@
-// AcademyX multi-tenant EdTech SaaS schema
+// Zenrix multi-tenant EdTech SaaS schema
 // All tenant-scoped models carry instituteId and are isolated by tenant middleware.
 
 generator client {

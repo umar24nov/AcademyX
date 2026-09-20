@@ -59,7 +59,7 @@ router.post("/", requireRole(Role.INSTITUTE_ADMIN, Role.TEACHER), validate(stude
         data: {
           name,
           email: email.toLowerCase(),
-          passwordHash: await hashPassword(password ?? "AcademyX@12345"),
+          passwordHash: await hashPassword(password ?? "Zenrix@12345"),
           role: Role.STUDENT,
           status: UserStatus.ACTIVE,
           instituteId: req.user!.instituteId!,

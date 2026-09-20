@@ -68,7 +68,7 @@ export function RoleLoginForm({
         return;
       }
       setTokens(data.accessToken, data.refreshToken);
-      localStorage.setItem("ax_session", JSON.stringify(data.user));
+      localStorage.setItem("zx_session", JSON.stringify(data.user));
       toast({ title: "Welcome back!", description: "Signed in successfully." });
       router.push(redirectPath);
       router.refresh();

@@ -1,7 +1,7 @@
 {
-  "name": "academyx-backend",
+  "name": "zenrix-backend",
   "version": "1.0.0",
-  "description": "AcademyX multi-tenant EdTech SaaS backend",
+  "description": "Zenrix multi-tenant EdTech SaaS backend",
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",

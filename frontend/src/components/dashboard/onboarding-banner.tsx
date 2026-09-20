@@ -36,7 +36,7 @@ export function OnboardingBanner() {
         </div>
         <p className="text-sm text-text-muted mb-3">
           Complete {state.total - state.done.length} more step{state.total - state.done.length === 1 ? "" : "s"} to unlock
-          the full AcademyX experience.
+          the full Zenrix experience.
         </p>
         <Progress value={pct} className="h-1.5 max-w-sm" />
       </div>

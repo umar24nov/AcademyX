@@ -7,7 +7,7 @@ async function main() {
   const app = createApp();
 
   const server = app.listen(env.PORT, () => {
-    console.log(`🚀 AcademyX API listening on http://localhost:${env.PORT}`);
+    console.log(`🚀 Zenrix API listening on http://localhost:${env.PORT}`);
     console.log(`   Health: http://localhost:${env.PORT}/health`);
   });
 

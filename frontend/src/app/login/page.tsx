@@ -41,7 +41,7 @@ export default function LoginPortalPage() {
             showText={false}
           />
           <h1 className="font-semibold text-2xl text-text-heading tracking-tight">
-            Welcome to AcademyX
+            Welcome to Zenrix
           </h1>
           <p className="text-sm text-text-muted">
             Choose how you&apos;d like to sign in to your account.

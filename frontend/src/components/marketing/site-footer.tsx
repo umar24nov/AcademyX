@@ -47,7 +47,7 @@ export function SiteFooter() {
     setEmail("");
     toast({
       title: "Subscribed!",
-      description: "We'll keep you posted on new AcademyX features.",
+      description: "We'll keep you posted on new Zenrix features.",
     });
   };
 
@@ -144,7 +144,7 @@ export function SiteFooter() {
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-primary shrink-0" />
-                hello@academyx.app
+                hello@zenrix.app
               </li>
             </ul>
           </div>
@@ -152,7 +152,7 @@ export function SiteFooter() {
 
         <div className="mt-12 pt-6 border-t border-border-subtle flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-text-muted">
-            © 2026 AcademyX. Made in India for coaching institutes.
+            © 2026 Zenrix. Made in India for coaching institutes.
           </p>
           <div className="flex flex-wrap justify-center gap-6 text-sm text-text-muted">
             {legalLinks.map((l) => (

@@ -10,7 +10,7 @@ const testimonials = [
     name: "Arif Hussain",
     role: "Director, Sunrise Academy — Hyderabad",
     quote:
-      "We run 12 batches with 800+ students on AcademyX. Attendance, fees and exams that took my staff a full week now close before lunchtime.",
+      "We run 12 batches with 800+ students on Zenrix. Attendance, fees and exams that took my staff a full week now close before lunchtime.",
   },
   {
     name: "Mohammed Imran",
@@ -22,7 +22,7 @@ const testimonials = [
     name: "Rohan Sharma",
     role: "Owner, Sharma Classes — Delhi",
     quote:
-      "I switched from three different apps to AcademyX. The reports alone are worth it — I know every centre's revenue and attendance from one dashboard.",
+      "I switched from three different apps to Zenrix. The reports alone are worth it — I know every centre's revenue and attendance from one dashboard.",
   },
   {
     name: "Fatima Sheikh",

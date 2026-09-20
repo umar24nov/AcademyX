@@ -261,7 +261,7 @@ export default function SettingsPage() {
                   <div className="flex items-center">
                     <Input className="rounded-r-none font-mono" defaultValue="enterprise" />
                     <span className="h-10 px-3 inline-flex items-center rounded-r-lg border border-l-0 border-border-subtle bg-surface-container-low font-mono text-sm text-text-muted">
-                      .academyx.app
+                      .zenrix.app
                     </span>
                   </div>
                 </div>

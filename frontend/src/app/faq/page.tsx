@@ -8,7 +8,7 @@ import { SiteFooter } from "@/components/marketing/site-footer";
 
 const faqs = [
   {
-    q: "Is AcademyX suitable for a small coaching centre?",
+    q: "Is Zenrix suitable for a small coaching centre?",
     a: "Yes. The Starter plan is designed for a single coaching institute with up to 200 students, and you can upgrade as your academy grows. Setup takes under 10 minutes and no credit card is required to start.",
   },
   {
@@ -17,11 +17,11 @@ const faqs = [
   },
   {
     q: "Do you support both online and offline batches?",
-    a: "Yes. AcademyX handles offline institutes, online-only academies and hybrid models. Mark attendance in person or let it happen automatically when students join a live class.",
+    a: "Yes. Zenrix handles offline institutes, online-only academies and hybrid models. Mark attendance in person or let it happen automatically when students join a live class.",
   },
   {
     q: "How do fees and payments work?",
-    a: "Create fee structures per course or batch and collect payments via Razorpay (UPI, cards, net banking). AcademyX generates receipts and invoices automatically and tracks pending fees for you.",
+    a: "Create fee structures per course or batch and collect payments via Razorpay (UPI, cards, net banking). Zenrix generates receipts and invoices automatically and tracks pending fees for you.",
   },
   {
     q: "Will my students need a separate mobile app?",

@@ -57,7 +57,7 @@ export default function InstituteAdminDashboardPage() {
       <div className="flex flex-col gap-8">
         <PageHeader
           title="Institute Analytics"
-          description="Real-time overview of AcademyX operations and performance."
+          description="Real-time overview of Zenrix operations and performance."
           actions={
             <>
               <ExportButton label="Export PDF" onClick={exportAdmissions} />

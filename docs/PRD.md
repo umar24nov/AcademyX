@@ -1,17 +1,17 @@
-# AcademyX — Product Requirements Document (PRD)
+# Zenrix — Product Requirements Document (PRD)
 
 > Status: **Living spec** — describes the product as built today, plus a clearly separated Roadmap.
 > Last updated: 2026-08-04
 
 ## 1. Overview
 
-AcademyX is a **multi-tenant EdTech SaaS platform** ("the operating system for coaching institutes") that lets coaching centers run their entire academy — students, teachers, courses, batches, live classes, exams, assignments, messaging, and payments — from a single web application.
+Zenrix is a **multi-tenant EdTech SaaS platform** ("the operating system for coaching institutes") that lets coaching centers run their entire academy — students, teachers, courses, batches, live classes, exams, assignments, messaging, and payments — from a single web application.
 
 Each coaching institute is an isolated **tenant** with its own admin, teachers, students, courses, and batches. A platform-level super admin manages all institutes.
 
 ```mermaid
 mindmap
-  root((AcademyX))
+  root((Zenrix))
     Platform
       Multi-tenant institutes
       Super admin
@@ -60,7 +60,7 @@ Coaching institutes typically juggle spreadsheets, WhatsApp groups, and disconne
 - Communication with parents and students
 - Billing and fee tracking
 
-This causes lost data, no single source of truth, and poor student experience. AcademyX consolidates all of it.
+This causes lost data, no single source of truth, and poor student experience. Zenrix consolidates all of it.
 
 ## 3. Targeted Users & Personas
 
@@ -73,12 +73,12 @@ This causes lost data, no single source of truth, and poor student experience. A
 
 Demo accounts (password `password123`):
 
-- `super@academyx.app` — Super Admin
+- `super@zenrix.app` — Super Admin
 - `admin@sunriseacademy.in` — Institute Admin (Sunrise Academy)
 - `teacher@sunriseacademy.in` — Teacher (Dr. Ayesha Ansari)
 - `student@sunriseacademy.in` — Student (Ayesha Khan)
 
-Accounts created through the onboarding wizard use the default password `AcademyX@12345`.
+Accounts created through the onboarding wizard use the default password `Zenrix@12345`.
 
 ## 4. Core Features (Implemented)
 

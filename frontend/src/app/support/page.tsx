@@ -32,7 +32,7 @@ export default function SupportPage() {
       <div className="flex flex-col gap-6">
         <PageHeader
           title="Support"
-          description="Get help with AcademyX or reach our support team."
+          description="Get help with Zenrix or reach our support team."
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -60,7 +60,7 @@ export default function SupportPage() {
               <div className="p-4 rounded-lg bg-surface-container-high mt-4">
                 <p className="text-sm font-medium text-on-surface mb-1">Talk to a human</p>
                 <p className="text-xs text-text-muted">
-                  Email <a href="mailto:support@academyx.app" className="text-primary underline underline-offset-2">support@academyx.app</a>{" "}
+                  Email <a href="mailto:support@zenrix.app" className="text-primary underline underline-offset-2">support@zenrix.app</a>{" "}
                   or call +1 (555) 000-0000 (Mon–Fri, 9am–6pm).
                 </p>
               </div>

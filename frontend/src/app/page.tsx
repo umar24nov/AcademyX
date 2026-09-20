@@ -116,7 +116,7 @@ export default function LandingPage() {
           </h1>
           <p className="mt-6 text-lg md:text-xl text-text-muted max-w-2xl mx-auto">
             Students, teachers, courses, live classes, exams, payments and reports —
-            AcademyX unifies everything your institute needs to grow.
+            Zenrix unifies everything your institute needs to grow.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" asChild className="w-full sm:w-auto">
@@ -249,7 +249,7 @@ export default function LandingPage() {
             Ready to scale your academy?
           </h2>
           <p className="text-text-muted mt-4 text-lg max-w-xl mx-auto">
-            Join thousands of coaching institutes running on AcademyX.
+            Join thousands of coaching institutes running on Zenrix.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" asChild className="w-full sm:w-auto">

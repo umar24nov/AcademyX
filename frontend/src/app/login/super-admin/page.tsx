@@ -8,12 +8,12 @@ export default function SuperAdminLoginPage() {
     <AuthShell>
       <RoleLoginForm
         heading="Platform admin login"
-        subheading="Restricted access for AcademyX platform owners."
+        subheading="Restricted access for Zenrix platform owners."
         roleLabel="platform admins"
         expectedRole="SUPER_ADMIN"
         redirectPath="/dashboard/super-admin"
         buttonLabel="Sign in as Platform Admin"
-        placeholder="owner@academyx.app"
+        placeholder="owner@zenrix.app"
         closeHref="/"
       />
     </AuthShell>

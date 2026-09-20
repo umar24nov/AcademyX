@@ -1,4 +1,4 @@
-# AcademyX
+# Zenrix
 
 **The Operating System for Coaching Institutes** — a multi-tenant EdTech SaaS platform that lets coaching centers run their entire academy from a single web app: students, teachers, courses, batches, live online classes, exams, assignments, messaging, notifications, and payments.
 
@@ -36,11 +36,11 @@
 
 Coaching institutes typically juggle spreadsheets, WhatsApp groups, and disconnected tools for admissions, scheduling, exams, live classes, communication, and billing. This causes lost data, no single source of truth, and a poor student experience.
 
-AcademyX consolidates all of it. Each coaching institute is an **isolated tenant** with its own admin, teachers, students, courses, and batches. A platform-level **Super Admin** manages all institutes.
+Zenrix consolidates all of it. Each coaching institute is an **isolated tenant** with its own admin, teachers, students, courses, and batches. A platform-level **Super Admin** manages all institutes.
 
 ```mermaid
 mindmap
-  root((AcademyX))
+  root((Zenrix))
     Platform
       Multi-tenant institutes
       Super admin
@@ -107,12 +107,12 @@ All seeded accounts use the password **`password123`**:
 
 | Role | Email | Description |
 | --- | --- | --- |
-| Super Admin | `super@academyx.app` | Platform operator, manages all institutes |
+| Super Admin | `super@zenrix.app` | Platform operator, manages all institutes |
 | Institute Admin | `admin@sunriseacademy.in` | Owner/principal of Sunrise Academy |
 | Teacher | `teacher@sunriseacademy.in` | Dr. Ayesha Ansari (Physics) |
 | Student | `student@sunriseacademy.in` | Ayesha Khan |
 
-- Accounts created through the onboarding wizard use the default password **`AcademyX@12345`**.
+- Accounts created through the onboarding wizard use the default password **`Zenrix@12345`**.
 - The seed script creates **6 Indian coaching institutes and 50+ students/teachers**, with Sunrise Academy as the primary fully-wired demo tenant.
 - Seeded reference IDs: `seed_course_001`, `seed_batch_sunrise_01`/`_02`, `seed_exam_001`, `seed_assign_001`.
 
@@ -169,14 +169,14 @@ New Project/
 ├── docs/                 # PRD, Architecture, Rules, Phases, Design, Memory
 ├── backend/              # Express + Prisma API
 ├── frontend/             # Next.js web app
-├── AcademyX_Screens_Arranged/  # Reference UI screen pack (tracked, read-only)
-├── AcademyX_UI_Screens/        # Original design mockups (presentation artifacts, untouched)
-├── AcademyX_UI_Walkthrough.pptx # UI walkthrough deck
+├── Zenrix_Screens_Arranged/  # Reference UI screen pack (tracked, read-only)
+├── Zenrix_UI_Screens/        # Original design mockups (presentation artifacts, untouched)
+├── Zenrix_UI_Walkthrough.pptx # UI walkthrough deck
 ├── .nvmrc                # node 20
 └── .gitignore
 ```
 
-> ⚠️ **Never modify** `AcademyX_UI_Screens/` or the `.pptx` deliverables. They are reference assets, not app code.
+> ⚠️ **Never modify** `Zenrix_UI_Screens/` or the `.pptx` deliverables. They are reference assets, not app code.
 
 ### Backend structure
 
@@ -425,7 +425,7 @@ sequenceDiagram
 ## 8. Frontend Architecture
 
 ### 8.1 Data layer
-- `lib/api.ts`: `api.get/post/put/patch/delete` wrap `fetch`, attach the `Authorization` header, unwrap the `{success,data}` envelope, and automatically retry once with a refreshed access token on 401. `getStoredUser()` reads the `ax_session` storage key; `tryGet<T>` returns `null` on any API failure.
+- `lib/api.ts`: `api.get/post/put/patch/delete` wrap `fetch`, attach the `Authorization` header, unwrap the `{success,data}` envelope, and automatically retry once with a refreshed access token on 401. `getStoredUser()` reads the `zx_session` storage key; `tryGet<T>` returns `null` on any API failure.
 - `lib/live.ts`: `useLive(fetcher, mockFallback)` fetches on mount and keeps a graceful mock fallback while the API is unavailable; `useStoredUser()` reads the session after mount only (avoids SSR hydration mismatches).
 - `lib/live-data.ts`: typed fetchers + mock data per module (exams, assignments, live classes, onboarding, batches, etc.).
 - `lib/csv.ts`: `downloadCsv` for CSV exports.
@@ -538,7 +538,7 @@ Validated at startup by `src/config/env.ts` (zod) — the app fails fast on miss
 | `HMS_APP_ID` / `HMS_APP_ACCESS_KEY` / `HMS_APP_SECRET` / `HMS_TEMPLATE_ID` | — | empty | optional, 100ms hosted rooms (planned) |
 | `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` | — | empty | optional, Razorpay checkout (planned) |
 | `RESEND_API_KEY` | — | empty | optional, email (planned) |
-| `EMAIL_FROM` | — | `AcademyX <no-reply@academyx.app>` | |
+| `EMAIL_FROM` | — | `Zenrix <no-reply@zenrix.app>` | |
 
 ### Frontend (`frontend/.env.example` → `frontend/.env.local`)
 
@@ -684,4 +684,4 @@ Mermaid diagrams render on GitHub. Outside GitHub, open them in a Mermaid-aware 
 
 ---
 
-*AcademyX is a demo-quality, fully deployed multi-tenant SaaS. Built with Next.js, Express, Prisma, PostgreSQL, Socket.IO, and WebRTC.*
+*Zenrix is a demo-quality, fully deployed multi-tenant SaaS. Built with Next.js, Express, Prisma, PostgreSQL, Socket.IO, and WebRTC.*

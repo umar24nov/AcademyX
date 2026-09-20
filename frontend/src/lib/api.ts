@@ -19,7 +19,7 @@ export class ApiError extends Error {
 }
 
 async function refreshAccessToken(): Promise<string | null> {
-  const refreshToken = localStorage.getItem("ax_refresh_token");
+  const refreshToken = localStorage.getItem("zx_refresh_token");
   if (!refreshToken) return null;
 
   const res = await fetch(`${API_BASE}/auth/refresh`, {
@@ -33,15 +33,15 @@ async function refreshAccessToken(): Promise<string | null> {
   const body = await res.json();
   const accessToken = body?.data?.accessToken;
   const newRefresh = body?.data?.refreshToken;
-  if (accessToken) localStorage.setItem("ax_access_token", accessToken);
-  if (newRefresh) localStorage.setItem("ax_refresh_token", newRefresh);
+  if (accessToken) localStorage.setItem("zx_access_token", accessToken);
+  if (newRefresh) localStorage.setItem("zx_refresh_token", newRefresh);
   return accessToken ?? null;
 }
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   let token: string | null = null;
   if (typeof window !== "undefined") {
-    token = localStorage.getItem("ax_access_token");
+    token = localStorage.getItem("zx_access_token");
   }
 
   const headers: Record<string, string> = {
@@ -103,22 +103,22 @@ export const api = {
 
 export function setTokens(access: string, refresh: string) {
   if (typeof window !== "undefined") {
-    localStorage.setItem("ax_access_token", access);
-    localStorage.setItem("ax_refresh_token", refresh);
+    localStorage.setItem("zx_access_token", access);
+    localStorage.setItem("zx_refresh_token", refresh);
   }
 }
 
 export function clearTokens() {
   if (typeof window !== "undefined") {
-    localStorage.removeItem("ax_access_token");
-    localStorage.removeItem("ax_refresh_token");
+    localStorage.removeItem("zx_access_token");
+    localStorage.removeItem("zx_refresh_token");
   }
 }
 
 export function getStoredUser(): UserSession | null {
   if (typeof window === "undefined") return null;
   try {
-    const raw = localStorage.getItem("ax_session");
+    const raw = localStorage.getItem("zx_session");
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (parsed && typeof parsed === "object" && parsed.id && parsed.role) {
@@ -132,14 +132,14 @@ export function getStoredUser(): UserSession | null {
 
 export function clearSession() {
   if (typeof window !== "undefined") {
-    localStorage.removeItem("ax_session");
+    localStorage.removeItem("zx_session");
   }
   clearTokens();
 }
 
 export async function signOut(): Promise<void> {
   if (typeof window !== "undefined") {
-    const refreshToken = localStorage.getItem("ax_refresh_token");
+    const refreshToken = localStorage.getItem("zx_refresh_token");
     if (refreshToken) {
       try {
         await api.post("/auth/logout", { refreshToken });

@@ -44,7 +44,7 @@ export default function InstitutesPage() {
       <div className="flex flex-col gap-6">
         <PageHeader
           title="Institutes"
-          description="Manage all institutes on the AcademyX platform."
+          description="Manage all institutes on the Zenrix platform."
           actions={
             <Button>
               <Icon name="add" className="h-4 w-4" />

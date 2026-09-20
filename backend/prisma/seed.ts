@@ -285,7 +285,7 @@ async function seedInstitute(cfg: InstituteSeedConfig) {
 }
 
 async function main() {
-  console.log("🌱 Seeding AcademyX database...");
+  console.log("🌱 Seeding Zenrix database...");
 
   const passwordHash = await hashPassword(PASSWORD);
 
@@ -311,8 +311,8 @@ async function main() {
   }
 
   // ---- Super admin ----
-  await upsertUser("super@academyx.app", "Super Admin", Role.SUPER_ADMIN, null, passwordHash);
-  console.log("✓ Super admin: super@academyx.app");
+  await upsertUser("super@zenrix.app", "Super Admin", Role.SUPER_ADMIN, null, passwordHash);
+  console.log("✓ Super admin: super@zenrix.app");
 
   // =========================================================================
   // Primary demo institute: Sunrise Academy
@@ -863,7 +863,7 @@ async function main() {
 
   console.log("🌱 Seeding complete.");
   console.log("\nDemo logins (password: password123):");
-  console.log("  super@academyx.app          → SUPER_ADMIN");
+  console.log("  super@zenrix.app          → SUPER_ADMIN");
   console.log("  admin@sunriseacademy.in     → INSTITUTE_ADMIN");
   console.log("  teacher@sunriseacademy.in   → TEACHER");
   console.log("  student@sunriseacademy.in   → STUDENT");
